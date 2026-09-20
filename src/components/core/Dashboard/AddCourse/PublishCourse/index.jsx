@@ -64,8 +64,8 @@ const PublishCourse = () => {
   }
 
   return (
-    <div className='rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 w-full mx-0 md:mx-auto'>
-      <p className='text-2xl font-semibold text-richblack-5'>
+    <div className='rounded-md border-[1px] border-global-stroke-primary bg-global-bg-surface p-6 w-full mx-0 md:mx-auto'>
+      <p className='text-2xl font-semibold text-global-text-primary'>
         Publish Settings
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -76,9 +76,9 @@ const PublishCourse = () => {
               type='checkbox'
               id='public'
               {...register("public")}
-              className='border-gray-300 h-4 w-4 rounded bg-richblack-500 text-richblack-400 focus:ring-2 focus:ring-richblack-5'
+              className='border-gray-300 h-4 w-4 rounded bg-global-surface-muted text-global-text-tertiary focus:ring-2 focus:ring-richblack-5'
             />
-            <span className='ml-2 text-richblack-400 cursor-pointer'>
+            <span className='ml-2 text-global-text-tertiary cursor-pointer'>
               Make this course as public
             </span>
           </label>
@@ -90,7 +90,7 @@ const PublishCourse = () => {
             disabled={loading}
             type="button"
             onClick={goBack}
-            className="flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900"
+            className="flex cursor-pointer items-center gap-x-2 rounded-md bg-button-tertiary-bg-default py-[8px] px-[20px] font-semibold text-global-text-inverse"
           >
             Back
           </button>
