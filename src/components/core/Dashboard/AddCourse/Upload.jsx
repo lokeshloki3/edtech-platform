@@ -44,14 +44,14 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
 
   return (
     <div className="flex flex-col space-y-2">
-      <label htmlFor={name} className="text-sm text-richblack-5">
-        {label} {!viewData && <sup className="text-pink-200">*</sup>}
+      <label htmlFor={name} className="text-sm text-global-text-primary">
+        {label} {!viewData && <sup className="text-status-error">*</sup>}
       </label>
 
       <div
         {...getRootProps()}
-        className={`${isDragActive ? "bg-richblack-600" : "bg-richblack-700"}
-          flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-richblack-500`}
+        className={`${isDragActive ? "bg-global-surface-muted" : "bg-global-card-surface-2"}
+          flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-global-stroke-secondary`}
       >
         <input {...getInputProps()} />
 
@@ -78,7 +78,7 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
                   setSelectedFile(null);
                   setValue(name, null);
                 }}
-                className="mt-3 text-richblack-400 underline"
+                className="mt-3 text-global-text-tertiary underline"
               >
                 Cancel
               </button>
@@ -87,14 +87,14 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
         ) : (
           <div className="flex w-full flex-col items-center p-6">
             <div className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800">
-              <FiUploadCloud className="text-2xl text-yellow-50" />
+              <FiUploadCloud className="text-2xl text-global-highlight-text" />
             </div>
-            <p className="mt-2 max-w-[200px] text-center text-sm text-richblack-200">
+            <p className="mt-2 max-w-[200px] text-center text-sm text-global-text-tertiary">
               Drag and drop an {!video ? "image" : "video"}, or click to{" "}
-              <span className="font-semibold text-yellow-50">Browse</span> a
+              <span className="font-semibold text-global-highlight-text">Browse</span> a
               file
             </p>
-            <ul className="mt-10 flex list-disc justify-between space-x-12 text-center  text-xs text-richblack-200">
+            <ul className="mt-10 flex list-disc justify-between space-x-12 text-center  text-xs text-global-text-tertiary">
               <li>Aspect ratio 16:9</li>
               <li>Recommended size 1024x576</li>
             </ul>
@@ -102,7 +102,7 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
         )}
       </div>
       {errors[name] && (
-        <span className="ml-2 text-xs tracking-wide text-pink-200">
+        <span className="ml-2 text-xs tracking-wide text-status-error">
           {label} is required
         </span>
       )}
