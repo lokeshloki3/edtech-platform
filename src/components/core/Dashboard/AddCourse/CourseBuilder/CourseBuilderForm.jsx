@@ -6,10 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MdNavigateNext } from "react-icons/md"
 import toast from 'react-hot-toast';
 import { setStep, setEditCourse, setCourse } from "../../../../../slices/courseSlice";
-import {
-  createSection,
-  updateSection,
-} from "../../../../../services/operations/courseDetailsAPI";
+import { useCreateSection, useUpdateSection } from '@/hooks/use-course-query';
 import NestedView from './NestedView';
 
 const CourseBuilderForm = () => {
@@ -20,7 +17,8 @@ const CourseBuilderForm = () => {
   const [editSectionName, setEditSectionName] = useState(null);
   const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  const { mutateAsync: createSection } = useCreateSection();
+  const { mutateAsync: updateSection } = useUpdateSection();
 
   const handleChangeEditSectionName = (sectionId, sectionName) => {
     if (editSectionName === sectionId) {
@@ -54,39 +52,28 @@ const CourseBuilderForm = () => {
   }
 
   const onSubmit = async (data) => {
-    // console.log("data", data);
     setLoading(true);
 
-    let result
+    try {
+      const result = editSectionName
+        ? await updateSection({
+            sectionName: data.sectionName,
+            sectionId: editSectionName,
+            courseId: course._id,
+          })
+        : await createSection({
+            sectionName: data.sectionName,
+            courseId: course._id,
+          });
 
-    if (editSectionName) {
-      result = await updateSection(
-        {
-          sectionName: data.sectionName,
-          sectionId: editSectionName,
-          courseId: course._id,
-        },
-        token
-      )
-      // console.log("edit", result);
-    }
-    else {
-      result = await createSection(
-        {
-          sectionName: data.sectionName,
-          courseId: course._id,
-        },
-        token
-      )
-    }
-
-    if (result) {
-      // console.log("section result", result)
       dispatch(setCourse(result));
       setEditSectionName(null);
       setValue("sectionName", "");
+    } catch {
+      // the mutation hook has already surfaced the error
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
