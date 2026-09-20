@@ -90,12 +90,12 @@ const CourseBuilderForm = () => {
   }
 
   return (
-    <div className="space-y-8 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 w-full mx-0 md:mx-auto">
-      <p className='text-2xl font-semibold text-richblack-5'>Course Builder</p>
+    <div className="space-y-8 rounded-md border-[1px] border-global-stroke-primary bg-global-bg-surface p-6 w-full mx-0 md:mx-auto">
+      <p className='text-2xl font-semibold text-global-text-primary'>Course Builder</p>
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
         <div className='flex flex-col space-y-2'>
-          <label htmlFor="sectionName" className="text-sm text-richblack-5">
-            Section Name <sup className="text-pink-200">*</sup>
+          <label htmlFor="sectionName" className="text-sm text-global-text-primary">
+            Section Name <sup className="text-status-error">*</sup>
           </label>
           <input
             id="sectionName"
@@ -105,7 +105,7 @@ const CourseBuilderForm = () => {
             className="form-style w-full"
           />
           {errors.sectionName && (
-            <span className="ml-2 text-xs tracking-wide text-pink-200">
+            <span className="ml-2 text-xs tracking-wide text-status-error">
               Section name is required
             </span>
           )}
@@ -118,7 +118,7 @@ const CourseBuilderForm = () => {
             text={editSectionName ? "Edit Section Name" : "Create Section"}
             outline={true}
           >
-            <IoAddCircleOutline size={20} className="text-yellow-50" />
+            <IoAddCircleOutline size={20} className="text-global-highlight-text" />
           </IconBtn>
         </div>
       </form>
@@ -131,7 +131,7 @@ const CourseBuilderForm = () => {
       <div className='flex justify-end gap-x-3'>
         <button
           onClick={goBack}
-          className='flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900'
+          className='flex cursor-pointer items-center gap-x-2 rounded-md bg-button-tertiary-bg-default py-[8px] px-[20px] font-semibold text-global-text-inverse'
         >
           Back
         </button>
