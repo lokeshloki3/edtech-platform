@@ -3,16 +3,17 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 // import ReactStars from "react-rating-stars-component";
 import IconBtn from '../../common/IconBtn';
-import { createRating } from '../../../services/operations/courseDetailsAPI';
+import { useCreateRating } from '@/hooks/use-course-query';
+import { useAuthStore } from '@/store/auth.store';
 import Rating from 'react-rating';
 import { FaStar } from 'react-icons/fa';
 import { RxCross2 } from "react-icons/rx";
 
 const CourseReviewModal = ({ setReviewModal }) => {
 
-  const { user } = useSelector((state) => state.profile);
+  const user = useAuthStore((s) => s.user);
   const { courseEntireData } = useSelector((state) => state.viewCourse);
-  const { token } = useSelector((state) => state.auth);
+  const { mutate: submitRating, isPending } = useCreateRating();
 
   const {
     register,
@@ -26,16 +27,15 @@ const CourseReviewModal = ({ setReviewModal }) => {
     setValue("courseRating", 0);
   }, [])
 
-  const onSubmit = async (data) => {
-    await createRating(
+  const onSubmit = (data) => {
+    submitRating(
       {
         courseId: courseEntireData._id,
-        rating: data.courseRating,
+        rating: Number(data.courseRating),
         review: data.courseExperience,
       },
-      token
+      { onSuccess: () => setReviewModal(false) }
     );
-    setReviewModal(false);
   }
 
   const ratingChanged = (newRating) => {
@@ -114,7 +114,8 @@ const CourseReviewModal = ({ setReviewModal }) => {
                 Cancel
               </button>
               <IconBtn
-                text="Save"
+                disabled={isPending}
+                text={isPending ? "Saving..." : "Save"}
               />
             </div>
           </form>
