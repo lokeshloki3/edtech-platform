@@ -24,7 +24,7 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
   try {
     const response = await axiosClient.post<LoginResponse>('/auth/login', payload);
 
-    if (!response.data.success || !response.data.token) {
+    if (!response.data.success) {
       throw new Error(response.data.message || 'Login failed');
     }
 
