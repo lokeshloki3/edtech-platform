@@ -35,12 +35,12 @@ const RenderSteps = () => {
                             <button
                                 className={`grid cursor-default aspect-square w-[34px] place-items-center rounded-full border-[1px] 
                                     ${step === item.id
-                                        ? "border-yellow-50 bg-yellow-900 text-yellow-50"
-                                        : "border-richblack-700 bg-richblack-800 text-richblack-300"} 
-                                    ${step > item.id && "bg-yellow-50 text-yellow-50"}} `}
+                                        ? "border-global-highlight-text bg-global-highlight-surface text-global-highlight-text"
+                                        : "border-global-stroke-primary bg-global-bg-surface text-global-text-tertiary"} 
+                                    ${step > item.id && "bg-button-primary-bg-default text-global-highlight-text"}} `}
                             >
                                 {step > item.id ? (
-                                    <FaCheck className='font-bold text-richblack-900' />
+                                    <FaCheck className='font-bold text-global-text-inverse' />
                                 ) : (
                                     item.id
                                 )}
@@ -51,7 +51,7 @@ const RenderSteps = () => {
                             <>
                                 <div
                                     className={`h-[calc(34px/2)] w-[25%] md:w-[33%] border-dashed border-b-2 
-                                    ${step > item.id ? "border-yellow-50" : "border-richblack-500"}`}
+                                    ${step > item.id ? "border-global-highlight-text" : "border-global-stroke-secondary"}`}
                                 ></div>
                             </>
                         )}
@@ -66,7 +66,7 @@ const RenderSteps = () => {
                             className='flex min-w-[100px] md:min-w-[130px] flex-col items-center gap-y-2'
                         >
                             <p
-                                className={`text-sm ${step >= item.id ? "text-richblack-5" : "text-richblack-500"}`}
+                                className={`text-sm ${step >= item.id ? "text-global-text-primary" : "text-global-text-disabled"}`}
                             >
                                 {item.title}
                             </p>
