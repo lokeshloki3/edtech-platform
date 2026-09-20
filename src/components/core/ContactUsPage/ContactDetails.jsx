@@ -33,12 +33,12 @@ const ContactDetails = () => {
                     let Icon = Icon1[element.icon] || Icon2[element.icon] || Icon3[element.icon];
                     return (
                         <div
-                            className="flex flex-col gap-[2px] p-3 text-sm text-richblack-200"
+                            className="flex flex-col gap-[2px] p-3 text-sm text-global-text-tertiary"
                             key={index}
                         >
                             <div className="flex flex-row items-center gap-3">
                                 <Icon size={25} />
-                                <h1 className="text-lg font-semibold text-richblack-5">
+                                <h1 className="text-lg font-semibold text-global-text-primary">
                                     {element?.heading}
                                 </h1>
                             </div>
