@@ -42,16 +42,16 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
 
   return (
     <>
-      <div className='flex h-[calc(100vh-3.5rem)] w-full md:w-[320px] md:max-w-[350px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800'>
+      <div className='flex h-[calc(100vh-3.5rem)] w-full md:w-[320px] md:max-w-[350px] flex-col border-r-[1px] border-r-richblack-700 bg-global-bg-surface'>
         {/* For buttons and headings */}
-        <div className='flex flex-col items-start justify-between mx-5 gap-2 gap-y-4 border-b border-richblack-600 py-5 text-lg font-bold text-richblack-25'>
+        <div className='flex flex-col items-start justify-between mx-5 gap-2 gap-y-4 border-b border-global-stroke-secondary py-5 text-lg font-bold text-global-text-secondary'>
           {/* For buttons */}
           <div className='flex w-full items-center justify-between'>
             <div
               onClick={() => {
                 navigate("/dashboard/enrolled-courses")
               }}
-              className="flex h-[35px] w-[35px] items-center justify-center rounded-full bg-richblack-100 p-1 text-richblack-700 hover:scale-90 cursor-pointer"
+              className="flex h-[35px] w-[35px] items-center justify-center rounded-full bg-richblack-100 p-1 text-global-text-inverse hover:scale-90 cursor-pointer"
               title='Back'
             >
               <IoIosArrowBack size={30} />
@@ -67,7 +67,7 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
           {/* For heading and title */}
           <div className='flex flex-col'>
             <p>{courseEntireData?.courseName}</p>
-            <p className="text-sm font-semibold text-richblack-500">
+            <p className="text-sm font-semibold text-global-text-disabled">
               {completedLectures?.length} / {totalNoOfLectures}
             </p>
           </div>
@@ -80,10 +80,10 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
               <div
                 onClick={() => setActiveStatus(section?._id)}
                 key={index}
-                className='mt-2 cursor-pointer text-sm text-richblack-5'
+                className='mt-2 cursor-pointer text-sm text-global-text-primary'
               >
                 {/* Sections */}
-                <div className='flex justify-between bg-richblack-600 px-5 py-4'>
+                <div className='flex justify-between bg-global-surface-muted px-5 py-4'>
                   <div className="w-[65%] font-semibold">
                     {section?.sectionName}
                   </div>
@@ -109,8 +109,8 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
                         section.subSection.map((topic, index) => (
                           <div
                             className={`flex gap-3 px-5 py-2 ${videoBarActive === topic._id
-                              ? "bg-yellow-200 text-richblack-900 font-semibold"
-                              : "hover:bg-richblack-900"}`}
+                              ? "bg-global-highlight-surface-strong text-global-text-inverse font-semibold"
+                              : "hover:bg-global-bg"}`}
                             key={index}
                             onClick={() => {
                               navigate(`/view-course/${courseEntireData?._id}/section/${section?._id}/sub-section/${topic?._id}`)
