@@ -1,13 +1,11 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import authReducer from "../slices/authSlice";
-import profileReducer from "../slices/profileSlice";
 import cartReducer from "../slices/cartSlice";
 import courseReducer from "../slices/courseSlice";
 import viewCourseReducer from "../slices/viewCourseSlice";
 
+// Auth and profile now live in the zustand auth store; what remains here is the
+// editor and cart state that has not been migrated yet.
 const rootReducer = combineReducers({
-    auth: authReducer,
-    profile: profileReducer,
     cart: cartReducer,
     course: courseReducer,
     viewCourse: viewCourseReducer,
