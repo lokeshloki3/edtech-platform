@@ -1,11 +1,11 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import frameImg from "../../../assets/Images/frame.png"
 import LoginForm from "./LoginForm"
 import SignupForm from "./SignupForm"
+import { useAuthStore } from '@/store/auth.store';
 
 const Template = ({ title, description1, description2, image, formType }) => {
-  const { loading } = useSelector((state) => state.auth);
+  const loading = useAuthStore((s) => s.status) === 'pending';
 
   return (
     <div className='grid min-h-[calc(100vh-3.5rem)] place-items-center'>
