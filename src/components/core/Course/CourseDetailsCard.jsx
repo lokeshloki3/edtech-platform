@@ -33,7 +33,7 @@ const CourseDetailsCard = ({
 
     return (
         <div>
-            <div className="flex flex-col gap-4 rounded-md bg-richblack-700 p-4 text-richblack-5">
+            <div className="flex flex-col gap-4 rounded-md bg-global-card-surface-2 p-4 text-global-text-primary">
                 {/* Course Image */}
                 <img
                     src={ThumbnailImage}
@@ -82,14 +82,14 @@ const CourseDetailsCard = ({
                             )
                         )}
                     </div>
-                    <p className='pb-3 pt-6 text-center text-sm text-richblack-25'>
+                    <p className='pb-3 pt-6 text-center text-sm text-global-text-secondary'>
                         30-Day Money-Back Guarantee
                     </p>
 
                     <p className='my-2 text-xl font-semibold'>
                         This Course Includes :
                     </p>
-                    <div className='flex flex-col gap-3 text-sm text-caribbeangreen-100'>
+                    <div className='flex flex-col gap-3 text-sm text-status-success'>
                         {course?.instructions?.map((item, index) => (
                             <p className='flex gap-2' key={index}>
                                 <BsFillCaretRightFill />
@@ -100,7 +100,7 @@ const CourseDetailsCard = ({
                 </div>
                 <div className='text-center'>
                     <button
-                        className='mc-auto flex items-center gap-2 py-6 text-yellow-100 cursor-pointer'
+                        className='mc-auto flex items-center gap-2 py-6 text-global-highlight-text-muted cursor-pointer'
                         onClick={handleShare}
                     >
                         <FaShareSquare size={15} />
