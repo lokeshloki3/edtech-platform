@@ -44,14 +44,14 @@ const CourseReviewModal = ({ setReviewModal }) => {
 
   return (
     <div className='fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white/10 backdrop-blur-sm'>
-      <div className='my-10 w-11/12 max-w-[700px] rounded-lg border border-richblack-400 bg-richblack-800'>
+      <div className='my-10 w-11/12 max-w-[700px] rounded-lg border border-global-stroke-tertiary bg-global-bg-surface'>
         {/* Modal header */}
-        <div className='flex items-center justify-between rounded-t-lg bg-richblack-700 p-5'>
-          <p className='text-xl font-semibold text-richblack-5'>Add Review</p>
+        <div className='flex items-center justify-between rounded-t-lg bg-global-card-surface-2 p-5'>
+          <p className='text-xl font-semibold text-global-text-primary'>Add Review</p>
           <button
             onClick={() => setReviewModal(false)}
           >
-            <RxCross2 className="text-2xl text-richblack-5 cursor-pointer" />
+            <RxCross2 className="text-2xl text-global-text-primary cursor-pointer" />
           </button>
         </div>
 
@@ -64,8 +64,8 @@ const CourseReviewModal = ({ setReviewModal }) => {
               className='aspect-square w-[50px] rounded-full object-cover'
             />
             <div>
-              <p className="font-semibold text-richblack-5">{user?.firstName} {user?.lastName}</p>
-              <p className="text-sm text-richblack-5">Posting Publicly</p>
+              <p className="font-semibold text-global-text-primary">{user?.firstName} {user?.lastName}</p>
+              <p className="text-sm text-global-text-primary">Posting Publicly</p>
             </div>
           </div>
 
@@ -87,8 +87,8 @@ const CourseReviewModal = ({ setReviewModal }) => {
             />
 
             <div className='flex w-11/12 flex-col space-y-2'>
-              <label htmlFor='courseExperience' className='text-sm text-richblack-5'>
-                Add Your Experience <sup className="text-pink-200">*</sup>
+              <label htmlFor='courseExperience' className='text-sm text-global-text-primary'>
+                Add Your Experience <sup className="text-status-error">*</sup>
               </label>
               <textarea
                 id='courseExperience'
@@ -98,7 +98,7 @@ const CourseReviewModal = ({ setReviewModal }) => {
               />
               {
                 errors.courseExperience && (
-                  <span className="ml-2 text-xs tracking-wide text-pink-200">
+                  <span className="ml-2 text-xs tracking-wide text-status-error">
                     Please add your experience
                   </span>
                 )
@@ -109,7 +109,7 @@ const CourseReviewModal = ({ setReviewModal }) => {
             <div className="mt-6 flex w-11/12 justify-end gap-x-2">
               <button
                 onClick={() => setReviewModal(false)}
-                className="flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900"
+                className="flex cursor-pointer items-center gap-x-2 rounded-md bg-button-tertiary-bg-default py-[8px] px-[20px] font-semibold text-global-text-inverse"
               >
                 Cancel
               </button>
