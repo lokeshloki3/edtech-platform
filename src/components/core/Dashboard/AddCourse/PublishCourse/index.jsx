@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { resetCourseState, setStep } from '../../../../../slices/courseSlice';
 import { COURSE_STATUS } from "../../../../../utils/constants";
 import { useNavigate } from 'react-router-dom';
-import { editCourseDetails } from '../../../../../services/operations/courseDetailsAPI';
+import { useEditCourse } from '@/hooks/use-course-query';
 
 const PublishCourse = () => {
 
@@ -14,7 +14,7 @@ const PublishCourse = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { course } = useSelector((state) => state.course);
-  const { token } = useSelector((state) => state.auth);
+  const { mutateAsync: editCourse } = useEditCourse();
 
   useEffect(() => {
     if (course?.status === COURSE_STATUS.PUBLISHED) {
@@ -26,8 +26,7 @@ const PublishCourse = () => {
     dispatch(setStep(2));
   }
 
-  const onSubmit = (data) => {
-    // console.log(data);
+  const onSubmit = () => {
     handleCoursePublish();
   }
 
@@ -56,11 +55,14 @@ const PublishCourse = () => {
       ? COURSE_STATUS.PUBLISHED : COURSE_STATUS.DRAFT;
     formData.append("status", courseStatus);
     setLoading(true);
-    const result = await editCourseDetails(formData, token);
-    if (result) {
+    try {
+      await editCourse(formData);
       goToCourses();
+    } catch {
+      // the mutation hook has already surfaced the error
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
