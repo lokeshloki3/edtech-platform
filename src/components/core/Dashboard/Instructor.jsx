@@ -41,10 +41,10 @@ const Instructor = () => {
   return (
     <div>
       <div className='space-y-2'>
-        <h1 className='text-2xl font-bold text-richblack-5 flex items-center gap-2'>
-          Hi {user?.firstName} <MdWavingHand className='text-yellow-100' />
+        <h1 className='text-2xl font-bold text-global-text-primary flex items-center gap-2'>
+          Hi {user?.firstName} <MdWavingHand className='text-global-highlight-text-muted' />
         </h1>
-        <p className="font-medium text-richblack-200">
+        <p className="font-medium text-global-text-tertiary">
           Let's start something new
         </p>
       </div>
@@ -58,38 +58,38 @@ const Instructor = () => {
             {totalAmount > 0 || totalStudents > 0 ? (
               <InstructorChart courses={instructorData} />
             ) : (
-              <div className="flex-1 rounded-md bg-richblack-800 p-6">
-                <p className="text-lg font-bold text-richblack-5">Visualize</p>
-                <p className="mt-4 text-xl font-medium text-richblack-50">
+              <div className="flex-1 rounded-md bg-global-bg-surface p-6">
+                <p className="text-lg font-bold text-global-text-primary">Visualize</p>
+                <p className="mt-4 text-xl font-medium text-global-text-secondary">
                   Not Enough Data To Visualize
                 </p>
               </div>
             )}
             {/* Total Statistics */}
-            <div className='flex min-w-[250px] flex-col rounded-md bg-richblack-800 p-6'>
-              <p className='text-lg font-bold text-richblack-5'>Statistics</p>
+            <div className='flex min-w-[250px] flex-col rounded-md bg-global-bg-surface p-6'>
+              <p className='text-lg font-bold text-global-text-primary'>Statistics</p>
               <div className='mt-4 space-y-4'>
                 <div>
-                  <p className='text-lg text-richblack-200'>Total Courses</p>
-                  <p className='text-3xl font-semibold text-richblack-50'>{courses.length}</p>
+                  <p className='text-lg text-global-text-tertiary'>Total Courses</p>
+                  <p className='text-3xl font-semibold text-global-text-secondary'>{courses.length}</p>
                 </div>
                 <div>
-                  <p className='text-lg text-richblack-200'>Total Students</p>
-                  <p className='text-3xl font-semibold text-richblack-50'>{totalStudents}</p>
+                  <p className='text-lg text-global-text-tertiary'>Total Students</p>
+                  <p className='text-3xl font-semibold text-global-text-secondary'>{totalStudents}</p>
                 </div>
                 <div>
-                  <p className='text-lg text-richblack-200'>Total Income</p>
-                  <p className='text-3xl font-semibold text-richblack-50'>Rs {totalAmount}</p>
+                  <p className='text-lg text-global-text-tertiary'>Total Income</p>
+                  <p className='text-3xl font-semibold text-global-text-secondary'>Rs {totalAmount}</p>
                 </div>
               </div>
             </div>
           </div>
-          <div className='rounded-md bg-richblack-800 p-6'>
+          <div className='rounded-md bg-global-bg-surface p-6'>
             {/* Render 3 Courses */}
             <div className='flex items-center justify-between'>
-              <p className='text-lg font-bold text-richblack-5'>Your Courses</p>
+              <p className='text-lg font-bold text-global-text-primary'>Your Courses</p>
               <Link to="/dashboard/my-courses">
-                <p className='text-xs font-semibold text-yellow-50'>View All</p>
+                <p className='text-xs font-semibold text-global-highlight-text'>View All</p>
               </Link>
             </div>
             <div className='my-4 flex flex-col md:flex-row gap-4 md:gap-0 items-start space-x-6'>
@@ -101,17 +101,17 @@ const Instructor = () => {
                     className='h-[201px] w-full rounded-md object-cover'
                   />
                   <div className="mt-3 w-full">
-                    <p className="text-sm font-medium text-richblack-50">
+                    <p className="text-sm font-medium text-global-text-secondary">
                       {course.courseName}
                     </p>
                     <div className="mt-1 flex items-center space-x-2">
-                      <p className="text-xs font-medium text-richblack-300">
+                      <p className="text-xs font-medium text-global-text-tertiary">
                         {course.studentsEnrolled.length} students
                       </p>
-                      <p className="text-xs font-medium text-richblack-300">
+                      <p className="text-xs font-medium text-global-text-tertiary">
                         |
                       </p>
-                      <p className="text-xs font-medium text-richblack-300">
+                      <p className="text-xs font-medium text-global-text-tertiary">
                         Rs. {course.price}
                       </p>
                     </div>
@@ -122,12 +122,12 @@ const Instructor = () => {
           </div>
         </div>
       ) : (
-        <div className="mt-20 rounded-md bg-richblack-800 p-6 py-20">
-          <p className="text-center text-2xl font-bold text-richblack-5">
+        <div className="mt-20 rounded-md bg-global-bg-surface p-6 py-20">
+          <p className="text-center text-2xl font-bold text-global-text-primary">
             You have not created any courses yet
           </p>
           <Link to="/dashboard/add-course">
-            <p className="mt-1 text-center text-lg font-semibold text-yellow-50">
+            <p className="mt-1 text-center text-lg font-semibold text-global-highlight-text">
               Create a course
             </p>
           </Link>
