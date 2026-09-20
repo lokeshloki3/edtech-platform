@@ -20,7 +20,7 @@ const CourseAccordionBar = ({ course, isActive, handleActive }) => {
     }, [active]);
 
     return (
-        <div className='overflow-hidden border border-solid border-richblack-600 bg-richblack-700 text-richblack-5 last:mb-0'>
+        <div className='overflow-hidden border border-solid border-global-stroke-secondary bg-global-card-surface-2 text-global-text-primary last:mb-0'>
             <div>
                 <div
                     className='flex cursor-pointer items-start justify-between bg-white/20 px-7 py-6 transition-all duration-300'
@@ -39,7 +39,7 @@ const CourseAccordionBar = ({ course, isActive, handleActive }) => {
                         <p>{course?.sectionName}</p>
                     </div>
                     <div className='space-x-4'>
-                        <span className='text-yellow-25'>
+                        <span className='text-global-highlight-text'>
                             {`${course.subSection.length || 0} lecture(s)`}
                         </span>
                     </div>
@@ -47,7 +47,7 @@ const CourseAccordionBar = ({ course, isActive, handleActive }) => {
             </div>
             <div
                 ref={contentEl}
-                className='relative h-0 overflow-hidden bg-richblack-900 transition-[height] duration-[0.35s] ease-[ease]'
+                className='relative h-0 overflow-hidden bg-global-bg transition-[height] duration-[0.35s] ease-[ease]'
                 style={{ height: sectionHeight, }}
             >
                 <div className='flex flex-col gap-2 px-7 py-6 font-semibold'>
