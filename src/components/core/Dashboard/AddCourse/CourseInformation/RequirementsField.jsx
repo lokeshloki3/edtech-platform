@@ -33,8 +33,8 @@ const RequirementsField = ({ name, label, register, setValue, errors, getValues,
 
     return (
         <div className="flex flex-col space-y-2">
-            <label htmlFor={name} className="text-sm text-richblack-5">
-                {label} <sup className="text-pink-200">*</sup>
+            <label htmlFor={name} className="text-sm text-global-text-primary">
+                {label} <sup className="text-status-error">*</sup>
             </label>
             <div className="flex flex-col items-start space-y-2">
                 <input
@@ -47,7 +47,7 @@ const RequirementsField = ({ name, label, register, setValue, errors, getValues,
                 <button
                     type="button"
                     onClick={handleAddRequirement}
-                    className="font-semibold text-yellow-50 cursor-pointer"
+                    className="font-semibold text-global-highlight-text cursor-pointer"
                 >
                     Add
                 </button>
@@ -56,7 +56,7 @@ const RequirementsField = ({ name, label, register, setValue, errors, getValues,
             {requirementsList.length > 0 && (
                 <ul className="mt-2 list-inside list-disc">
                     {requirementsList.map((requirement, index) => (
-                        <li key={index} className="flex items-center text-richblack-5">
+                        <li key={index} className="flex items-center text-global-text-primary">
                             <span>{requirement}</span>
                             <button
                                 type="button"
@@ -70,7 +70,7 @@ const RequirementsField = ({ name, label, register, setValue, errors, getValues,
                 </ul>
             )}
             {errors[name] && (
-                <span className="ml-2 text-xs tracking-wide text-pink-200">
+                <span className="ml-2 text-xs tracking-wide text-status-error">
                     {label} is required
                 </span>
             )}
