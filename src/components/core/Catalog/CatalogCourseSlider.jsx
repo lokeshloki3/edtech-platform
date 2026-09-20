@@ -35,7 +35,7 @@ const CatalogCourseSlider = ({ Courses, delay }) => {
                     ))}
                 </Swiper>
             ) : (
-                <p className='text-xl text-richblack-5'>No Course Found</p>
+                <p className='text-xl text-global-text-primary'>No Course Found</p>
             )}
         </div>
     )
