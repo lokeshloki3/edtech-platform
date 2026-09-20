@@ -3,6 +3,7 @@ const OTP = require("../models/OTP");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { SESSION_TTL_SECONDS, COOKIE_NAME, getAuthCookieOptions } = require("../config/authCookie");
 const Profile = require("../models/Profile");
 const mailSender = require("../utils/mailSender");
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
@@ -210,18 +211,16 @@ exports.login = async (req, res) => {
                 accountType: user.accountType,
             }
             const token = jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn: "2h",
+                expiresIn: SESSION_TTL_SECONDS,
             });
             // Save token to user document in database
             user.token = token;
             user.password = undefined;
 
-            // Set cookie for token and return success response
-            const options = {
-                expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
-                httpOnly: true,
-            }
-            res.cookie("token", token, options).status(200).json({
+            // The httpOnly cookie is the session. `token` is still echoed in the
+            // body only for the legacy Bearer-header call sites on the client;
+            // remove it from this response once those are all migrated.
+            res.cookie(COOKIE_NAME, token, getAuthCookieOptions()).status(200).json({
                 success: true,
                 token,
                 user,
@@ -330,6 +329,26 @@ exports.changePassword = async (req, res) => {
             success: false,
             message: "Error occurred while updating password",
             error: error.message,
+        });
+    }
+}
+
+// logout — clears the session cookie. Required now that the JWT is httpOnly:
+// the client cannot delete the cookie itself, so only the server can end a session.
+exports.logout = async (req, res) => {
+    try {
+        const { maxAge, ...clearOptions } = getAuthCookieOptions();
+
+        res.clearCookie(COOKIE_NAME, clearOptions);
+
+        return res.status(200).json({
+            success: true,
+            message: "Logged out successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Logout failed, please try again",
         });
     }
 }
