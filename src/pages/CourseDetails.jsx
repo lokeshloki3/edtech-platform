@@ -147,7 +147,7 @@ const CourseDetails = () => {
 
   return (
     <div>
-      <div className='relative w-full bg-richblack-800'>
+      <div className='relative w-full bg-global-bg-surface'>
         {/* Hero Section */}
         <div className='mx-auto box-content px-4 lg:w-[1260px] 2xl:relative'>
           <div className='mx-auto grid min-h-[450px] max-w-(--max-content-tab) justify-items-center py-8 lg:mx-0 lg:justify-items-center lg:py-0 xl:max-w-[810px]'>
@@ -161,14 +161,14 @@ const CourseDetails = () => {
               />
             </div>
             <div
-              className='z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-richblack-5'
+              className='z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-global-text-primary'
             >
               <p className='text-4xl font-bold sm:text-[42px]'>
                 {courseName}
               </p>
-              <p className='text-richblack-200'>{courseDescription}</p>
+              <p className='text-global-text-tertiary'>{courseDescription}</p>
               <div className='text-md flex flex-wrap items-center gap-2'>
-                <span className='text-yellow-25'>{avgReviewCount}</span>
+                <span className='text-global-highlight-text'>{avgReviewCount}</span>
                 <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
                 <span>{`(${ratingAndReviews.length} reviews)`}</span>
                 <span>{`${studentsEnrolled.length} students enrolled`}</span>
@@ -190,7 +190,7 @@ const CourseDetails = () => {
 
             {/* This div for mobile only */}
             <div className='flex w-full flex-col gap-4 border-y border-y-richblack-500 py-4 lg:hidden'>
-              <p className='space-x-3 pb-4 text-3xl font-semibold text-richblack-5'>
+              <p className='space-x-3 pb-4 text-3xl font-semibold text-global-text-primary'>
                 Rs. {price}
               </p>
               <div className='flex flex-col gap-2'>
@@ -213,14 +213,14 @@ const CourseDetails = () => {
                   isCourseInCart ? (
                     <button
                       onClick={() => navigate("/dashboard/cart")}
-                      className='cursor-pointer rounded-md bg-richblack-600 px-[20px] py-[8px] font-semibold text-richblack-5'
+                      className='cursor-pointer rounded-md bg-global-surface-muted px-[20px] py-[8px] font-semibold text-global-text-primary'
                     >
                       Go to Cart
                     </button>
                   ) : (
                     <button
                       onClick={handleAddToCart}
-                      className='cursor-pointer rounded-md bg-richblack-600 px-[20px] py-[8px] font-semibold text-richblack-5'
+                      className='cursor-pointer rounded-md bg-global-surface-muted px-[20px] py-[8px] font-semibold text-global-text-primary'
                     >
                       Add to Cart
                     </button>
@@ -241,10 +241,10 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
-      <div className='mx-auto box-content px4 text-start text-richblack-5 lg:w-[1260px]'>
+      <div className='mx-auto box-content px4 text-start text-global-text-primary lg:w-[1260px]'>
         <div className='mx-auto max-w-(--max-content-tab) lg:mx-0 xl:max-w-[810px]'>
           {/* What will you learn section */}
-          <div className='my-8 border border-richblack-600 p-8'>
+          <div className='my-8 border border-global-stroke-secondary p-8'>
             <p className='text-3xl font-semibold'>What you'll learn</p>
             <div className='mt-5'>
               <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown>
@@ -267,7 +267,7 @@ const CourseDetails = () => {
                 </div>
                 <div>
                   <button
-                    className='text-yellow-25 cursor-pointer'
+                    className='text-global-highlight-text cursor-pointer'
                     onClick={() => setIsActive([])}
                   >
                     Collapse all sections
@@ -303,7 +303,7 @@ const CourseDetails = () => {
                 />
                 <p className="text-lg">{`${instructor.firstName} ${instructor.lastName}`}</p>
               </div>
-              <p className='text-richblack-50'>
+              <p className='text-global-text-secondary'>
                 {instructor?.additionalDetails?.about}
               </p>
             </div>
