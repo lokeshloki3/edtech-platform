@@ -6,19 +6,15 @@ const User = require("../models/User");
 // dotenv.config();
 
 // auth
-// authentication bearer > cookies > body - safety of token
+// Session auth: the JWT travels only as an httpOnly cookie.
 exports.auth = async (req, res, next) => {
     try {
-        // extract token
-        // The httpOnly cookie is the primary credential. The Authorization
-        // header is still accepted for the not-yet-migrated client call sites.
-        // `req.header(...)` is undefined when the header is absent, so it has to
-        // be guarded — calling .replace() on it threw and surfaced as a 500
-        // "something went wrong" instead of a plain 401.
-        const authHeader = req.header("Authorization");
-        const token = req.cookies.token
-            || req.body.token
-            || (authHeader ? authHeader.replace("Bearer ", "") : null);
+        // Cookie-only. The Authorization header and body token were accepted
+        // while the client still held a bearer token; now that it does not, a
+        // second accepted credential path would only widen the surface the
+        // httpOnly cookie exists to close. Re-add the header read here if a
+        // non-browser client ever needs it.
+        const token = req.cookies.token;
 
         // if token missing, then return response
         if (!token) {
