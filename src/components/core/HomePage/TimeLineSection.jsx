@@ -52,15 +52,15 @@ const TimeLineSection = () => {
                 <img src={TimeLineImage}
                     alt='TimeLineImage'
                 />
-                <div className='absolute bg-caribbeangreen-700 flex text-white uppercase py-7
+                <div className='absolute bg-status-success-surface flex text-white uppercase py-7
                 left-[50%] translate-x-[-50%] translate-y-[-50%]'>
-                    <div className='flex gap-5 items-center border-r border-caribbeangreen-300 px-7'>
+                    <div className='flex gap-5 items-center border-r border-status-success-stroke px-7'>
                         <p className='text-3xl font-bold'>10</p>
-                        <p className='text-caribbeangreen-300 text-sm'>Years of Experience</p>
+                        <p className='text-status-success text-sm'>Years of Experience</p>
                     </div>
                     <div className='flex gap-5 items-center px-7'>
                         <p className='text-3xl font-bold'>250</p>
-                        <p className='text-caribbeangreen-300 text-sm'>Type of Courses</p>
+                        <p className='text-status-success text-sm'>Type of Courses</p>
                     </div>
                 </div>
             </div>
