@@ -30,18 +30,18 @@ const ExploreMore = () => {
         <HighlightText text={"Power of Code"} />
       </div>
 
-      <p className='text-center text-richblack-300 text-sm text-[16px] mt-3'>
+      <p className='text-center text-global-text-tertiary text-sm text-[16px] mt-3'>
         Learn to build anything you can imagine
       </p>
 
-      <div className='mt-5 grid grid-cols-5 rounded-lg bg-richblack-800 mb-5 border-richblack-100
+      <div className='mt-5 grid grid-cols-5 rounded-lg bg-global-bg-surface mb-5 border-global-stroke-tertiary
       px-1 py-1'>
         {
           tabsName.map((element, index) => {
             return (
               <div
-                className={`text-[16px] ${currentTab === element ? "bg-richblack-900 text-richblack-5 font-medium" : "text-richblack-200"}
-                rounded-lg transition-all duration-200 cursor-pointer text-center hover:bg-richblack-900 hover:text-richblack-5 px-1 py-1 sm:px-7 sm:py-2`}
+                className={`text-[16px] ${currentTab === element ? "bg-global-bg text-global-text-primary font-medium" : "text-global-text-tertiary"}
+                rounded-lg transition-all duration-200 cursor-pointer text-center hover:bg-global-bg hover:text-global-text-primary px-1 py-1 sm:px-7 sm:py-2`}
                 key={index}
                 onClick={() => setMyCard(element)}
               >
