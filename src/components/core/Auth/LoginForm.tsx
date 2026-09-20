@@ -54,7 +54,7 @@ function LoginForm() {
           {...register('password')}
         />
         <Link to="/forgot-password">
-          <p className="caption mt-1 ml-auto max-w-max text-status-info">Forgot Password</p>
+          <p className="caption text-status-info mt-1 ml-auto max-w-max">Forgot Password</p>
         </Link>
       </div>
 

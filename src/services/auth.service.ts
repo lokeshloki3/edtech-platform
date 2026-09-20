@@ -1,4 +1,5 @@
 // services/auth.service.ts
+import { withAvatarFallback } from '@/lib/avatar';
 import axiosClient from '@/lib/axiosClient';
 import { handleClientAxiosError } from '@/lib/handleClientAxiosError';
 import type {
@@ -27,7 +28,7 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
       throw new Error(response.data.message || 'Login failed');
     }
 
-    return response.data;
+    return { ...response.data, user: withAvatarFallback(response.data.user) };
   } catch (err: unknown) {
     return handleClientAxiosError(err, 'Login failed, please try again');
   }
@@ -74,7 +75,7 @@ export async function getCurrentUser(): Promise<AuthUser> {
       throw new Error(response.data.message || 'Could not fetch user details');
     }
 
-    return response.data.data;
+    return withAvatarFallback(response.data.data);
   } catch (err: unknown) {
     return handleClientAxiosError(err, 'Could not fetch user details');
   }

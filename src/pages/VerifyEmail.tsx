@@ -85,7 +85,7 @@ const VerifyEmail = () => {
             <button
               type="button"
               disabled={isResending}
-              className="body-2 flex cursor-pointer items-center gap-x-2 text-status-info disabled:cursor-not-allowed disabled:opacity-60"
+              className="body-2 text-status-info flex cursor-pointer items-center gap-x-2 disabled:cursor-not-allowed disabled:opacity-60"
               onClick={() => resendOtp({ email: signupData.email })}
             >
               <RxCountdownTimer />
