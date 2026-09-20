@@ -43,9 +43,6 @@ export interface SignupResponse extends ApiEnvelope {
 }
 
 export interface LoginResponse extends ApiEnvelope {
-  // Echoed alongside the httpOnly cookie only for the legacy auth bridge.
-  // Drop from the server response once the last Bearer call site is migrated.
-  token: string;
   user: AuthUser;
 }
 
