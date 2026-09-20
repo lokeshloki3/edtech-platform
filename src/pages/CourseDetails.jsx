@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom';
-import { buyCourse } from '../services/operations/studentPaymentAPI';
-import { fetchCourseDetails } from "../services/operations/courseDetailsAPI";
 import Error from "./Error";
 import GetAvgRating from '../utils/avgRating';
 import RatingStars from "../components/common/RatingStars";
@@ -17,46 +15,33 @@ import CourseDetailsCard from '../components/core/Course/CourseDetailsCard';
 import Footer from "../components/common/Footer";
 import ReactMarkdown from 'react-markdown';
 import CourseAccordionBar from '../components/core/Course/CourseAccordionBar';
+import { useCourseDetails } from '@/hooks/use-course-query';
+import { useBuyCourse } from '@/hooks/use-payment-query';
+import { useAuthStore } from '@/store/auth.store';
 
 const CourseDetails = () => {
 
-  const { user } = useSelector((state) => state.profile);
-  const { token } = useSelector((state) => state.auth);
+  const user = useAuthStore((s) => s.user);
+  const isLoggedIn = useAuthStore((s) => s.status === "authenticated");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { courseId } = useParams();
-  const [courseData, setCourseData] = useState(null);
-  const { loading } = useSelector((state) => state.profile);
+  const { data: courseData, isLoading: loading, isError } = useCourseDetails(courseId);
+  const { mutate: buyCourse, isPending: paymentLoading } = useBuyCourse();
   const [avgReviewCount, setAvgReviewCount] = useState(0);
   const [confirmationModal, setConfirmationModal] = useState(null);
   const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
   const [isActive, setIsActive] = useState(Array(0));
-  const { paymentLoading } = useSelector((state) => state.course);
   const { cart } = useSelector((state) => state.cart || { cart: [] });
 
   useEffect(() => {
-    const getCourseFullDetails = async () => {
-      try {
-        const result = await fetchCourseDetails(courseId);
-        // console.log("Printing CourseData-> ", result);
-        setCourseData(result);
-      }
-      catch (error) {
-        // console.log("Could not fetch course details");
-      }
-    }
-    getCourseFullDetails();
-
-  }, [courseId]);
-
-  useEffect(() => {
-    const count = GetAvgRating(courseData?.data?.courseDetails?.ratingAndReviews);
+    const count = GetAvgRating(courseData?.courseDetails?.ratingAndReviews);
     setAvgReviewCount(count);
   }, [courseData]);
 
   useEffect(() => {
     let lectures = 0;
-    courseData?.data?.courseDetails?.courseContent?.forEach((sec) => {
+    courseData?.courseDetails?.courseContent?.forEach((sec) => {
       lectures += sec.subSection.length || 0
     })
     setTotalNoOfLectures(lectures);
@@ -72,12 +57,11 @@ const CourseDetails = () => {
     )
   }
 
-  if (!courseData.success) {
+  if (isError) {
     return <Error />
   }
 
   const {
-    _id: course_id,
     courseName,
     courseDescription,
     thumbnail,
@@ -88,14 +72,14 @@ const CourseDetails = () => {
     instructor,
     studentsEnrolled,
     createdAt,
-  } = courseData.data?.courseDetails;
+  } = courseData.courseDetails;
 
   const isCourseInCart = cart?.some((item) => item._id === courseId);
 
   const handleBuyCourse = () => {
     // if user logged then only he can buy courses
-    if (token) {
-      buyCourse(token, [courseId], user, navigate, dispatch);
+    if (isLoggedIn) {
+      buyCourse([courseId]);
       return;
     }
     setConfirmationModal({
@@ -113,8 +97,8 @@ const CourseDetails = () => {
       toast.error("You are an Instructor. You can't buy a course.");
       return;
     }
-    if (token) {
-      dispatch(addToCart(courseData?.data?.courseDetails));
+    if (isLoggedIn) {
+      dispatch(addToCart(courseData?.courseDetails));
       return;
     }
     setConfirmationModal({
