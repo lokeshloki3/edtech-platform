@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
 import { sidebarLinks } from '../../../data/dashboard-links'
 import SidebarLink from './SidebarLink';
 import { VscSignOut } from 'react-icons/vsc';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../common/ConfirmationModal';
 import { useLogout } from "@/hooks/use-auth-query"
+import { useAuthStore } from '@/store/auth.store';
 
 const Sidebar = () => {
-    const { user, loading: profileLoading } = useSelector((state) => state.profile);
-    const { loading: authLoading } = useSelector((state) => state.auth);
+    const user = useAuthStore((s) => s.user);
+    const status = useAuthStore((s) => s.status);
     const { mutate: logout } = useLogout();
     const navigate = useNavigate();
 
     const [confirmationModal, setConfirmationModal] = useState(null)
 
-    if (profileLoading || authLoading) {
+    if (status === 'pending') {
         return (
             <div className='grid h-[calc(100vh-3.5rem)] min-w-[220px] items-center border-r-[1px] border-r-richblack-700 bg-global-bg-surface'>
                 <div className='spinner'></div>

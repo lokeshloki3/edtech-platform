@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
-const RequirementsField = ({ name, label, register, setValue, errors, getValues, }) => {
+const RequirementsField = ({ name, label, register, setValue, errors }) => {
 
     const [requirement, setRequirement] = useState("");
     const [requirementsList, setRequirementsList] = useState([]);

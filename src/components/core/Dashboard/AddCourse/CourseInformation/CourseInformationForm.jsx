@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { HiOutlineCurrencyRupee } from "react-icons/hi"
 import ChipInput from './ChipInput';
-import { addCourseDetails, editCourseDetails, fetchCourseCategories, } from "../../../../../services/operations/courseDetailsAPI"
+import { useCourseCategories, useCreateCourse, useEditCourse } from "@/hooks/use-course-query"
 import { setCourse, setStep } from "../../../../../slices/courseSlice"
 import { COURSE_STATUS } from "../../../../../utils/constants"
 import Upload from '../Upload';
@@ -23,22 +23,13 @@ const CourseInformationForm = () => {
   } = useForm();
 
   const [loading, setLoading] = useState(false);
-  const [courseCategories, setCourseCategories] = useState([])
   const { course, editCourse } = useSelector((state) => state.course);
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  const { data: courseCategories = [], isLoading: loadingCategories } = useCourseCategories();
+  const { mutateAsync: createCourse } = useCreateCourse();
+  const { mutateAsync: updateCourse } = useEditCourse();
 
   useEffect(() => {
-    const getCategories = async () => {
-      setLoading(true);
-      const categories = await fetchCourseCategories();
-      // console.log("categories", categories);
-      if (categories?.length > 0) {
-        setCourseCategories(categories);
-      }
-      setLoading(false);
-    }
-    getCategories();
 
     // if form is in edit mode
     if (editCourse) {
@@ -119,11 +110,14 @@ const CourseInformationForm = () => {
         }
         // console.log("Edit Form data: ", formData);
         setLoading(true);
-        const result = await editCourseDetails(formData, token)
-        setLoading(false);
-        if (result) {
+        try {
+          const result = await updateCourse(formData);
           dispatch(setStep(2));
           dispatch(setCourse(result));
+        } catch {
+          // the mutation hook has already surfaced the error
+        } finally {
+          setLoading(false);
         }
       } else {
         toast.error("No changes made to the form");
@@ -143,12 +137,15 @@ const CourseInformationForm = () => {
     formData.append("instructions", JSON.stringify(data.courseRequirements))
     formData.append("thumbnailImage", data.courseImage)
     setLoading(true);
-    const result = await addCourseDetails(formData, token)
-    if (result) {
+    try {
+      const result = await createCourse(formData);
       dispatch(setStep(2));
       dispatch(setCourse(result));
+    } catch {
+      // the mutation hook has already surfaced the error
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -233,7 +230,7 @@ const CourseInformationForm = () => {
           <option value=" disabled">
             Choose a Category
           </option>
-          {!loading && courseCategories?.map((category, index) => (
+          {!loadingCategories && courseCategories?.map((category, index) => (
             <option key={index} value={category?._id}>
               {category?.name}
             </option>

@@ -4,7 +4,7 @@ import Upload from "../Upload";
 import { useForm } from 'react-hook-form';
 import IconBtn from '../../../../common/IconBtn';
 import toast from 'react-hot-toast';
-import { createSubSection, updateSubSection } from '../../../../../services/operations/courseDetailsAPI';
+import { useCreateSubSection, useUpdateSubSection } from '@/hooks/use-course-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCourse } from '../../../../../slices/courseSlice';
 
@@ -17,7 +17,8 @@ const SubSectionModal = ({
 }) => {
 
     const [loading, setLoading] = useState(false);
-    const { token } = useSelector((state) => state.auth);
+    const { mutateAsync: createSubSection } = useCreateSubSection();
+    const { mutateAsync: updateSubSection } = useUpdateSubSection();
     const dispatch = useDispatch();
     const { course } = useSelector((state) => state.course);
 
@@ -75,17 +76,20 @@ const SubSectionModal = ({
         formData.append("description", data.lectureDesc);
         formData.append("video", data.lectureVideo);
         setLoading(true);
-        const result = await createSubSection(formData, token)
-        if (result) {
-            // update the structure of course
+        try {
+            const result = await createSubSection(formData);
+            // the endpoint answers with the section, so the course is rebuilt
+            // around it before it goes back into the slice
             const updatedCourseContent = course.courseContent.map((section) =>
                 section._id === modalData ? result : section
             )
-            const updatedCourse = { ...course, courseContent: updatedCourseContent }
-            dispatch(setCourse(updatedCourse));
+            dispatch(setCourse({ ...course, courseContent: updatedCourseContent }));
+            setModalData(null);
+        } catch {
+            // the mutation hook has already surfaced the error
+        } finally {
+            setLoading(false);
         }
-        setModalData(null);
-        setLoading(false);
     }
 
     // handle the editing of subsection
@@ -106,19 +110,18 @@ const SubSectionModal = ({
             formData.append("video", currentValues.lectureVideo);
         }
         setLoading(true);
-        const result = await updateSubSection(formData, token);
-
-        if (result) {
-            // console.log("result", result);
-            // update the structure of course
+        try {
+            const result = await updateSubSection(formData);
             const updatedCourseContent = course.courseContent.map((section) =>
                 section._id === modalData.sectionId ? result : section
             )
-            const updatedCourse = { ...course, courseContent: updatedCourseContent }
-            dispatch(setCourse(updatedCourse));
+            dispatch(setCourse({ ...course, courseContent: updatedCourseContent }));
+            setModalData(null);
+        } catch {
+            // the mutation hook has already surfaced the error
+        } finally {
+            setLoading(false);
         }
-        setModalData(null);
-        setLoading(false);
     }
 
     return (

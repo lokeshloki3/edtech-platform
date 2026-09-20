@@ -6,7 +6,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiFillCaretDown } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 import ConfirmationModal from "../../../../common/ConfirmationModal";
-import { deleteSection, deleteSubSection } from '../../../../../services/operations/courseDetailsAPI';
+import { useDeleteSection, useDeleteSubSection } from '@/hooks/use-course-query';
 import { setCourse } from '../../../../../slices/courseSlice';
 import SubSectionModal from './SubSectionModal';
 
@@ -14,37 +14,38 @@ const NestedView = ({ handleChangeEditSectionName }) => {
 
   const { course } = useSelector((state) => state.course);
   const [confirmationModal, setConfirmationModal] = useState(null);
-  const { token } = useSelector((state) => state.auth);
+  const { mutate: deleteSection } = useDeleteSection();
+  const { mutate: deleteSubSection } = useDeleteSubSection();
   const dispatch = useDispatch();
   const [viewSubSection, setViewSubSection] = useState(null);
   const [editSubSection, setEditSubSection] = useState(null);
   const [addSubSection, setAddSubSection] = useState(null);
 
-  const handleDeleleSection = async (sectionId) => {
-    const result = await deleteSection({
-      sectionId,
-      courseId: course._id,
-      token,
-    })
-
-    if (result) {
-      dispatch(setCourse(result));
-    }
-    setConfirmationModal(null);
+  const handleDeleleSection = (sectionId) => {
+    deleteSection(
+      { sectionId, courseId: course._id },
+      {
+        onSuccess: (result) => dispatch(setCourse(result)),
+        onSettled: () => setConfirmationModal(null),
+      }
+    );
   }
 
-  const handleDeleteSubSection = async (subSectionId, sectionId) => {
-    const result = await deleteSubSection({ subSectionId, sectionId, token });
-
-    if (result) {
-      // update the structure of course as we cannot render course directly when subSection changes
-      const updatedCourseContent = course.courseContent.map((section) =>
-        section._id === sectionId ? result : section
-      )
-      const updatedCourse = { ...course, courseContent: updatedCourseContent };
-      dispatch(setCourse(updatedCourse));
-    }
-    setConfirmationModal(null);
+  const handleDeleteSubSection = (subSectionId, sectionId) => {
+    deleteSubSection(
+      { subSectionId, sectionId },
+      {
+        onSuccess: (result) => {
+          // deleteSubSection answers with the section, not the course, so the
+          // course is rebuilt around it before it goes back into the slice.
+          const updatedCourseContent = course.courseContent.map((section) =>
+            section._id === sectionId ? result : section
+          );
+          dispatch(setCourse({ ...course, courseContent: updatedCourseContent }));
+        },
+        onSettled: () => setConfirmationModal(null),
+      }
+    );
   }
 
   return (

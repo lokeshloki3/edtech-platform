@@ -59,7 +59,7 @@ export type SubSectionFormPayload = z.infer<typeof subSectionFormSchema>;
 
 export const lectureCompletionSchema = z.object({
   courseId: z.string().min(1, 'Course id is missing'),
-  subsectionId: z.string().min(1, 'Lecture id is missing'),
+  subSectionId: z.string().min(1, 'Lecture id is missing'),
 });
 
 export type LectureCompletionPayload = z.infer<typeof lectureCompletionSchema>;

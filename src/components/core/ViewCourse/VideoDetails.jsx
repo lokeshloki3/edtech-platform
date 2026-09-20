@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AiFillPlayCircle } from "react-icons/ai";
 import IconBtn from "../../common/IconBtn";
 import { updateCompletedLectures } from "../../../slices/viewCourseSlice";
-import { markLectureAsComplete } from '../../../services/operations/courseDetailsAPI';
+import { useMarkLectureAsComplete } from '@/hooks/use-course-query';
 
 const VideoDetails = () => {
 
@@ -15,8 +15,7 @@ const VideoDetails = () => {
   const [videoEnded, setVideoEnded] = useState(false);
   const location = useLocation();
   const playerRef = useRef(null); // to change DOM in real time
-  const [loading, setLoading] = useState(false);
-  const { token } = useSelector((state) => state.auth);
+  const { mutate: markLectureComplete, isPending: completing } = useMarkLectureAsComplete();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [playing, setPlaying] = useState(false);
@@ -137,19 +136,13 @@ const VideoDetails = () => {
     }
   }
 
-  const handleLectureCompletion = async () => {
-    setLoading(true);
-    // Course Progress
-    const response = await markLectureAsComplete({ courseId: courseId, subSectionId: subSectionId }, token);
-    // state update
-    if (response) {
-      dispatch(updateCompletedLectures(subSectionId));
-    }
-    setLoading(false);
+  const handleLectureCompletion = () => {
+    markLectureComplete(
+      { courseId, subSectionId },
+      { onSuccess: () => dispatch(updateCompletedLectures(subSectionId)) }
+    );
   }
 
-  // console.log('Video Ended State:', videoEnded);
-  console.log('Video Data:', videoData);
 
   return (
     <div className='flex flex-col gap-5 text-white'>
@@ -180,15 +173,15 @@ const VideoDetails = () => {
               <div className="absolute inset-0 z-[100] grid place-content-center bg-black/70">
                 {!completedLectures.includes(subSectionId) && (
                   <IconBtn
-                    disabled={loading}
+                    disabled={completing}
                     onclick={() => handleLectureCompletion()}
-                    text={!loading ? 'Mark As Completed' : 'Loading...'}
+                    text={!completing ? 'Mark As Completed' : 'Loading...'}
                     customClasses="text-xl max-w-max px-4 mx-auto"
                   />
                 )}
 
                 <IconBtn
-                  disabled={loading}
+                  disabled={completing}
                   onclick={() => {
                     if (playerRef?.current) {
                       playerRef.current?.seekTo(0);
@@ -203,7 +196,7 @@ const VideoDetails = () => {
                 <div className='mt-5 flex min-w-[250px] justify-center gap-x-4 text-xl'>
                   {!isFirstVideo() && (
                     <button
-                      disabled={loading}
+                      disabled={completing}
                       onClick={goToPrevVideo}
                       className="blackButton"
                     >
@@ -213,7 +206,7 @@ const VideoDetails = () => {
 
                   {!isLastVideo() && (
                     <button
-                      disabled={loading}
+                      disabled={completing}
                       onClick={goToNextVideo}
                       className="blackButton"
                     >

@@ -1,12 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import IconBtn from '../../common/IconBtn';
 import { RiEditBoxLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { formattedDate } from "../../../utils/dateFormatter"
+import { useAuthStore } from '@/store/auth.store';
 
 const MyProfile = () => {
-    const { user } = useSelector((state) => state.profile);
+    const user = useAuthStore((s) => s.user);
     const navigate = useNavigate();
 
     return (

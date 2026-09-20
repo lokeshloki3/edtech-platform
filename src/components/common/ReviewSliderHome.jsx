@@ -1,38 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import "swiper/css"
 import "swiper/css/free-mode"
 import "swiper/css/pagination"
 import { FreeMode, Pagination, Autoplay } from "swiper/modules"
-import { apiConnector } from '../../services/apiConnector'
-import { ratingsEndpoints } from '../../services/apis'
+import { useCourseReviews } from '@/hooks/use-course-query'
 import Rating from 'react-rating';
 import { FaStar } from "react-icons/fa";
 
 const ReviewSliderHome = () => {
 
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: reviews = [], isLoading: loading } = useCourseReviews();
   const truncateLength = 150;
-
-  useEffect(() => {
-    const fetchAllReviews = async () => {
-      try {
-        const { data } = await apiConnector("GET", ratingsEndpoints.REVIEWS_DETAILS_API);
-        // console.log("Logging response in rating", data);
-
-        if (data?.success) {
-          setReviews(data?.data);
-        }
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllReviews();
-  }, []);
 
   // console.log("Printing Reviews", reviews);
 

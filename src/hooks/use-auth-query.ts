@@ -14,7 +14,6 @@ import {
   signup,
 } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth.store';
-import { clearLegacyAuth, syncLegacyAuth } from '@/store/legacy-auth-bridge';
 import type {
   AuthUser,
   LoginResponse,
@@ -45,7 +44,6 @@ export function useCurrentUser() {
     queryFn: async () => {
       const user = await getCurrentUser();
       setUser(user);
-      syncLegacyAuth({ user });
       return user;
     },
     staleTime: 1000 * 60 * 5,
@@ -63,7 +61,6 @@ export function useLogin() {
     mutationFn: (payload) => login(payload),
     onSuccess: (data) => {
       setUser(data.user);
-      syncLegacyAuth({ token: data.token, user: data.user });
       queryClient.setQueryData(authKeys.currentUser(), data.user);
       showCustomSuccessToast({ message: data.message || 'Logged in successfully' });
     },
@@ -105,7 +102,6 @@ export function useLogout() {
     // A failed logout call must not strand the user in a half-authenticated UI.
     onSettled: () => {
       clearAuth();
-      clearLegacyAuth();
       queryClient.removeQueries({ queryKey: authKeys.all });
     },
   });

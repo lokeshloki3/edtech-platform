@@ -6,6 +6,7 @@ import { FaShareSquare } from "react-icons/fa";
 import toast from 'react-hot-toast';
 import copy from 'copy-to-clipboard';
 import { ACCOUNT_TYPE } from "../../../utils/constants";
+import { useAuthStore } from '@/store/auth.store';
 
 const CourseDetailsCard = ({
     course,
@@ -14,7 +15,7 @@ const CourseDetailsCard = ({
     handleAddToCart
 }) => {
 
-    const { user } = useSelector((state) => state.profile);
+    const user = useAuthStore((s) => s.user);
     const navigate = useNavigate();
     const { cart } = useSelector((state) => state.cart || { cart: [] });
 

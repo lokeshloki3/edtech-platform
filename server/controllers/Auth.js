@@ -213,16 +213,17 @@ exports.login = async (req, res) => {
             const token = jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: SESSION_TTL_SECONDS,
             });
-            // Save token to user document in database
-            user.token = token;
+            // The JWT is never attached to the returned user either - with the
+            // body stripped, user.token would have been the remaining way for a
+            // bearer credential to reach JS. It was never persisted here anyway
+            // (no save() follows), so dropping it changes nothing server-side.
             user.password = undefined;
 
-            // The httpOnly cookie is the session. `token` is still echoed in the
-            // body only for the legacy Bearer-header call sites on the client;
-            // remove it from this response once those are all migrated.
+            // The httpOnly cookie is the session. The token is deliberately not
+            // echoed in the body: nothing on the client reads it any more, and
+            // returning it would put a bearer credential back into JS reach.
             res.cookie(COOKIE_NAME, token, getAuthCookieOptions()).status(200).json({
                 success: true,
-                token,
                 user,
                 message: "Logged in successfully",
             })

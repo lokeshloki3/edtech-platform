@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
-import { apiConnector } from '../../../services/apiConnector';
 import CountryCode from "../../../data/countrycode.json";
-import { contactusEndpoint } from "../../../services/apis";
-import toast from 'react-hot-toast';
+import { useSubmitContactForm } from "@/hooks/use-contact-query";
 
 const ContactUsForm = () => {
-    const [loading, setLoading] = useState(false);
+    const { mutate: sendMessage, isPending: loading } = useSubmitContactForm();
     const {
         register,
         handleSubmit,
@@ -14,25 +12,8 @@ const ContactUsForm = () => {
         formState: { errors, isSubmitSuccessful },
     } = useForm();
 
-    const submitContactForm = async (data) => {
-        // console.log("Form Data - ", data);
-        try {
-            setLoading(true);
-            const response = await apiConnector(
-                "POST",
-                contactusEndpoint.CONTACT_US_API,
-                data
-            )
-            console.log("Email Response -", response);
-            if (response.data.success) {
-                toast.success("Email sent successfully");
-            }
-            setLoading(false);
-        } catch (error) {
-            console.log("ERROR MESSAGE - ", error.message)
-            setLoading(false)
-            toast.error(error.message);
-        }
+    const submitContactForm = (data) => {
+        sendMessage(data);
     }
 
     useEffect(() => {

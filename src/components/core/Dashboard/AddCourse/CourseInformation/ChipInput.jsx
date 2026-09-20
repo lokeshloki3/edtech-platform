@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { MdClose } from "react-icons/md"
 import { useSelector } from 'react-redux';
 
-const ChipInput = ({ label, name, placeholder, register, errors, setValue, getValues, }) => {
+const ChipInput = ({ label, name, placeholder, register, errors, setValue }) => {
 
     const [chips, setChips] = useState([]);
 

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Link, matchPath, useLocation, useNavigate } from "react-router-dom"
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { NavbarLinks } from "../../data/navbar-links"
-import { useSelector } from "react-redux"
-import { apiConnector } from "../../services/apiConnector"
-import { categories } from "../../services/apis"
 import { BsChevronDown } from "react-icons/bs"
 import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai"
 import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropdown from "../core/Auth/ProfileDropDown"
 import { sidebarLinks } from '../../data/dashboard-links'
+import { useSelector } from "react-redux"
 import { useLogout } from "@/hooks/use-auth-query"
+import { useCourseCategories } from "@/hooks/use-course-query"
+import { useAuthStore } from "@/store/auth.store"
 import { VscSignOut } from "react-icons/vsc"
 import { RxCross2 } from "react-icons/rx"
 
@@ -34,34 +34,17 @@ import { RxCross2 } from "react-icons/rx"
 // ];
 
 const Navbar = () => {
-  const { token } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.profile);
+  const isLoggedIn = useAuthStore((s) => s.status === "authenticated");
+  const user = useAuthStore((s) => s.user);
   const { totalItems } = useSelector((state) => state.cart);
   const location = useLocation();
 
-  const [subLinks, setSubLinks] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { mutate: logout } = useLogout();
   const navigate = useNavigate();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoading(true);
-      try {
-        const result = await apiConnector("GET", categories.CATEGORIES_API);
-        // console.log("Printing Sublinks result:", result);
-        // setSubLinks(result.data.allCategories);
-        setSubLinks(result.data.data);
-      } catch (error) {
-        // console.log("Could not fetch Categories", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchCategories();
-  }, [])
+  const { data: subLinks = [], isLoading: loading } = useCourseCategories();
 
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname);
@@ -157,7 +140,7 @@ const Navbar = () => {
             )
           }
           {
-            token === null && (
+            !isLoggedIn && (
               <Link to="/login">
                 <button className='rounded-[8px] cursor-pointer border border-global-stroke-primary bg-global-bg-surface px-[12px] py-[8px] text-global-text-secondary'>
                   Log in
@@ -166,7 +149,7 @@ const Navbar = () => {
             )
           }
           {
-            token === null && (
+            !isLoggedIn && (
               <Link to="/signup">
                 <button className='rounded-[8px] cursor-pointer border border-global-stroke-primary bg-global-bg-surface px-[12px] py-[8px] text-global-text-secondary'>
                   Sign Up
@@ -175,7 +158,7 @@ const Navbar = () => {
             )
           }
           {
-            token !== null && <ProfileDropdown />
+            isLoggedIn && <ProfileDropdown />
           }
         </div>
         <button
@@ -279,7 +262,7 @@ const Navbar = () => {
 
             {/* Add login/signup/dashboard buttons */}
             <div className="flex flex-col gap-2 mt-2">
-              {token === null ? (
+              {!isLoggedIn ? (
                 <>
                   <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
                     <button className="w-full rounded border border-global-stroke-primary bg-global-bg-surface px-4 py-2 text-left text-global-text-secondary">
