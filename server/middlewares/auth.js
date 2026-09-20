@@ -10,9 +10,15 @@ const User = require("../models/User");
 exports.auth = async (req, res, next) => {
     try {
         // extract token
+        // The httpOnly cookie is the primary credential. The Authorization
+        // header is still accepted for the not-yet-migrated client call sites.
+        // `req.header(...)` is undefined when the header is absent, so it has to
+        // be guarded — calling .replace() on it threw and surfaced as a 500
+        // "something went wrong" instead of a plain 401.
+        const authHeader = req.header("Authorization");
         const token = req.cookies.token
             || req.body.token
-            || req.header("Authorization").replace("Bearer ", "");
+            || (authHeader ? authHeader.replace("Bearer ", "") : null);
 
         // if token missing, then return response
         if (!token) {
@@ -25,7 +31,6 @@ exports.auth = async (req, res, next) => {
         // verify the token
         try {
             const decode = jwt.verify(token, process.env.JWT_SECRET);
-            console.log(decode);
             req.user = decode;
         } catch (error) {
             // verification issue
