@@ -57,18 +57,18 @@ const Catalog = () => {
   return (
     <div>
       {/* Hero Section */}
-      <div className='box-content bg-richblack-800 px-4'>
+      <div className='box-content bg-global-bg-surface px-4'>
         <div className='mx-auto flex min-h-[260px] max-w-(--max-content-tab) lg:max-w-(--max-content) flex-col justify-center gap-4'>
-          <p className='text-sm text-richblack-300'>
+          <p className='text-sm text-global-text-tertiary'>
             {`Home / Catalog / `}
-            <span className='text-yellow-25'>
+            <span className='text-global-highlight-text'>
               {catalogPageData?.data?.selectedCategory?.name}
             </span>
           </p>
-          <p className='text-3xl text-richblack-5'>
+          <p className='text-3xl text-global-text-primary'>
             {catalogPageData?.data?.selectedCategory?.name}
           </p>
-          <p className='max-w-[870px] text-richblack-200'>
+          <p className='max-w-[870px] text-global-text-tertiary'>
             {catalogPageData?.data?.selectedCategory?.description}
           </p>
         </div>
@@ -81,8 +81,8 @@ const Catalog = () => {
           {/* Add logic here to also show New and Popular */}
           <p
             className={`px-4 py-2 ${active === 1
-              ? "border-b border-b-yellow-25 text-yellow-25"
-              : "text-richblack-50"
+              ? "border-b border-b-yellow-25 text-global-highlight-text"
+              : "text-global-text-secondary"
               } cursor-pointer`}
             onClick={() => setActive(1)}
           >
@@ -90,8 +90,8 @@ const Catalog = () => {
           </p>
           <p
             className={`px-4 py-2 ${active === 2
-              ? "border-b border-b-yellow-25 text-yellow-25"
-              : "text-richblack-50"
+              ? "border-b border-b-yellow-25 text-global-highlight-text"
+              : "text-global-text-secondary"
               } cursor-pointer`}
             onClick={() => setActive(2)}
           >
