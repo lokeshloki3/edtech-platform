@@ -20,7 +20,7 @@ const InstructorSection = () => {
                         Become an
                         <HighlightText text={"Instructor"} />
                     </div>
-                    <div className="font-medium text-[16px] w-full md:w-[80%] text-richblack-300">
+                    <div className="font-medium text-[16px] w-full md:w-[80%] text-global-text-tertiary">
                         Instructors from around the world teach millions of students on StudySphere. We provide the tools and skills to teach what you love.
                     </div>
                     <div className="w-fit mx-auto">
