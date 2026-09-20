@@ -4,6 +4,8 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+@import './typography.css';
+
 /* ---------------------------------------------------------------------------
    SEMANTIC TOKENS
    Layer 2 of the two-layer token system. These name a *role* ("the background
