@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Link, matchPath, useLocation, useNavigate } from "react-router-dom"
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { NavbarLinks } from "../../data/navbar-links"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { apiConnector } from "../../services/apiConnector"
 import { categories } from "../../services/apis"
 import { BsChevronDown } from "react-icons/bs"
@@ -10,7 +10,7 @@ import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai"
 import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropdown from "../core/Auth/ProfileDropDown"
 import { sidebarLinks } from '../../data/dashboard-links'
-import { logout } from "../../services/operations/authAPI"
+import { useLogout } from "@/hooks/use-auth-query"
 import { VscSignOut } from "react-icons/vsc"
 import { RxCross2 } from "react-icons/rx"
 
@@ -42,7 +42,7 @@ const Navbar = () => {
   const [subLinks, setSubLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const dispatch = useDispatch();
+  const { mutate: logout } = useLogout();
   const navigate = useNavigate();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
 
@@ -295,7 +295,7 @@ const Navbar = () => {
               ) : (
                 <div
                   onClick={() => {
-                    dispatch(logout(navigate))
+                    logout(undefined, { onSettled: () => navigate("/") })
                     setIsMobileMenuOpen(false)
                   }}
                   className="flex w-full gap-1 items-center text-richblack-25 hover:text-yellow-25 cursor-pointer"
