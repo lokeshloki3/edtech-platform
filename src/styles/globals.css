@@ -24,12 +24,19 @@
   --global-primary: var(--yellow-50);
   --global-bg: var(--richblack-900);
   --global-bg-surface: var(--richblack-800);
+  --global-surface-muted: var(--richblack-600);
   --global-text-primary: var(--richblack-5);
-  --global-text-secondary: var(--richblack-100);
+  --global-text-secondary: var(--richblack-50);
   --global-text-tertiary: var(--richblack-300);
+  --global-text-disabled: var(--richblack-500);
+  --global-text-inverse: var(--richblack-900);
   --global-highlight-text: var(--yellow-50);
+  --global-highlight-text-muted: var(--yellow-100);
+  --global-highlight-surface: var(--yellow-900);
+  --global-highlight-surface-strong: var(--yellow-100);
   --global-stroke-primary: var(--richblack-700);
   --global-stroke-secondary: var(--richblack-600);
+  --global-stroke-tertiary: var(--richblack-300);
   --global-card-surface: var(--richblack-800);
   --global-card-surface-2: var(--richblack-700);
 
@@ -53,6 +60,12 @@
   --button-secondary-content-active: var(--richblack-5);
   --button-secondary-stroke-disabled: var(--richblack-700);
   --button-secondary-content-disabled: var(--richblack-400);
+
+  /* Tertiary button - the grey Cancel/Back action in modals and course forms */
+  --button-tertiary-bg-default: var(--richblack-300);
+  --button-tertiary-content-default: var(--richblack-900);
+  --button-tertiary-bg-hover: var(--richblack-200);
+  --button-tertiary-bg-active: var(--richblack-400);
 
   /* Input field — the `.form-style` of the legacy stylesheet */
   --input-field-bg-default: var(--richblack-700);
@@ -83,21 +96,32 @@
 
   /* Status */
   --status-success: var(--caribbeangreen-100);
+  --status-success-surface: var(--caribbeangreen-700);
+  --status-success-stroke: var(--caribbeangreen-300);
   --status-error: var(--pink-200);
+  --status-error-surface: var(--pink-900);
+  --status-error-stroke: var(--pink-700);
   --status-warning: var(--yellow-50);
-  --status-info: var(--blue-200);
+  --status-info: var(--blue-100);
 }
 
 :root[data-theme='light'] {
   --global-primary: var(--yellow-100);
   --global-bg: var(--richblack-5);
   --global-bg-surface: var(--white);
+  --global-surface-muted: var(--richblack-25);
   --global-text-primary: var(--richblack-900);
   --global-text-secondary: var(--richblack-600);
   --global-text-tertiary: var(--richblack-400);
+  --global-text-disabled: var(--richblack-200);
+  --global-text-inverse: var(--richblack-5);
   --global-highlight-text: var(--yellow-400);
+  --global-highlight-text-muted: var(--yellow-300);
+  --global-highlight-surface: var(--brown-5);
+  --global-highlight-surface-strong: var(--brown-50);
   --global-stroke-primary: var(--richblack-25);
   --global-stroke-secondary: var(--richblack-50);
+  --global-stroke-tertiary: var(--richblack-100);
   --global-card-surface: var(--white);
   --global-card-surface-2: var(--richblack-5);
 
@@ -119,6 +143,11 @@
   --button-secondary-content-active: var(--richblack-900);
   --button-secondary-stroke-disabled: var(--richblack-25);
   --button-secondary-content-disabled: var(--richblack-200);
+
+  --button-tertiary-bg-default: var(--richblack-25);
+  --button-tertiary-content-default: var(--richblack-900);
+  --button-tertiary-bg-hover: var(--richblack-50);
+  --button-tertiary-bg-active: var(--richblack-100);
 
   --input-field-bg-default: var(--white);
   --input-field-stroke-default: var(--richblack-25);
@@ -146,7 +175,11 @@
   --icon-button-content-disabled: var(--richblack-100);
 
   --status-success: var(--caribbeangreen-300);
+  --status-success-surface: var(--caribbeangreen-5);
+  --status-success-stroke: var(--caribbeangreen-100);
   --status-error: var(--pink-300);
+  --status-error-surface: var(--pink-5);
+  --status-error-stroke: var(--pink-100);
   --status-warning: var(--yellow-300);
   --status-info: var(--blue-300);
 }
@@ -397,12 +430,19 @@
   --color-global-primary: var(--global-primary);
   --color-global-bg: var(--global-bg);
   --color-global-bg-surface: var(--global-bg-surface);
+  --color-global-surface-muted: var(--global-surface-muted);
   --color-global-text-primary: var(--global-text-primary);
   --color-global-text-secondary: var(--global-text-secondary);
   --color-global-text-tertiary: var(--global-text-tertiary);
+  --color-global-text-disabled: var(--global-text-disabled);
+  --color-global-text-inverse: var(--global-text-inverse);
   --color-global-highlight-text: var(--global-highlight-text);
+  --color-global-highlight-text-muted: var(--global-highlight-text-muted);
+  --color-global-highlight-surface: var(--global-highlight-surface);
+  --color-global-highlight-surface-strong: var(--global-highlight-surface-strong);
   --color-global-stroke-primary: var(--global-stroke-primary);
   --color-global-stroke-secondary: var(--global-stroke-secondary);
+  --color-global-stroke-tertiary: var(--global-stroke-tertiary);
   --color-global-card-surface: var(--global-card-surface);
   --color-global-card-surface-2: var(--global-card-surface-2);
 
@@ -424,6 +464,11 @@
   --color-button-secondary-content-active: var(--button-secondary-content-active);
   --color-button-secondary-stroke-disabled: var(--button-secondary-stroke-disabled);
   --color-button-secondary-content-disabled: var(--button-secondary-content-disabled);
+
+  --color-button-tertiary-bg-default: var(--button-tertiary-bg-default);
+  --color-button-tertiary-content-default: var(--button-tertiary-content-default);
+  --color-button-tertiary-bg-hover: var(--button-tertiary-bg-hover);
+  --color-button-tertiary-bg-active: var(--button-tertiary-bg-active);
 
   --color-input-field-bg-default: var(--input-field-bg-default);
   --color-input-field-stroke-default: var(--input-field-stroke-default);
@@ -451,7 +496,11 @@
   --color-icon-button-content-disabled: var(--icon-button-content-disabled);
 
   --color-status-success: var(--status-success);
+  --color-status-success-surface: var(--status-success-surface);
+  --color-status-success-stroke: var(--status-success-stroke);
   --color-status-error: var(--status-error);
+  --color-status-error-surface: var(--status-error-surface);
+  --color-status-error-stroke: var(--status-error-stroke);
   --color-status-warning: var(--status-warning);
   --color-status-info: var(--status-info);
 }

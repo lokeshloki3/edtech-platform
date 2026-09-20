@@ -29,15 +29,15 @@ const RenderCartCourses = () => {
                 className="h-[148px] w-[220px] rounded-lg object-cover"
               />
               <div className="flex flex-col space-y-1">
-                <p className='text-lg font-medium text-richblack-5'>
+                <p className='text-lg font-medium text-global-text-primary'>
                   {course?.courseName}
                 </p>
-                <p className='text-sm text-richblack-300'>
+                <p className='text-sm text-global-text-tertiary'>
                   {course?.category?.name}
                 </p>
 
                 <div className='flex items-center gap-2'>
-                  <span className='text-yellow-5'>{GetAvgRating(course?.ratingAndReviews)}</span>
+                  <span className='text-global-highlight-text'>{GetAvgRating(course?.ratingAndReviews)}</span>
                   {/* <ReactStars
                     count={5}
                     value={course?.ratingAndReviews?.length}
@@ -54,7 +54,7 @@ const RenderCartCourses = () => {
                     fullSymbol={<FaStar className="text-[#ffd700]" />}
                   />
 
-                  <span className='text-richblack-400'>
+                  <span className='text-global-text-tertiary'>
                     {course?.ratingAndReviews?.length} Ratings
                   </span>
                 </div>
@@ -64,13 +64,13 @@ const RenderCartCourses = () => {
             <div className="flex flex-col items-end space-y-2">
               <button
                 onClick={() => dispatch(removeFromCart(course._id))}
-                className="flex items-center gap-x-1 rounded-md border border-richblack-600 bg-richblack-700 py-3 px-[12px] text-pink-200 cursor-pointer"
+                className="flex items-center gap-x-1 rounded-md border border-global-stroke-secondary bg-global-card-surface-2 py-3 px-[12px] text-status-error cursor-pointer"
               >
                 <RiDeleteBin6Line />
                 <span>Remove</span>
               </button>
 
-              <p className="mb-6 text-3xl font-medium text-yellow-100">
+              <p className="mb-6 text-3xl font-medium text-global-highlight-text-muted">
                 Rs {course?.price}
               </p>
             </div>

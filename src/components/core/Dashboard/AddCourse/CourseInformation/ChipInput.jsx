@@ -41,8 +41,8 @@ const ChipInput = ({ label, name, placeholder, register, errors, setValue, getVa
 
     return (
         <div className="flex flex-col space-y-2">
-            <label htmlFor={name} className="text-sm text-richblack-5">
-                {label} <sup className="text-pink-200">*</sup>
+            <label htmlFor={name} className="text-sm text-global-text-primary">
+                {label} <sup className="text-status-error">*</sup>
             </label>
 
             {/* Render the chips and input */}
@@ -50,7 +50,7 @@ const ChipInput = ({ label, name, placeholder, register, errors, setValue, getVa
                 {chips.map((chip, index) => (
                     <div
                         key={index}
-                        className="m-1 flex items-center rounded-full bg-yellow-400 px-2 py-1 text-sm text-richblack-5"
+                        className="m-1 flex items-center rounded-full bg-global-highlight-surface-strong px-2 py-1 text-sm text-global-text-primary"
                     >
                         {chip}
                         <button
@@ -73,7 +73,7 @@ const ChipInput = ({ label, name, placeholder, register, errors, setValue, getVa
                 />
             </div>
             {errors[name] && (
-                <span className="ml-2 text-xs tracking-wide text-pink-200">
+                <span className="ml-2 text-xs tracking-wide text-status-error">
                     {label} is required
                 </span>
             )}

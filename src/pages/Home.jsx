@@ -20,11 +20,11 @@ const Home = () => {
              items-center gap-8 text-white'>
                 <Link to={"/signup"}>
                     {/* group property of parent */}
-                    <div className='group mt-16 p-1 mx-auto rounded-full bg-richblack-800 font-bold
-                     text-richblack-200 drop-shadow-[0_1.5px_rgba(255,255,255,0.25)] transition-all 
+                    <div className='group mt-16 p-1 mx-auto rounded-full bg-global-bg-surface font-bold
+                     text-global-text-tertiary drop-shadow-[0_1.5px_rgba(255,255,255,0.25)] transition-all 
                      duration-200 hover:scale-95 hover:drop-shadow-none w-fit'>
                         <div className='flex items-center gap-2 rounded-full px-10 py-[5px] transition-all 
-                         duration-200 group-hover:bg-richblack-900'>
+                         duration-200 group-hover:bg-global-bg'>
                             <p>Become an Instructor</p>
                             <FaArrowRight />
                         </div>
@@ -34,7 +34,7 @@ const Home = () => {
                     Empower Your Future with
                     <HighlightText text={"Coding Skills"} />
                 </div>
-                <div className='-mt-4 w-[90%] text-center text-lg font-bold text-richblack-300'>
+                <div className='-mt-4 w-[90%] text-center text-lg font-bold text-global-text-tertiary'>
                     With our online coding courses, you can learn at your own pace, from anywhere in the
                     world, and get access to a wealth of resources, including hands-on projects, quizzes,
                     and personalized feedback from instructors.
@@ -83,7 +83,7 @@ const Home = () => {
                                 active: false,
                             }
                         }
-                        codeColor={"text-yellow-25"}
+                        codeColor={"text-global-highlight-text"}
                         codeblock={`<!DOCTYPE html>\n <html lang="en">\n<head>\n<title>This is myPage</title>\n</head>\n<body>\n<h1><a href="/">Header</a></h1>\n<nav> <a href="/one">One</a> <a href="/two">Two</a> <a href="/three">Three</a>\n</nav>\n</body>`}
                         backgroundGradient={<div className="codeblock1 absolute"></div>}
                     />
@@ -121,7 +121,7 @@ const Home = () => {
                 <ExploreMore />
             </div>
             {/* Section 2 */}
-            <div className='bg-puregreys-5 text-richblack-700'>
+            <div className='bg-puregreys-5 text-global-text-inverse'>
                 <div className='homepage_bg h-16 md:h-[310px]'>
                     <div className='w-11/12 max-w-(--max-content) flex flex-col items-center justify-between gap-5 mx-auto'>
                         <div className='h-10 md:h-[150px]'></div>
@@ -162,7 +162,7 @@ const Home = () => {
                 </div>
             </div>
             {/* Section 3 */}
-            <div className='w-11/12 my-20 mx-auto flex flex-col max-w-(--max-content) items-center justify-between gap-8 bg-richblack-900 text-white'>
+            <div className='w-11/12 my-20 mx-auto flex flex-col max-w-(--max-content) items-center justify-between gap-8 bg-global-bg text-white'>
                 <InstructorSection />
                 
                 <h2 className='text-center text-3xl md:text-4xl font-semibold mt-10'>Review from Other Learners</h2>

@@ -33,8 +33,8 @@ const UpdatePassword = () => {
     return (
         <div>
             <form onSubmit={handleSubmit(submitPasswordForm)}>
-                <div className='my-10 flex flex-col gap-y-6 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-8 px-12'>
-                    <h2 className='text-lg font-semibold text-richblack-5'>Password</h2>
+                <div className='my-10 flex flex-col gap-y-6 rounded-md border-[1px] border-global-stroke-primary bg-global-bg-surface p-8 px-12'>
+                    <h2 className='text-lg font-semibold text-global-text-primary'>Password</h2>
                     <div className='flex flex-col gap-5 lg:flex-row'>
                         <div className='relative flex flex-col gap-2 lg:w-[48%]'>
                             <label htmlFor='oldPassword' className='label-style'>
@@ -59,7 +59,7 @@ const UpdatePassword = () => {
                                 )}
                             </span>
                             {errors.oldPassword && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     Please enter your Current Password.
                                 </span>
                             )}
@@ -90,7 +90,7 @@ const UpdatePassword = () => {
                                 )}
                             </span>
                             {errors.newPassword && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     Please enter your New Password.
                                 </span>
                             )}
@@ -119,7 +119,7 @@ const UpdatePassword = () => {
                                 )}
                             </span>
                             {errors.confirmNewPassword && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     Please enter your Confirm New Password.
                                 </span>
                             )}
@@ -131,7 +131,7 @@ const UpdatePassword = () => {
                     <button
                         type="button"
                         onClick={() => { navigate("/dashboard/my-profile") }}
-                        className='cursor-pointer rounded-md bg-richblack-700 py-2 px-5 font-semibold text-richblack-50'
+                        className='cursor-pointer rounded-md bg-global-card-surface-2 py-2 px-5 font-semibold text-global-text-secondary'
                     >
                         Cancel
                     </button>

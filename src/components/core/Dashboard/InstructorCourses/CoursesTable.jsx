@@ -33,19 +33,19 @@ const CoursesTable = ({ courses, setCourses }) => {
 
   return (
     <div>
-      <Table className='rounded-xl border border-richblack-800'>
+      <Table className='rounded-xl border border-global-stroke-primary'>
         <Thead>
           <Tr className='grid grid-cols-[1fr_120px_100px_100px] rounded-t-md border-b border-b-richblack-800 px-6 py-2'>
-            <Th className='flex-1 text-left text-sm font-medium uppercase text-richblack-100'>
+            <Th className='flex-1 text-left text-sm font-medium uppercase text-global-text-secondary'>
               Courses
             </Th>
-            <Th className='text-left text-sm font-medium uppercase text-richblack-100'>
+            <Th className='text-left text-sm font-medium uppercase text-global-text-secondary'>
               Duration
             </Th>
-            <Th className='text-left text-sm font-medium uppercase text-richblack-100'>
+            <Th className='text-left text-sm font-medium uppercase text-global-text-secondary'>
               Price
             </Th>
-            <Th className='text-left text-sm font-medium uppercase text-richblack-100'>
+            <Th className='text-left text-sm font-medium uppercase text-global-text-secondary'>
               Actions
             </Th>
           </Tr>
@@ -53,7 +53,7 @@ const CoursesTable = ({ courses, setCourses }) => {
         <Tbody>
           {courses?.length === 0 ? (
             <Tr>
-              <Td className='py-10 text-center text-2xl font-medium text-richblack-100'>
+              <Td className='py-10 text-center text-2xl font-medium text-global-text-secondary'>
                 No courses found
               </Td>
             </Tr>
@@ -61,7 +61,7 @@ const CoursesTable = ({ courses, setCourses }) => {
             courses?.map((course) => (
               <Tr
                 key={course._id}
-                className='grid grid-cols-[1fr_120px_100px_100px] border-b border-richblack-800 px-6 py-8'
+                className='grid grid-cols-[1fr_120px_100px_100px] border-b border-global-stroke-primary px-6 py-8'
               >
                 <Td className='flex flex-1 gap-x-4'>
                   <img
@@ -70,10 +70,10 @@ const CoursesTable = ({ courses, setCourses }) => {
                     className='h-[148px] w-[220px] rounded-lg object-cover'
                   />
                   <div className='flex flex-col justify-between'>
-                    <p className='text-lg font-medium text-richblack-5'>
+                    <p className='text-lg font-medium text-global-text-primary'>
                       {course.courseName}
                     </p>
-                    <p className='text-xs text-richblack-300'>
+                    <p className='text-xs text-global-text-tertiary'>
                       {course.courseDescription.length > TRUNCATE_LENGTH
                         ? course.courseDescription.slice(0, TRUNCATE_LENGTH) + "..."
                         : course.courseDescription}
@@ -89,13 +89,13 @@ const CoursesTable = ({ courses, setCourses }) => {
                       Created: {formatDate(course.createdAt)}
                     </p>
                     {course.status === COURSE_STATUS.DRAFT ? (
-                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
+                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-global-card-surface-2 px-2 py-[2px] text-[12px] font-medium text-status-error">
                         <HiClock size={14} />
                         Drafted
                       </p>
                     ) : (
-                      <div className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-yellow-100">
-                        <div className="flex h-3 w-3 items-center justify-center rounded-full bg-yellow-100 text-richblack-700">
+                      <div className="flex w-fit flex-row items-center gap-2 rounded-full bg-global-card-surface-2 px-2 py-[2px] text-[12px] font-medium text-global-highlight-text-muted">
+                        <div className="flex h-3 w-3 items-center justify-center rounded-full bg-global-highlight-surface-strong text-global-text-inverse">
                           <FaCheck size={8} />
                         </div>
                         Published
@@ -104,20 +104,20 @@ const CoursesTable = ({ courses, setCourses }) => {
                   </div>
                 </Td>
                 {/* Make it dynamic by calculating duration of video */}
-                <Td className="text-sm font-medium text-richblack-100">
+                <Td className="text-sm font-medium text-global-text-secondary">
                   {course.totalDuration}
                 </Td>
-                <Td className="text-sm font-medium text-richblack-100">
+                <Td className="text-sm font-medium text-global-text-secondary">
                   Rs {course.price}
                 </Td>
-                <Td className="text-sm font-medium text-richblack-100 ">
+                <Td className="text-sm font-medium text-global-text-secondary ">
                   <button
                     disabled={loading}
                     onClick={() => {
                       navigate(`/dashboard/edit-course/${course._id}`)
                     }}
                     title="Edit"
-                    className="px-2 transition-all duration-200 hover:scale-110 hover:text-caribbeangreen-300 cursor-pointer"
+                    className="px-2 transition-all duration-200 hover:scale-110 hover:text-status-success cursor-pointer"
                   >
                     <FiEdit2 size={20} />
                   </button>

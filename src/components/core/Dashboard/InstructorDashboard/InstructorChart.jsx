@@ -46,15 +46,15 @@ const InstructorChart = ({ courses }) => {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-y-3 rounded-md w-full bg-richblack-800 p-6">
-      <p className='text-lg font-bold text-richblack-5'>Visualize</p>
+    <div className="flex flex-1 flex-col gap-y-3 rounded-md w-full bg-global-bg-surface p-6">
+      <p className='text-lg font-bold text-global-text-primary'>Visualize</p>
       <div className='space-x-4 font-semibold'>
         {/* Button to switch to Students and Income chart */}
         <button
           onClick={() => setCurrChart("students")}
           className={`rounded-sm p-1 px-3 transition-all duration-200 cursor-pointer ${currChart === "students"
-            ? "bg-richblack-700 text-yellow-50"
-            : "text-yellow-400"
+            ? "bg-global-card-surface-2 text-global-highlight-text"
+            : "text-global-highlight-text-muted"
             }`}
         >
           Students
@@ -62,8 +62,8 @@ const InstructorChart = ({ courses }) => {
         <button
           onClick={() => setCurrChart("income")}
           className={`rounded-sm p-1 px-3 transition-all duration-200 cursor-pointer ${currChart === "income"
-            ? "bg-richblack-700 text-yellow-50"
-            : "text-yellow-400"
+            ? "bg-global-card-surface-2 text-global-highlight-text"
+            : "text-global-highlight-text-muted"
             }`}
         >
           Income

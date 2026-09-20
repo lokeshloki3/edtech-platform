@@ -32,8 +32,8 @@ const EditProfile = () => {
     return (
         <div>
             <form onSubmit={handleSubmit(submitProfileForm)}>
-                <div className="my-10 flex flex-col gap-y-6 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-8 px-12">
-                    <h2 className="text-lg font-semibold text-richblack-5">
+                <div className="my-10 flex flex-col gap-y-6 rounded-md border-[1px] border-global-stroke-primary bg-global-bg-surface p-8 px-12">
+                    <h2 className="text-lg font-semibold text-global-text-primary">
                         Profile Information
                     </h2>
 
@@ -52,7 +52,7 @@ const EditProfile = () => {
                                 defaultValue={user?.firstName}
                             />
                             {errors.firstName && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     Please enter your first name
                                 </span>
                             )}
@@ -72,7 +72,7 @@ const EditProfile = () => {
                                 defaultValue={user?.lastName}
                             />
                             {errors.firstName && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     Please enter your last name
                                 </span>
                             )}
@@ -102,7 +102,7 @@ const EditProfile = () => {
                                 defaultValue={user?.additionalDetails?.dateOfBirth}
                             />
                             {errors.dateOfBirth && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     {errors.dateOfBirth.message}
                                 </span>
                             )}
@@ -128,7 +128,7 @@ const EditProfile = () => {
                                 })}
                             </select>
                             {errors.gender && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     Please enter your Date of Birth.
                                 </span>
                             )}
@@ -157,7 +157,7 @@ const EditProfile = () => {
                                 defaultValue={user?.additionalDetails?.contactNumber}
                             />
                             {errors.contactNumber && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     {errors.contactNumber.message}
                                 </span>
                             )}
@@ -176,7 +176,7 @@ const EditProfile = () => {
                                 defaultValue={user?.additionalDetails?.about}
                             />
                             {errors.about && (
-                                <span className="-mt-1 text-[12px] text-yellow-100">
+                                <span className="-mt-1 text-[12px] text-global-highlight-text-muted">
                                     Please enter your About.
                                 </span>
                             )}
@@ -190,7 +190,7 @@ const EditProfile = () => {
                         onClick={() => {
                             navigate("/dashboard/my-profile")
                         }}
-                        className="cursor-pointer rounded-md bg-richblack-700 py-2 px-5 font-semibold text-richblack-50"
+                        className="cursor-pointer rounded-md bg-global-card-surface-2 py-2 px-5 font-semibold text-global-text-secondary"
                     >
                         Cancel
                     </button>

@@ -61,7 +61,7 @@ const Category = () => {
             <div className='flex flex-col md:flex-row gap-4'>
               <div className="flex flex-col gap-2 lg:w-[48%]">
                 <label htmlFor="categoryName" className="label-style">
-                  Category Name <sup className="text-pink-200">*</sup>
+                  Category Name <sup className="text-status-error">*</sup>
                 </label>
                 <input
                   type="text"
@@ -96,8 +96,8 @@ const Category = () => {
           </div>
         </form>
       </div>
-      <div className='w-full md:w-1/3 bg-richblack-800 p-2 rounded-lg'>
-        <h2 className='text-2xl font-semibold mb-4 text-center border-b-2 border-richblack-300'>All Categories</h2>
+      <div className='w-full md:w-1/3 bg-global-bg-surface p-2 rounded-lg'>
+        <h2 className='text-2xl font-semibold mb-4 text-center border-b-2 border-global-stroke-tertiary'>All Categories</h2>
         {loading ? (
           <p className='spinner'></p>
         ) : (

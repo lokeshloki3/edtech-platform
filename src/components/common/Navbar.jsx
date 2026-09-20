@@ -69,7 +69,7 @@ const Navbar = () => {
 
   return (
     <div className="fixed w-full top-0 z-500 flex h-14 items-center justify-center border-b-[1px] border-b-richblack-700
-			bg-richblack-800 transition-all duration-200">
+			bg-global-bg-surface transition-all duration-200">
       <div className='flex w-11/12 max-w-(--max-content) items-center justify-between'>
         {/* Logo */}
         <Link to='/'>
@@ -77,7 +77,7 @@ const Navbar = () => {
         </Link>
         {/* Navigation Links */}
         <nav className="hidden md:block">
-          <ul className="flex gap-x-6 text-richblack-25">
+          <ul className="flex gap-x-6 text-global-text-secondary">
             {
               NavbarLinks.map((link, index) => {
                 return (
@@ -87,14 +87,14 @@ const Navbar = () => {
                         <>
                           <div className={`group relative flex items-center gap-1 cursor-pointer
 													${matchRoute("/catalog/:catalogName")
-                              ? "text-yellow-25"
-                              : "text-richblack-25"
+                              ? "text-global-highlight-text"
+                              : "text-global-text-secondary"
                             }`}
                           >
                             <p>{link.title}</p>
                             <BsChevronDown />
                             <div className='invisible absolute left-[50%] top-[50%] z-[1000] w-[200px]
-                                    		translate-x-[-50%] translate-y-[3em] flex flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900
+                                    		translate-x-[-50%] translate-y-[3em] flex flex-col rounded-lg bg-richblack-5 p-4 text-global-text-inverse
                                 				opacity-0 transition-all duration-150 group-hover:visible
                                 				group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[250px]'>
 
@@ -129,7 +129,7 @@ const Navbar = () => {
                         </>
                       ) : (
                         <Link to={link?.path}>
-                          <p className={`${matchRoute(link?.path) ? "text-yellow-25" : "text-richblack-25"}`}>
+                          <p className={`${matchRoute(link?.path) ? "text-global-highlight-text" : "text-global-text-secondary"}`}>
                             {link.title}
                           </p>
                         </Link>
@@ -147,9 +147,9 @@ const Navbar = () => {
           {
             user && user?.accountType === ACCOUNT_TYPE.STUDENT && (
               <Link to="/dashboard/cart" className="relative">
-                <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
+                <AiOutlineShoppingCart className="text-2xl text-global-text-secondary" />
                 {totalItems > 0 && (
-                  <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-content-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">
+                  <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-content-center overflow-hidden rounded-full bg-global-surface-muted text-center text-xs font-bold text-global-highlight-text-muted">
                     {totalItems}
                   </span>
                 )}
@@ -159,7 +159,7 @@ const Navbar = () => {
           {
             token === null && (
               <Link to="/login">
-                <button className='rounded-[8px] cursor-pointer border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100'>
+                <button className='rounded-[8px] cursor-pointer border border-global-stroke-primary bg-global-bg-surface px-[12px] py-[8px] text-global-text-secondary'>
                   Log in
                 </button>
               </Link>
@@ -168,7 +168,7 @@ const Navbar = () => {
           {
             token === null && (
               <Link to="/signup">
-                <button className='rounded-[8px] cursor-pointer border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100'>
+                <button className='rounded-[8px] cursor-pointer border border-global-stroke-primary bg-global-bg-surface px-[12px] py-[8px] text-global-text-secondary'>
                   Sign Up
                 </button>
               </Link>
@@ -196,15 +196,15 @@ const Navbar = () => {
           ></div>
 
           {/* Mobile Menu Panel */}
-          <div className="absolute top-14 left-0 w-full bg-richblack-800 flex flex-col gap-4 p-4 md:hidden z-5000">
+          <div className="absolute top-14 left-0 w-full bg-global-bg-surface flex flex-col gap-4 p-4 md:hidden z-5000">
             {/* Close button at top-right */}
             <button
-              className="self-end text-richblack-25 text-2xl -mb-5 cursor-pointer"
+              className="self-end text-global-text-secondary text-2xl -mb-5 cursor-pointer"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <RxCross2 />
             </button>
-            <ul className="flex flex-col gap-y-4 text-richblack-25">
+            <ul className="flex flex-col gap-y-4 text-global-text-secondary">
               {/* Existing NavbarLinks */}
               {NavbarLinks.map((link, index) => (
                 <li key={index}>
@@ -234,7 +234,7 @@ const Navbar = () => {
                                   setIsMobileMenuOpen(false);
                                   setIsCatalogOpen(false);
                                 }}
-                                className="hover:text-yellow-25"
+                                className="hover:text-global-highlight-text"
                               >
                                 {subLink.name}
                               </Link>
@@ -249,8 +249,8 @@ const Navbar = () => {
                     <Link
                       to={link.path}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      // className="hover:text-yellow-25"
-                      className={`hover:text-yellow-25 ${location.pathname === link.path ? "text-yellow-25" : "text-richblack-25"}`}
+                      // className="hover:text-global-highlight-text"
+                      className={`hover:text-global-highlight-text ${location.pathname === link.path ? "text-global-highlight-text" : "text-global-text-secondary"}`}
                     >
                       {link.title}
                     </Link>
@@ -268,7 +268,7 @@ const Navbar = () => {
                     <Link
                       to={link.path}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-2 hover:text-yellow-25"
+                      className="flex items-center gap-2 hover:text-global-highlight-text"
                     >
                       <span>{link.name}</span>
                     </Link>
@@ -282,12 +282,12 @@ const Navbar = () => {
               {token === null ? (
                 <>
                   <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <button className="w-full rounded border border-richblack-700 bg-richblack-800 px-4 py-2 text-left text-richblack-100">
+                    <button className="w-full rounded border border-global-stroke-primary bg-global-bg-surface px-4 py-2 text-left text-global-text-secondary">
                       Log in
                     </button>
                   </Link>
                   <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-                    <button className="w-full rounded border border-richblack-700 bg-richblack-800 px-4 py-2 text-left text-richblack-100">
+                    <button className="w-full rounded border border-global-stroke-primary bg-global-bg-surface px-4 py-2 text-left text-global-text-secondary">
                       Sign Up
                     </button>
                   </Link>
@@ -298,7 +298,7 @@ const Navbar = () => {
                     logout(undefined, { onSettled: () => navigate("/") })
                     setIsMobileMenuOpen(false)
                   }}
-                  className="flex w-full gap-1 items-center text-richblack-25 hover:text-yellow-25 cursor-pointer"
+                  className="flex w-full gap-1 items-center text-global-text-secondary hover:text-global-highlight-text cursor-pointer"
                 >
                   <VscSignOut className="text-lg" />
                   Logout

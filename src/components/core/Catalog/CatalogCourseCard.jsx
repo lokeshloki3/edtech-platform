@@ -24,12 +24,12 @@ const CatalogCourseCard = ({ course, Height, showEnrollment }) => {
                         />
                     </div>
                     <div className='flex flex-col gap-2 px-2 py-3'>
-                        <p className='text-xl text-richblack-5'>{course?.courseName}</p>
-                        <p className='text-sm text-richblack-50'>
+                        <p className='text-xl text-global-text-primary'>{course?.courseName}</p>
+                        <p className='text-sm text-global-text-secondary'>
                             {course?.instructor?.firstName} {course?.instructor?.lastName}
                         </p>
                         <div className="flex items-center gap-2">
-                            <span className="text-yellow-5">{avgReviewCount || 0}</span>
+                            <span className="text-global-highlight-text">{avgReviewCount || 0}</span>
                             {/* <ReactStars
                                 count={5}
                                 value={avgReviewCount || 0}
@@ -40,16 +40,16 @@ const CatalogCourseCard = ({ course, Height, showEnrollment }) => {
                                 fullIcon={<FaStar />}
                             /> */}
                             <RatingStars Review_Count={avgReviewCount} />
-                            <span className="text-richblack-400">
+                            <span className="text-global-text-tertiary">
                                 {course?.ratingAndReviews?.length} Ratings
                             </span>
                             {showEnrollment && (
-                                <span className="text-richblack-400">
+                                <span className="text-global-text-tertiary">
                                     ( {course?.studentsEnrolled?.length} Student(s) Enrolled )
                                 </span>
                             )}
                         </div>
-                        <p className="text-xl text-richblack-5">Rs. {course?.price}</p>
+                        <p className="text-xl text-global-text-primary">Rs. {course?.price}</p>
                     </div>
                 </div>
             </Link>

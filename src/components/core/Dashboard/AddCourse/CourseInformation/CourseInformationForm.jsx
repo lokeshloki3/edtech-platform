@@ -154,12 +154,12 @@ const CourseInformationForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-8 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 w-full mx-0 md:mx-auto"
+      className="space-y-8 rounded-md border-[1px] border-global-stroke-primary bg-global-bg-surface p-6 w-full mx-0 md:mx-auto"
     >
       {/* Course Title */}
       <div className='flex flex-col space-y-2'>
-        <label htmlFor='courseTitle' className='text-sm text-richblack-5'>
-          Course Title <sup className='text-pink-200'>*</sup>
+        <label htmlFor='courseTitle' className='text-sm text-global-text-primary'>
+          Course Title <sup className='text-status-error'>*</sup>
         </label>
         <input
           id='courseTitle'
@@ -168,7 +168,7 @@ const CourseInformationForm = () => {
           className='form-style w-full'
         />
         {errors.courseTitle && (
-          <span className="ml-2 text-xs tracking-wide text-pink-200">
+          <span className="ml-2 text-xs tracking-wide text-status-error">
             Course title is required
           </span>
         )}
@@ -176,8 +176,8 @@ const CourseInformationForm = () => {
 
       {/* Course Description */}
       <div className='flex flex-col space-y-2'>
-        <label htmlFor='courseShortDesc' className='text-sm text-richblack-5'>
-          Course Short Description <sup className='text-pink-200'>*</sup>
+        <label htmlFor='courseShortDesc' className='text-sm text-global-text-primary'>
+          Course Short Description <sup className='text-status-error'>*</sup>
         </label>
         <textarea
           id='courseShortDesc'
@@ -186,7 +186,7 @@ const CourseInformationForm = () => {
           className='form-style resize-x-none min-h-[130px] w-full'
         />
         {errors.courseShortDesc && (
-          <span className="ml-2 text-xs tracking-wide text-pink-200">
+          <span className="ml-2 text-xs tracking-wide text-status-error">
             Course Description is required
           </span>
         )}
@@ -194,8 +194,8 @@ const CourseInformationForm = () => {
 
       {/* Course Price */}
       <div className='flex flex-col space-y-2'>
-        <label htmlFor='coursePrice' className='text-sm text-richblack-5'>
-          Course Price <sup className='text-pink-200'>*</sup>
+        <label htmlFor='coursePrice' className='text-sm text-global-text-primary'>
+          Course Price <sup className='text-status-error'>*</sup>
         </label>
         <div className='relative'>
           <input
@@ -210,10 +210,10 @@ const CourseInformationForm = () => {
             })}
             className='form-style w-full !pl-12'
           />
-          <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 inline-block -translate-y-1/2 text-2xl text-richblack-400" />
+          <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 inline-block -translate-y-1/2 text-2xl text-global-text-tertiary" />
         </div>
         {errors.coursePrice && (
-          <span className="ml-2 text-xs tracking-wide text-pink-200">
+          <span className="ml-2 text-xs tracking-wide text-status-error">
             Course Price is required
           </span>
         )}
@@ -221,8 +221,8 @@ const CourseInformationForm = () => {
 
       {/* Course Category */}
       <div className="flex flex-col space-y-2">
-        <label htmlFor="courseCategory" className="text-sm text-richblack-5">
-          Course Category <sup className="text-pink-200">*</sup>
+        <label htmlFor="courseCategory" className="text-sm text-global-text-primary">
+          Course Category <sup className="text-status-error">*</sup>
         </label>
         <select
           id='courseCategory'
@@ -240,7 +240,7 @@ const CourseInformationForm = () => {
           ))}
         </select>
         {errors.courseCategory && (
-          <span className="ml-2 text-xs tracking-wide text-pink-200">
+          <span className="ml-2 text-xs tracking-wide text-status-error">
             Course Category is required
           </span>
         )}
@@ -269,8 +269,8 @@ const CourseInformationForm = () => {
 
       {/* Benefits of the course */}
       <div className="flex flex-col space-y-2">
-        <label htmlFor="courseBenefits" className="text-sm text-richblack-5">
-          Benefits of the course <sup className="text-pink-200">*</sup>
+        <label htmlFor="courseBenefits" className="text-sm text-global-text-primary">
+          Benefits of the course <sup className="text-status-error">*</sup>
         </label>
         <textarea
           id="courseBenefits"
@@ -279,7 +279,7 @@ const CourseInformationForm = () => {
           className="form-style resize-x-none min-h-[130px] w-full"
         />
         {errors.courseBenefits && (
-          <span className="ml-2 text-xs tracking-wide text-pink-200">
+          <span className="ml-2 text-xs tracking-wide text-status-error">
             Benefits of the course is required
           </span>
         )}
@@ -301,7 +301,7 @@ const CourseInformationForm = () => {
           <button
             onClick={() => dispatch(setStep(2))}
             disabled={loading}
-            className="flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900"
+            className="flex cursor-pointer items-center gap-x-2 rounded-md bg-button-tertiary-bg-default py-[8px] px-[20px] font-semibold text-global-text-inverse"
           >
             Continue Wihout Saving
           </button>

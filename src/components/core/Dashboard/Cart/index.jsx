@@ -9,8 +9,8 @@ const Cart = () => {
 
     return (
         <div>
-            <h1 className='mb-14 text-3xl font-medium text-richblack-5'>Your Cart</h1>
-            <p className='border-b border-b-richblack-400 pb-2 font-semibold text-richblack-400'>
+            <h1 className='mb-14 text-3xl font-medium text-global-text-primary'>Your Cart</h1>
+            <p className='border-b border-b-richblack-400 pb-2 font-semibold text-global-text-tertiary'>
                 {totalItems} Courses in Cart
             </p>
 
@@ -20,7 +20,7 @@ const Cart = () => {
                     <RenderTotalAmount />
                 </div>
             ) : (
-                <p className='mt-14 text-center text-3xl text-richblack-100'>
+                <p className='mt-14 text-center text-3xl text-global-text-secondary'>
                     Your Cart is Empty
                 </p>
             )}
