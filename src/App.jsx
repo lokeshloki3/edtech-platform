@@ -13,7 +13,6 @@ import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/core/Auth/PrivateRoute";
 import MyProfile from "./components/core/Dashboard/MyProfile";
-import { useSelector } from "react-redux";
 import Settings from "./components/core/Dashboard/Settings";
 import { ACCOUNT_TYPE } from "./utils/constants";
 import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses";
@@ -27,9 +26,10 @@ import ViewCourse from "./pages/ViewCourse";
 import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 import Instructor from "./components/core/Dashboard/Instructor";
 import Category from "./components/core/Dashboard/Category";
+import { useAuthStore } from '@/store/auth.store';
 
 function App() {
-  const { user } = useSelector((state) => state.profile);
+  const user = useAuthStore((s) => s.user);
 
   return (
     <div className="w-screen min-h-screen bg-global-bg flex flex-col font-inter">
