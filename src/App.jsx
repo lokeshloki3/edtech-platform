@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/common/Navbar";
 import Login from "./pages/Login";
@@ -13,9 +13,7 @@ import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/core/Auth/PrivateRoute";
 import MyProfile from "./components/core/Dashboard/MyProfile";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserDetails } from "./services/operations/profileAPI"
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import Settings from "./components/core/Dashboard/Settings";
 import { ACCOUNT_TYPE } from "./utils/constants";
 import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses";
@@ -31,16 +29,7 @@ import Instructor from "./components/core/Dashboard/Instructor";
 import Category from "./components/core/Dashboard/Category";
 
 function App() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { user } = useSelector((state) => state.profile);
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      const token = JSON.parse(localStorage.getItem("token"));
-      dispatch(getUserDetails(token, navigate));
-    }
-  }, [])
 
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
