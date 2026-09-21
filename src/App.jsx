@@ -7,7 +7,7 @@ import OpenRoute from "./components/core/Auth/OpenRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import VerifyEmail from "./pages/VerifyEmail";
-import Error from "./pages/Error";
+import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
@@ -130,7 +130,7 @@ function App() {
           </Route>
 
           {/* 404 Page */}
-          <Route path="*" element={<Error />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
