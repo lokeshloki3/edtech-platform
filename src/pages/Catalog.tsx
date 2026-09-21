@@ -4,7 +4,7 @@ import { useCatalogPageData, useCourseCategories } from '@/hooks/use-course-quer
 import CatalogCourseCard from '../components/core/Catalog/CatalogCourseCard';
 import CatalogCourseSlider from '../components/core/Catalog/CatalogCourseSlider';
 import Footer from '../components/common/Footer';
-import Error from './Error';
+import NotFound from './NotFound';
 import { useState } from 'react';
 
 const toSlug = (name: string) => name.split(' ').join('-').toLowerCase();
@@ -34,7 +34,7 @@ const Catalog = () => {
   }
 
   if (isError || !catalogPageData) {
-    return <Error />;
+    return <NotFound />;
   }
 
   return (

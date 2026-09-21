@@ -7,7 +7,7 @@ import OpenRoute from "./components/core/Auth/OpenRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import VerifyEmail from "./pages/VerifyEmail";
-import Error from "./pages/Error";
+import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
@@ -26,10 +26,13 @@ import ViewCourse from "./pages/ViewCourse";
 import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 import Instructor from "./components/core/Dashboard/Instructor";
 import Category from "./components/core/Dashboard/Category";
+import { useRobotsMeta } from '@/hooks/use-robots-meta';
 import { useAuthStore } from '@/store/auth.store';
 
 function App() {
   const user = useAuthStore((s) => s.user);
+
+  useRobotsMeta();
 
   return (
     <div className="w-screen min-h-screen bg-global-bg flex flex-col font-inter">
@@ -127,7 +130,7 @@ function App() {
           </Route>
 
           {/* 404 Page */}
-          <Route path="*" element={<Error />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>

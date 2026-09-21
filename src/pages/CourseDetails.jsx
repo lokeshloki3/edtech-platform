@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom';
-import Error from "./Error";
+import NotFound from "./NotFound";
 import GetAvgRating from '../utils/avgRating';
 import RatingStars from "../components/common/RatingStars";
 import { BiInfoCircle } from "react-icons/bi";
@@ -58,7 +58,7 @@ const CourseDetails = () => {
   }
 
   if (isError) {
-    return <Error />
+    return <NotFound />
   }
 
   const {
