@@ -1,191 +1,130 @@
-import React from "react";
-import { FooterLink2 } from "../../data/footer-links";
-import { Link } from "react-router-dom";
+import { FaFacebook, FaGoogle, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
-// Images
-import Logo from "../../assets/Logo/Logo-Full-Light.png";
+import Logo from '../../assets/Logo/Logo-Full-Light.png';
+import { FooterLink2 } from '../../data/footer-links';
 
-// Icons
-import { FaFacebook, FaGoogle, FaTwitter, FaYoutube } from "react-icons/fa";
+const CATALOG_ROUTE = '/catalog/web-development';
 
-const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
-const Resources = [
-  "Articles",
-  "Blog",
-  "Chart Sheet",
-  "Code challenges",
-  "Docs",
-  "Projects",
-  "Videos",
-  "Workspaces",
-];
-const Plans = ["Paid memberships", "For students", "Business solutions"];
-const Community = ["Forums", "Chapters", "Events"];
+const withRoute = (labels, to) => labels.map((label) => ({ label, to }));
+
+const COMPANY = withRoute(['About', 'Careers', 'Affiliates'], '/about');
+const RESOURCES = withRoute(
+  [
+    'Articles',
+    'Blog',
+    'Chart Sheet',
+    'Code challenges',
+    'Docs',
+    'Projects',
+    'Videos',
+    'Workspaces',
+  ],
+  CATALOG_ROUTE
+);
+const SUPPORT = withRoute(['Help Center'], '/contact');
+const PLANS = withRoute(['Paid memberships', 'For students', 'Business solutions'], CATALOG_ROUTE);
+const COMMUNITY = withRoute(['Forums', 'Chapters', 'Events'], '/about');
+const LEGAL = ['Privacy Policy', 'Cookie Policy', 'Terms'];
+
+const headingId = (title) => `footer-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+
+const FooterNav = ({ title, links, className }) => {
+  const id = headingId(title);
+
+  return (
+    <nav aria-labelledby={id} className={className}>
+      <h2 id={id} className="body-2-md text-global-text-secondary font-semibold">
+        {title}
+      </h2>
+      <ul className="mt-2 flex flex-col gap-2">
+        {links.map(({ label, to }) => (
+          <li key={label}>
+            <Link
+              to={to}
+              className="body-3 hover:text-global-text-secondary transition-all duration-200"
+            >
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
   return (
-    <div className="bg-global-bg-surface">
-      <div className="flex lg:flex-row gap-8 items-center justify-between w-11/12 max-w-(--max-content) text-global-text-tertiary leading-6 mx-auto relative py-14">
-        <div className="border-b w-[100%] flex flex-col lg:flex-row pb-5 border-global-stroke-primary">
-          {/* Section 1 */}
-          <div className="lg:w-[50%] flex flex-wrap flex-row justify-between lg:border-r lg:border-global-stroke-primary pl-3 lg:pr-5 gap-3">
-            <div className="w-[30%] flex flex-col gap-3 lg:w-[30%] mb-7 lg:pl-0">
-              <Link>
-                <img src={Logo} alt="Logo" className="object-contain" width={160} height={32} loading="lazy" />
+    <footer className="bg-global-bg-surface">
+      <div className="text-global-text-tertiary relative mx-auto flex w-11/12 max-w-(--max-content) items-center justify-between gap-8 py-14 lg:flex-row">
+        <div className="border-global-stroke-primary flex w-full flex-col border-b pb-5 lg:flex-row">
+          <div className="border-global-stroke-primary flex flex-row flex-wrap justify-between gap-3 pl-3 lg:w-[50%] lg:border-r lg:pr-5">
+            <div className="mb-7 flex w-[30%] flex-col gap-3 lg:w-[30%] lg:pl-0">
+              <Link to="/">
+                <img
+                  src={Logo}
+                  alt="StudySphere"
+                  className="object-contain"
+                  width={160}
+                  height={32}
+                  loading="lazy"
+                />
               </Link>
-              <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
-                Company
-              </h1>
-              <div className="flex flex-col gap-2">
-                {["About", "Careers", "Affiliates"].map((ele, i) => {
-                  return (
-                    <div
-                      key={i}
-                      className="text-[14px] cursor-pointer hover:text-global-text-secondary transition-all duration-200"
-                    >
-                      {/* <Link to={ele.toLowerCase()}>{ele}</Link> */}
-                      <Link to="/about">{ele}</Link>
-                    </div>
-                  );
-                })}
-              </div>
+              <FooterNav title="Company" links={COMPANY} />
               <div className="flex gap-3 text-lg">
                 <FaFacebook />
                 <FaGoogle />
                 <FaTwitter />
                 <FaYoutube />
               </div>
-              <div></div>
             </div>
 
-            <div className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
-              <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
-                Resources
-              </h1>
-
-              <div className="flex flex-col gap-2 mt-2">
-                {Resources.map((ele, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="text-[14px] cursor-pointer hover:text-global-text-secondary transition-all duration-200"
-                    >
-                      {/* <Link to={ele.split(" ").join("-").toLowerCase()}>{ele}</Link> */}
-                      <Link to="/catalog/web-development">{ele}</Link>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px] mt-7">
-                Support
-              </h1>
-              <div className="text-[14px] cursor-pointer hover:text-global-text-secondary transition-all duration-200 mt-2">
-                {/* <Link to={"/help-center"}>Help Center</Link> */}
-                <Link to="/contact">Help Center</Link>
-              </div>
+            <div className="mb-7 w-[48%] lg:w-[30%] lg:pl-0">
+              <FooterNav title="Resources" links={RESOURCES} />
+              <FooterNav title="Support" links={SUPPORT} className="mt-7" />
             </div>
 
-            <div className="w-full md:w-[48%] lg:w-[30%] mb-7 lg:pl-0">
+            <div className="mb-7 w-full md:w-[48%] lg:w-[30%] lg:pl-0">
               <div className="flex justify-between md:block">
-                <div>
-                  <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
-                    Plans
-                  </h1>
-
-                  <div className="flex flex-col gap-2 mt-2">
-                    {Plans.map((ele, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="text-[14px] cursor-pointer hover:text-global-text-secondary transition-all duration-200"
-                        >
-                          {/* <Link to={ele.split(" ").join("-").toLowerCase()}>
-                        {ele}
-                      </Link> */}
-                          <Link to="/catalog/web-development">{ele}</Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px] mt-0 md:mt-7 mr-20 md:mr-0">
-                    Community
-                  </h1>
-
-                  <div className="flex flex-col gap-2 mt-2">
-                    {Community.map((ele, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="text-[14px] cursor-pointer hover:text-global-text-secondary transition-all duration-200"
-                        >
-                          {/* <Link to={ele.split(" ").join("-").toLowerCase()}>{ele}</Link> */}
-                          <Link to="/about">{ele}</Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                <FooterNav title="Plans" links={PLANS} />
+                <FooterNav title="Community" links={COMMUNITY} className="mr-20 md:mt-7 md:mr-0" />
               </div>
             </div>
           </div>
 
-          {/* Section 2 */}
-          <div className="lg:w-[50%] flex flex-wrap flex-row justify-between pl-3 lg:pl-5 gap-3">
-            {FooterLink2.map((ele, i) => {
-              return (
-                <div key={i} className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
-                  <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
-                    {ele.title}
-                  </h1>
-                  <div className="flex flex-col gap-2 mt-2">
-                    {ele.links.map((link, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="text-[14px] cursor-pointer hover:text-global-text-secondary transition-all duration-200"
-                        >
-                          {/* <Link to={link.link}>{link.title}</Link> */}
-                          <Link to="/catalog/web-development">{link.title}</Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="flex flex-row flex-wrap justify-between gap-3 pl-3 lg:w-[50%] lg:pl-5">
+            {FooterLink2.map((section) => (
+              <FooterNav
+                key={section.title}
+                title={section.title}
+                links={section.links.map((link) => ({ label: link.title, to: CATALOG_ROUTE }))}
+                className="mb-7 w-[48%] lg:w-[30%] lg:pl-0"
+              />
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row items-center justify-between w-11/12 max-w-(--max-content) text-global-text-tertiary mx-auto  pb-14 text-sm">
-        {/* Section 1 */}
-        <div className="flex justify-between lg:items-start items-center flex-col lg:flex-row gap-3 w-full">
-          <div className="flex flex-row">
-            {BottomFooter.map((ele, i) => {
-              return (
-                <div
-                  key={i}
-                  className={` ${BottomFooter.length - 1 === i
-                    ? ""
-                    : "border-r border-global-stroke-primary cursor-pointer hover:text-global-text-secondary transition-all duration-200"
-                    } px-3 `}
-                >
-                  {/* <Link to={ele.split(" ").join("-").toLocaleLowerCase()}>
-                    {ele}
-                  </Link> */}
-                  <p>{ele}</p>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="text-center">Made with ❤️ Lokesh © 2025 StudySphere</div>
+      <div className="text-global-text-tertiary mx-auto flex w-11/12 max-w-(--max-content) flex-row items-center justify-between pb-14">
+        <div className="flex w-full flex-col items-center justify-between gap-3 lg:flex-row lg:items-start">
+          <ul className="flex flex-row">
+            {LEGAL.map((item, index) => (
+              <li
+                key={item}
+                className={`body-3 px-3 ${
+                  index === LEGAL.length - 1 ? '' : 'border-global-stroke-primary border-r'
+                }`}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="body-3 text-center">Made with ❤️ Lokesh © {year} StudySphere</p>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

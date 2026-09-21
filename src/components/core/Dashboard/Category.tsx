@@ -28,6 +28,8 @@ const Category = () => {
 
   return (
     <div className="flex h-full w-full flex-col gap-8 text-white md:flex">
+      <h1 className="sr-only">Categories</h1>
+
       <div className="w-full md:w-2/3">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex min-h-44 w-full flex-col gap-7">

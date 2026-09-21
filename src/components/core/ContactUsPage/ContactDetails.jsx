@@ -38,9 +38,9 @@ const ContactDetails = () => {
                         >
                             <div className="flex flex-row items-center gap-3">
                                 <Icon size={25} />
-                                <h1 className="text-lg font-semibold text-global-text-primary">
+                                <h2 className="text-lg font-semibold text-global-text-primary">
                                     {element?.heading}
-                                </h1>
+                                </h2>
                             </div>
                             <p className="font-medium">{element?.description}</p>
                             <p className="font-semibold">{element?.details}</p>

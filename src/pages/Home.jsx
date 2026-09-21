@@ -30,10 +30,10 @@ const Home = () => {
                         </div>
                     </div>
                 </Link>
-                <div className='text-center text-4xl font-semibold'>
+                <h1 className='text-center text-4xl font-semibold'>
                     Empower Your Future with
                     <HighlightText text={"Coding Skills"} />
-                </div>
+                </h1>
                 <div className='-mt-4 w-[90%] text-center text-lg font-bold text-global-text-tertiary'>
                     With our online coding courses, you can learn at your own pace, from anywhere in the
                     world, and get access to a wealth of resources, including hands-on projects, quizzes,
@@ -62,11 +62,11 @@ const Home = () => {
                     <CodeBlocks
                         position={"lg:flex-row"}
                         heading={
-                            <div className='text-3xl md:text-4xl font-semibold'>
+                            <h2 className='text-3xl md:text-4xl font-semibold'>
                                 Unlock your
                                 <HighlightText text={"coding potential "} />
                                 with our online courses
-                            </div>
+                            </h2>
                         }
                         subheading={"Our courses are designed and taught by industry experts who have years of experience in coding and are passionate about sharing their knowledge with you."}
                         ctabtn1={
@@ -94,10 +94,10 @@ const Home = () => {
                     <CodeBlocks
                         position={"lg:flex-row-reverse"}
                         heading={
-                            <div className="w-[100%] text-3xl md:text-4xl font-semibold lg:w-[50%]">
+                            <h2 className="w-[100%] text-3xl md:text-4xl font-semibold lg:w-[50%]">
                                 Start
                                 <HighlightText text={"coding in seconds"} />
-                            </div>
+                            </h2>
                         }
                         subheading={
                             "Go ahead, give it a try. Our hands-on learning environment means you'll be writing real code from your very first lesson."
@@ -142,10 +142,10 @@ const Home = () => {
                 </div>
                 <div className='w-11/12 max-w-(--max-content) flex flex-col items-center justify-between gap-7 mx-auto'>
                     <div className='flex flex-col md:flex-row gap-5 mb-10 mt-[95px]'>
-                        <div className='text-3xl md:text-4xl font-semibold w-full md:w-[45%]'>
+                        <h2 className='text-3xl md:text-4xl font-semibold w-full md:w-[45%]'>
                             Get the Skills you need for about
                             <HighlightText text={"Job that is in demand"} />
-                        </div>
+                        </h2>
                         <div className='flex flex-col gap-10 w-full md:w-[40%] items-start'>
                             <div className='text-[16px]'>
                                 The modern StudySphere is the dictates its own terms. Today, to be a competitive specialist requires more than professional skills.

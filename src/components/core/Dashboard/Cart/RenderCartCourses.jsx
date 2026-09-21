@@ -38,15 +38,6 @@ const RenderCartCourses = () => {
 
                 <div className='flex items-center gap-2'>
                   <span className='text-global-highlight-text'>{GetAvgRating(course?.ratingAndReviews)}</span>
-                  {/* <ReactStars
-                    count={5}
-                    value={course?.ratingAndReviews?.length}
-                    size={20}
-                    edit={false}
-                    activeColor="#ffd700"
-                    emptyIcon={<FaStar />}
-                    fullIcon={<FaStar />}
-                  /> */}
                   <Rating
                     initialRating={GetAvgRating(course?.ratingAndReviews)}
                     readonly

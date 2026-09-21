@@ -30,15 +30,6 @@ const CatalogCourseCard = ({ course, Height, showEnrollment }) => {
                         </p>
                         <div className="flex items-center gap-2">
                             <span className="text-global-highlight-text">{avgReviewCount || 0}</span>
-                            {/* <ReactStars
-                                count={5}
-                                value={avgReviewCount || 0}
-                                size={20}
-                                edit={false}
-                                activeColor="#ffd700"
-                                emptyIcon={<FaRegStar />}
-                                fullIcon={<FaStar />}
-                            /> */}
                             <RatingStars Review_Count={avgReviewCount} />
                             <span className="text-global-text-tertiary">
                                 {course?.ratingAndReviews?.length} Ratings

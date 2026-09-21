@@ -2,29 +2,9 @@
 
 @import '@fontsource-variable/inter';
 
-/* Typography is pulled into Tailwind's `base` cascade layer on purpose.
-   Unlayered CSS outranks every layered rule, so importing this file at the top
-   level made `h1`/`h2` element rules beat `text-[16px]`, `text-3xl` and every
-   other size utility on the elements they matched. Inside `base` the element
-   defaults sit after preflight (so they still apply), the `.h1`-`.h6` /
-   `.body-*` classes still win over the element rules on specificity, and any
-   Tailwind utility in `@layer utilities` overrides both. */
 @import './typography.css' layer(base);
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-/* ---------------------------------------------------------------------------
-   SEMANTIC TOKENS
-   Layer 2 of the two-layer token system. These name a *role* ("the background
-   behind a card") and point at a primitive from the @theme inline block below.
-   Components consume these through the --color-* bridge, never raw hex.
-
-   StudySphere is dark-first: [data-theme='dark'] is set on <html> in index.html
-   and is the design the app actually ships. The light block mirrors the same
-   token names so the structure is ready, but its values are a straight
-   inversion built from the existing palette — they need design sign-off before
-   any light-mode UI is built on them.
---------------------------------------------------------------------------- */
 
 :root[data-theme='dark'] {
   /* Global */
@@ -47,7 +27,7 @@
   --global-card-surface: var(--richblack-800);
   --global-card-surface-2: var(--richblack-700);
 
-  /* Primary button — the `.yellowButton` of the legacy stylesheet */
+  /* Primary button */
   --button-primary-bg-default: var(--yellow-50);
   --button-primary-content-default: var(--richblack-900);
   --button-primary-bg-hover: var(--yellow-25);
@@ -57,7 +37,7 @@
   --button-primary-bg-disabled: var(--richblack-700);
   --button-primary-content-disabled: var(--richblack-400);
 
-  /* Secondary button — the `.blackButton` of the legacy stylesheet */
+  /* Secondary button */
   --button-secondary-bg-default: var(--richblack-800);
   --button-secondary-content-default: var(--richblack-5);
   --button-secondary-stroke-default: var(--richblack-700);
@@ -68,13 +48,13 @@
   --button-secondary-stroke-disabled: var(--richblack-700);
   --button-secondary-content-disabled: var(--richblack-400);
 
-  /* Tertiary button - the grey Cancel/Back action in modals and course forms */
+  /* Tertiary button */
   --button-tertiary-bg-default: var(--richblack-300);
   --button-tertiary-content-default: var(--richblack-900);
   --button-tertiary-bg-hover: var(--richblack-200);
   --button-tertiary-bg-active: var(--richblack-400);
 
-  /* Input field — the `.form-style` of the legacy stylesheet */
+  /* Input field */
   --input-field-bg-default: var(--richblack-700);
   --input-field-stroke-default: var(--richblack-600);
   --input-field-content-default: var(--richblack-5);
@@ -191,12 +171,6 @@
   --status-info: var(--blue-300);
 }
 
-/* ---------------------------------------------------------------------------
-   PRIMITIVES + TAILWIND BRIDGE
-   Layer 1 (raw palette) and the --color-* re-export that turns every semantic
-   token into a Tailwind utility (--color-global-bg  ->  `bg-global-bg`).
---------------------------------------------------------------------------- */
-
 @theme inline {
   /* Fonts */
   --font-inter: 'Inter Variable', Inter, sans-serif;
@@ -213,7 +187,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* --- Primitive palette (StudySphere brand) --- */
+  /* Palette */
   --white: #ffffff;
   --black: #000000;
   --transparent: #ffffff00;
@@ -322,9 +296,6 @@
   --puregreys-800: #171717;
   --puregreys-900: #141414;
 
-  /* --- Palette -> Tailwind utilities (bg-richblack-800, text-yellow-50, ...) ---
-     Kept so every already-written component keeps rendering unchanged during
-     the migration. New code should prefer the semantic utilities below. */
   --color-white: var(--white);
   --color-black: var(--black);
   --color-transparent: var(--transparent);
@@ -433,7 +404,7 @@
   --color-puregreys-800: var(--puregreys-800);
   --color-puregreys-900: var(--puregreys-900);
 
-  /* --- Semantic tokens -> Tailwind utilities --- */
+  /* Semantic tokens -> Tailwind utilities */
   --color-global-primary: var(--global-primary);
   --color-global-bg: var(--global-bg);
   --color-global-bg-surface: var(--global-bg-surface);
@@ -529,14 +500,6 @@
   }
 }
 
-/* ---------------------------------------------------------------------------
-   LEGACY APP STYLES
-   Carried over from the Vite app's index.css so existing screens render
-   unchanged. Each should disappear as its screen is migrated onto the semantic
-   tokens above — `.form-style` -> input-field-*, `.yellowButton` ->
-   button-primary-*, `.blackButton` -> button-secondary-*.
---------------------------------------------------------------------------- */
-
 @layer components {
   .codeblock1 {
     width: 372.95px;
@@ -567,7 +530,6 @@
     background: url('../assets/Images/bghome.svg');
   }
 
-  /* https://10015.io/tools/css-loader-generator */
   .spinner {
     width: 56px;
     height: 56px;
@@ -641,7 +603,6 @@
   }
 }
 
-/* Customizing the pagination */
 .swiper-pagination {
   bottom: 10px;
 }
@@ -661,7 +622,6 @@
 }
 
 @layer components {
-  /* Buttons */
   .yellowButton {
     @apply text-richblack-900 cursor-pointer rounded-md bg-yellow-50 px-[20px] py-[8px] font-semibold;
   }

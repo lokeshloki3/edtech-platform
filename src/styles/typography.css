@@ -1,14 +1,3 @@
-/* ---------------------------------------------------------------------------
-   TYPOGRAPHY
-   Same contract as retailfront-client-ui: element selectors + matching utility
-   classes, applied directly in JSX (`className="body-2"`). Sizes are taken from
-   the type scale the StudySphere screens already use — `.section_heading` was
-   text-2xl / lg:text-4xl, which is `.h4` desktop / `.h5` mobile here.
-
-   Font families resolve through the --font-* variables declared in
-   @theme inline in globals.css (Vite + @fontsource, the stand-in for next/font).
---------------------------------------------------------------------------- */
-
 h1,
 h2,
 h3,

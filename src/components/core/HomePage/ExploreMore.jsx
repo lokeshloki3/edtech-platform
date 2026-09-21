@@ -25,10 +25,10 @@ const ExploreMore = () => {
 
   return (
     <div>
-      <div className='text-3xl sm:text-4xl font-semibold text-center'>
+      <h2 className='text-3xl sm:text-4xl font-semibold text-center'>
         Unlock the
         <HighlightText text={"Power of Code"} />
-      </div>
+      </h2>
 
       <p className='text-center text-global-text-tertiary text-sm text-[16px] mt-3'>
         Learn to build anything you can imagine
