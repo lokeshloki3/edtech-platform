@@ -135,6 +135,7 @@ exports.categoryPageDetails = async (req, res) => {
         // return response
         return res.status(200).json({
             success: true,
+            message: "Category page details fetched successfully",
             data: {
                 selectedCategory,
                 differentCategory,

@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useFullCourseDetails } from '@/hooks/use-course-query';
-import type { Course } from '@/types/course.types';
+import type { BuilderCourse } from '@/types/course.types';
 import RenderSteps from '../AddCourse/RenderSteps';
 import { setCourse, setEditCourse } from '../../../../slices/courseSlice';
 
 interface CourseState {
-  course: { course: Course | null };
+  course: { course: BuilderCourse | null };
 }
 
 const EditCourse = () => {

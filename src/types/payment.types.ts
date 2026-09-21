@@ -1,14 +1,8 @@
 // types/payment.types.ts
-import type { ApiEnvelope } from '@/types/auth.types';
-
 export interface RazorpayOrder {
   id: string;
   currency: string;
   amount: number;
-}
-
-export interface CapturePaymentResponse extends ApiEnvelope {
-  data: RazorpayOrder;
 }
 
 /** What the Razorpay checkout handler hands back on a successful payment. */

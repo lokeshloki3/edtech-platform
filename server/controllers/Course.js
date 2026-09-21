@@ -129,7 +129,7 @@ exports.editCourse = async (req, res) => {
         const course = await Course.findById(courseId)
 
         if (!course) {
-            return res.status(404).json({ error: "Course not found" })
+            return res.status(404).json({ success: false, message: "Course not found" })
         }
 
         // If Thumbnail Image is found, update it
@@ -353,6 +353,7 @@ exports.getFullCourseDetails = async (req, res) => {
 
         return res.status(200).json({
             success: true,
+            message: "Course content fetched successfully",
             data: {
                 courseDetails,
                 totalDuration,
@@ -406,6 +407,7 @@ exports.getInstructorCourses = async (req, res) => {
         // Return the instructor's courses
         res.status(200).json({
             success: true,
+            message: "Instructor courses fetched successfully",
             data: instructorCourses,
         })
     } catch (error) {
@@ -425,7 +427,7 @@ exports.deleteCourse = async (req, res) => {
         // Find the course
         const course = await Course.findById(courseId)
         if (!course) {
-            return res.status(404).json({ message: "Course not found" })
+            return res.status(404).json({ success: false, message: "Course not found" })
         }
 
         // Unenroll students from the course

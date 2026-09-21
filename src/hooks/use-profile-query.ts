@@ -13,7 +13,8 @@ import {
 import { getEnrolledCourses, getInstructorData } from '@/services/profile.service';
 import { authKeys } from '@/hooks/use-auth-query';
 import { useAuthStore } from '@/store/auth.store';
-import type { ApiEnvelope, AuthUser } from '@/types/auth.types';
+import type { ApiEnvelope } from '@/types/api.types';
+import type { AuthUser } from '@/types/auth.types';
 import type { EnrolledCourse, InstructorCourseStat } from '@/types/course.types';
 import type {
   ChangePasswordPayload,

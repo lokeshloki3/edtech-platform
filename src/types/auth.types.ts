@@ -1,13 +1,5 @@
 // types/auth.types.ts
 
-// The Express API wraps responses as { success, message, ...payload } rather
-// than the { status, message, data } envelope the BFF-backed apps return.
-// Services check this shape and unwrap to a plain domain object.
-export interface ApiEnvelope {
-  success: boolean;
-  message: string;
-}
-
 export type AccountType = 'Admin' | 'Student' | 'Instructor';
 
 export interface Profile {
@@ -33,25 +25,3 @@ export interface AuthUser {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface SendOtpResponse extends ApiEnvelope {
-  data?: unknown;
-}
-
-export interface SignupResponse extends ApiEnvelope {
-  user: AuthUser;
-}
-
-export interface LoginResponse extends ApiEnvelope {
-  user: AuthUser;
-}
-
-export interface GetUserDetailsResponse extends ApiEnvelope {
-  data: AuthUser;
-}
-
-export type LogoutResponse = ApiEnvelope;
-
-export type ResetPasswordTokenResponse = ApiEnvelope;
-
-export type ResetPasswordResponse = ApiEnvelope;

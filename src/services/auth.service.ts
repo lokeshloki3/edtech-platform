@@ -2,16 +2,8 @@
 import { withAvatarFallback } from '@/lib/avatar';
 import axiosClient from '@/lib/axiosClient';
 import { handleClientAxiosError } from '@/lib/handleClientAxiosError';
-import type {
-  AuthUser,
-  GetUserDetailsResponse,
-  LoginResponse,
-  LogoutResponse,
-  ResetPasswordResponse,
-  ResetPasswordTokenResponse,
-  SendOtpResponse,
-  SignupResponse,
-} from '@/types/auth.types';
+import type { ApiEnvelope, ApiResponse } from '@/types/api.types';
+import type { AuthUser } from '@/types/auth.types';
 import type {
   LoginPayload,
   ResetPasswordPayload,
@@ -20,23 +12,23 @@ import type {
   SignupPayload,
 } from '@/zod-validations/auth.validation';
 
-export async function login(payload: LoginPayload): Promise<LoginResponse> {
+export async function login(payload: LoginPayload): Promise<AuthUser> {
   try {
-    const response = await axiosClient.post<LoginResponse>('/auth/login', payload);
+    const response = await axiosClient.post<ApiResponse<AuthUser>>('/auth/login', payload);
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Login failed');
     }
 
-    return { ...response.data, user: withAvatarFallback(response.data.user) };
+    return withAvatarFallback(response.data.data);
   } catch (err: unknown) {
     return handleClientAxiosError(err, 'Login failed, please try again');
   }
 }
 
-export async function sendOtp(payload: SendOtpPayload): Promise<SendOtpResponse> {
+export async function sendOtp(payload: SendOtpPayload): Promise<ApiEnvelope> {
   try {
-    const response = await axiosClient.post<SendOtpResponse>('/auth/sendotp', {
+    const response = await axiosClient.post<ApiEnvelope>('/auth/sendotp', {
       ...payload,
       checkUserPresent: true,
     });
@@ -53,13 +45,13 @@ export async function sendOtp(payload: SendOtpPayload): Promise<SendOtpResponse>
 
 export async function signup(payload: SignupPayload): Promise<AuthUser> {
   try {
-    const response = await axiosClient.post<SignupResponse>('/auth/signup', payload);
+    const response = await axiosClient.post<ApiResponse<AuthUser>>('/auth/signup', payload);
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Signup failed');
     }
 
-    return response.data.user;
+    return response.data.data;
   } catch (err: unknown) {
     return handleClientAxiosError(err, 'Signup failed, please try again');
   }
@@ -69,7 +61,7 @@ export async function signup(payload: SignupPayload): Promise<AuthUser> {
 // cannot inspect it, so who is logged in is answered by asking the server.
 export async function getCurrentUser(): Promise<AuthUser> {
   try {
-    const response = await axiosClient.get<GetUserDetailsResponse>('/profile/getUserDetails');
+    const response = await axiosClient.get<ApiResponse<AuthUser>>('/profile/getUserDetails');
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not fetch user details');
@@ -81,9 +73,9 @@ export async function getCurrentUser(): Promise<AuthUser> {
   }
 }
 
-export async function logout(): Promise<LogoutResponse> {
+export async function logout(): Promise<ApiEnvelope> {
   try {
-    const response = await axiosClient.post<LogoutResponse>('/auth/logout');
+    const response = await axiosClient.post<ApiEnvelope>('/auth/logout');
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Logout failed');
@@ -97,12 +89,9 @@ export async function logout(): Promise<LogoutResponse> {
 
 export async function requestPasswordResetToken(
   payload: ResetPasswordTokenPayload
-): Promise<ResetPasswordTokenResponse> {
+): Promise<ApiEnvelope> {
   try {
-    const response = await axiosClient.post<ResetPasswordTokenResponse>(
-      '/auth/reset-password-token',
-      payload
-    );
+    const response = await axiosClient.post<ApiEnvelope>('/auth/reset-password-token', payload);
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Failed to send reset email');
@@ -114,9 +103,9 @@ export async function requestPasswordResetToken(
   }
 }
 
-export async function resetPassword(payload: ResetPasswordPayload): Promise<ResetPasswordResponse> {
+export async function resetPassword(payload: ResetPasswordPayload): Promise<ApiEnvelope> {
   try {
-    const response = await axiosClient.post<ResetPasswordResponse>('/auth/reset-password', payload);
+    const response = await axiosClient.post<ApiEnvelope>('/auth/reset-password', payload);
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Failed to reset password');

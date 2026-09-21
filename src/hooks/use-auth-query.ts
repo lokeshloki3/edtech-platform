@@ -14,14 +14,8 @@ import {
   signup,
 } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth.store';
-import type {
-  AuthUser,
-  LoginResponse,
-  LogoutResponse,
-  ResetPasswordResponse,
-  ResetPasswordTokenResponse,
-  SendOtpResponse,
-} from '@/types/auth.types';
+import type { ApiEnvelope } from '@/types/api.types';
+import type { AuthUser } from '@/types/auth.types';
 import type {
   LoginPayload,
   ResetPasswordPayload,
@@ -57,19 +51,19 @@ export function useLogin() {
   const queryClient = useQueryClient();
   const setUser = useAuthStore((s) => s.setUser);
 
-  return useMutation<LoginResponse, Error, LoginPayload>({
+  return useMutation<AuthUser, Error, LoginPayload>({
     mutationFn: (payload) => login(payload),
-    onSuccess: (data) => {
-      setUser(data.user);
-      queryClient.setQueryData(authKeys.currentUser(), data.user);
-      showCustomSuccessToast({ message: data.message || 'Logged in successfully' });
+    onSuccess: (user) => {
+      setUser(user);
+      queryClient.setQueryData(authKeys.currentUser(), user);
+      showCustomSuccessToast({ message: 'Logged in successfully' });
     },
     onError: (err) => handleMutationError(err, 'Login failed, please try again'),
   });
 }
 
 export function useSendOtp() {
-  return useMutation<SendOtpResponse, Error, SendOtpPayload>({
+  return useMutation<ApiEnvelope, Error, SendOtpPayload>({
     mutationFn: (payload) => sendOtp(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'OTP sent successfully' }),
     onError: (err) => handleMutationError(err, 'Could not send OTP'),
@@ -93,7 +87,7 @@ export function useLogout() {
   const queryClient = useQueryClient();
   const clearAuth = useAuthStore((s) => s.logout);
 
-  return useMutation<LogoutResponse, Error, void>({
+  return useMutation<ApiEnvelope, Error, void>({
     mutationFn: () => logout(),
     onSuccess: (data) => {
       showCustomSuccessToast({ message: data.message || 'Logged out' });
@@ -108,7 +102,7 @@ export function useLogout() {
 }
 
 export function useRequestPasswordResetToken() {
-  return useMutation<ResetPasswordTokenResponse, Error, ResetPasswordTokenPayload>({
+  return useMutation<ApiEnvelope, Error, ResetPasswordTokenPayload>({
     mutationFn: (payload) => requestPasswordResetToken(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Reset email sent, check your inbox' }),
     onError: (err) => handleMutationError(err, 'Failed to send reset email'),
@@ -116,7 +110,7 @@ export function useRequestPasswordResetToken() {
 }
 
 export function useResetPassword() {
-  return useMutation<ResetPasswordResponse, Error, ResetPasswordPayload>({
+  return useMutation<ApiEnvelope, Error, ResetPasswordPayload>({
     mutationFn: (payload) => resetPassword(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Password reset successfully' }),
     onError: (err) => handleMutationError(err, 'Failed to reset password'),

@@ -1,27 +1,20 @@
 // services/settings.service.ts
 import axiosClient from '@/lib/axiosClient';
 import { handleClientAxiosError } from '@/lib/handleClientAxiosError';
-import type { ApiEnvelope, AuthUser } from '@/types/auth.types';
+import type { ApiEnvelope, ApiResponse } from '@/types/api.types';
+import type { AuthUser } from '@/types/auth.types';
 import { withAvatarFallback } from '@/lib/avatar';
 import type {
   ChangePasswordPayload,
   UpdateProfilePayload,
 } from '@/zod-validations/settings.validation';
 
-interface UpdateDisplayPictureResponse extends ApiEnvelope {
-  data: AuthUser;
-}
-
-interface UpdateProfileResponse extends ApiEnvelope {
-  updatedUserDetails: AuthUser;
-}
-
 export async function updateDisplayPicture(file: File): Promise<AuthUser> {
   try {
     const formData = new FormData();
     formData.append('displayPicture', file);
 
-    const response = await axiosClient.put<UpdateDisplayPictureResponse>(
+    const response = await axiosClient.put<ApiResponse<AuthUser>>(
       '/profile/updateDisplayPicture',
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -39,7 +32,7 @@ export async function updateDisplayPicture(file: File): Promise<AuthUser> {
 
 export async function updateProfile(payload: UpdateProfilePayload): Promise<AuthUser> {
   try {
-    const response = await axiosClient.put<UpdateProfileResponse>(
+    const response = await axiosClient.put<ApiResponse<AuthUser>>(
       '/profile/updateProfile',
       payload
     );
@@ -48,7 +41,7 @@ export async function updateProfile(payload: UpdateProfilePayload): Promise<Auth
       throw new Error(response.data.message || 'Could not update profile');
     }
 
-    return withAvatarFallback(response.data.updatedUserDetails);
+    return withAvatarFallback(response.data.data);
   } catch (err: unknown) {
     return handleClientAxiosError(err, 'Could not update profile');
   }
