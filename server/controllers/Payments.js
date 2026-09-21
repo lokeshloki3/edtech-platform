@@ -16,7 +16,7 @@ exports.capturePayment = async (req, res) => {
     if (courses.length === 0) {
         return res.status(400).json({
             success: false,
-            messsage: "Please provide Course Id"
+            message: "Please provide Course Id"
         });
     }
     let total_amount = 0;
@@ -30,7 +30,7 @@ exports.capturePayment = async (req, res) => {
             if (!course) {
                 return res.status(400).json({
                     success: false,
-                    messsage: "Could not find the course"
+                    message: "Could not find the course"
                 });
             }
 
@@ -67,6 +67,7 @@ exports.capturePayment = async (req, res) => {
         console.log("paymentResponse", paymentResponse);
         return res.status(200).json({
             success: true,
+            message: "Payment order created successfully",
             data: paymentResponse,
         });
     } catch (error) {
@@ -187,6 +188,7 @@ const enrollStudent = async (courses, userId, res) => {
             console.log(error);
             return res.status(500).json({
                 success: false,
+                message: "Could not send the payment confirmation email",
                 error: error.message
             });
         }
