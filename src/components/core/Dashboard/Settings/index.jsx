@@ -1,15 +1,13 @@
-import React from 'react'
-import ChangeProfilePicture from './ChangeProfilePicture'
-import EditProfile from './EditProfile'
-import UpdatePassword from './UpdatePassword'
-import DeleteAccount from './DeleteAccount'
+import React from 'react';
+import ChangeProfilePicture from './ChangeProfilePicture';
+import EditProfile from './EditProfile';
+import UpdatePassword from './UpdatePassword';
+import DeleteAccount from './DeleteAccount';
 
 const Settings = () => {
   return (
     <div>
-      <h1 className='mb-14 text-3xl font-medium text-global-text-primary'>
-        Edit Profile
-      </h1>
+      <h1 className="text-global-text-primary mb-14 text-3xl font-medium">Edit Profile</h1>
 
       <ChangeProfilePicture />
 
@@ -19,7 +17,7 @@ const Settings = () => {
 
       <DeleteAccount />
     </div>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;

@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import ReactPlayer from 'react-player';
-import { FiUploadCloud } from "react-icons/fi"
+import { FiUploadCloud } from 'react-icons/fi';
 
-const Upload = ({ name, label, register, setValue, errors, video = false, viewData = null, editData = null, }) => {
-
+const Upload = ({
+  name,
+  label,
+  register,
+  setValue,
+  errors,
+  video = false,
+  viewData = null,
+  editData = null,
+}) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewSource, setPreviewSource] = useState(
-    viewData ? viewData : editData ? editData : ""
+    viewData ? viewData : editData ? editData : ''
   );
 
   const onDrop = (acceptedFiles) => {
@@ -16,12 +24,10 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
       previewFile(file);
       setSelectedFile(file);
     }
-  }
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: !video
-      ? { "image/*": [".jpeg", ".jpg", ".png"] }
-      : { "video/*": [".mp4"] },
+    accept: !video ? { 'image/*': ['.jpeg', '.jpg', '.png'] } : { 'video/*': ['.mp4'] },
     onDrop,
   });
 
@@ -31,27 +37,26 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setPreviewSource(reader.result);
-    }
-  }
+    };
+  };
 
   useEffect(() => {
-    register(name, { required: true })
+    register(name, { required: true });
   }, [register, name]);
 
   useEffect(() => {
-    setValue(name, selectedFile)
+    setValue(name, selectedFile);
   }, [selectedFile, setValue, name]);
 
   return (
     <div className="flex flex-col space-y-2">
-      <label htmlFor={name} className="text-sm text-global-text-primary">
+      <label htmlFor={name} className="text-global-text-primary text-sm">
         {label} {!viewData && <sup className="text-status-error">*</sup>}
       </label>
 
       <div
         {...getRootProps()}
-        className={`${isDragActive ? "bg-global-surface-muted" : "bg-global-card-surface-2"}
-          flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-global-stroke-secondary`}
+        className={`${isDragActive ? 'bg-global-surface-muted' : 'bg-global-card-surface-2'} border-global-stroke-secondary flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted`}
       >
         <input {...getInputProps()} />
 
@@ -60,25 +65,25 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
             {!video ? (
               <img
                 src={previewSource}
-                alt='Preview'
+                alt="Preview"
                 className="h-full w-full rounded-md object-cover"
               />
             ) : (
-
               <div className="aspect-w-16 aspect-h-9 w-full">
                 <ReactPlayer url={previewSource} playsinline controls width="100%" height="100%" />
-              </div>)}
+              </div>
+            )}
 
             {!viewData && (
               <button
-                type='button'
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation(); // prevent triggering dropzone
-                  setPreviewSource("");
+                  setPreviewSource('');
                   setSelectedFile(null);
                   setValue(name, null);
                 }}
-                className="mt-3 text-global-text-tertiary underline"
+                className="text-global-text-tertiary mt-3 underline"
               >
                 Cancel
               </button>
@@ -86,15 +91,14 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
           </div>
         ) : (
           <div className="flex w-full flex-col items-center p-6">
-            <div className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800">
-              <FiUploadCloud className="text-2xl text-global-highlight-text" />
+            <div className="bg-pure-greys-800 grid aspect-square w-14 place-items-center rounded-full">
+              <FiUploadCloud className="text-global-highlight-text text-2xl" />
             </div>
-            <p className="mt-2 max-w-[200px] text-center text-sm text-global-text-tertiary">
-              Drag and drop an {!video ? "image" : "video"}, or click to{" "}
-              <span className="font-semibold text-global-highlight-text">Browse</span> a
-              file
+            <p className="text-global-text-tertiary mt-2 max-w-[200px] text-center text-sm">
+              Drag and drop an {!video ? 'image' : 'video'}, or click to{' '}
+              <span className="text-global-highlight-text font-semibold">Browse</span> a file
             </p>
-            <ul className="mt-10 flex list-disc justify-between space-x-12 text-center  text-xs text-global-text-tertiary">
+            <ul className="text-global-text-tertiary mt-10 flex list-disc justify-between space-x-12 text-center text-xs">
               <li>Aspect ratio 16:9</li>
               <li>Recommended size 1024x576</li>
             </ul>
@@ -102,12 +106,10 @@ const Upload = ({ name, label, register, setValue, errors, video = false, viewDa
         )}
       </div>
       {errors[name] && (
-        <span className="ml-2 text-xs tracking-wide text-status-error">
-          {label} is required
-        </span>
+        <span className="text-status-error ml-2 text-xs tracking-wide">{label} is required</span>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Upload
+export default Upload;

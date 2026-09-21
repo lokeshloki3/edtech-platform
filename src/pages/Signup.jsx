@@ -1,5 +1,5 @@
-import React from 'react'
-import Template from '../components/core/Auth/Template'
+import React from 'react';
+import Template from '../components/core/Auth/Template';
 import signupImg from '../assets/Images/signup.webp';
 
 const Signup = () => {
@@ -11,7 +11,7 @@ const Signup = () => {
       image={signupImg}
       formType="signup"
     />
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
