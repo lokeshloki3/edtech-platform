@@ -40,7 +40,7 @@ const TimeLineSection = () => {
                                     <img src={element.Logo} />
                                 </div>
                                 <div>
-                                    <h2 className='font-semibold text-[18px]'>{element.Heading}</h2>
+                                    <h2 className='font-semibold leading-normal text-[18px]'>{element.Heading}</h2>
                                     <p className='text-base'>{element.Description}</p>
                                 </div>
                             </div>

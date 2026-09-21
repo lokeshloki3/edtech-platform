@@ -25,7 +25,7 @@ const Community = ["Forums", "Chapters", "Events"];
 const Footer = () => {
   return (
     <div className="bg-global-bg-surface">
-      <div className="flex lg:flex-row gap-8 items-center justify-between w-11/12 max-w-maxContent text-global-text-tertiary leading-6 mx-auto relative py-14">
+      <div className="flex lg:flex-row gap-8 items-center justify-between w-11/12 max-w-(--max-content) text-global-text-tertiary leading-6 mx-auto relative py-14">
         <div className="border-b w-[100%] flex flex-col lg:flex-row pb-5 border-global-stroke-primary">
           {/* Section 1 */}
           <div className="lg:w-[50%] flex flex-wrap flex-row justify-between lg:border-r lg:border-global-stroke-primary pl-3 lg:pr-5 gap-3">
@@ -33,7 +33,7 @@ const Footer = () => {
               <Link>
                 <img src={Logo} alt="Logo" className="object-contain" width={160} height={32} loading="lazy" />
               </Link>
-              <h1 className="text-global-text-secondary font-semibold text-[16px]">
+              <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
                 Company
               </h1>
               <div className="flex flex-col gap-2">
@@ -59,7 +59,7 @@ const Footer = () => {
             </div>
 
             <div className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
-              <h1 className="text-global-text-secondary font-semibold text-[16px]">
+              <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
                 Resources
               </h1>
 
@@ -77,7 +77,7 @@ const Footer = () => {
                 })}
               </div>
 
-              <h1 className="text-global-text-secondary font-semibold text-[16px] mt-7">
+              <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px] mt-7">
                 Support
               </h1>
               <div className="text-[14px] cursor-pointer hover:text-global-text-secondary transition-all duration-200 mt-2">
@@ -89,7 +89,7 @@ const Footer = () => {
             <div className="w-full md:w-[48%] lg:w-[30%] mb-7 lg:pl-0">
               <div className="flex justify-between md:block">
                 <div>
-                  <h1 className="text-global-text-secondary font-semibold text-[16px]">
+                  <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
                     Plans
                   </h1>
 
@@ -110,7 +110,7 @@ const Footer = () => {
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-global-text-secondary font-semibold text-[16px] mt-0 md:mt-7 mr-20 md:mr-0">
+                  <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px] mt-0 md:mt-7 mr-20 md:mr-0">
                     Community
                   </h1>
 
@@ -137,7 +137,7 @@ const Footer = () => {
             {FooterLink2.map((ele, i) => {
               return (
                 <div key={i} className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
-                  <h1 className="text-global-text-secondary font-semibold text-[16px]">
+                  <h1 className="text-global-text-secondary font-semibold leading-normal text-[16px]">
                     {ele.title}
                   </h1>
                   <div className="flex flex-col gap-2 mt-2">
@@ -160,7 +160,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="flex flex-row items-center justify-between w-11/12 max-w-maxContent text-global-text-tertiary mx-auto  pb-14 text-sm">
+      <div className="flex flex-row items-center justify-between w-11/12 max-w-(--max-content) text-global-text-tertiary mx-auto  pb-14 text-sm">
         {/* Section 1 */}
         <div className="flex justify-between lg:items-start items-center flex-col lg:flex-row gap-3 w-full">
           <div className="flex flex-row">
