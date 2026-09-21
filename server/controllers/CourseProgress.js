@@ -12,7 +12,7 @@ exports.updateCourseProgress = async (req, res) => {
     // Check if the subsection is valid
     const subSection = await SubSection.findById(subSectionId)
     if (!subSection) {
-      return res.status(404).json({ error: "Invalid subsection" })
+      return res.status(404).json({ success: false, message: "Invalid subsection" })
     }
 
     // Find the old entry of course progress document for the user and course
@@ -30,7 +30,7 @@ exports.updateCourseProgress = async (req, res) => {
     } else {
       // If course progress exists, check if the subsection is already completed
       if (courseProgress.completedVideos.includes(subSectionId)) {
-        return res.status(400).json({ error: "Subsection already completed" })
+        return res.status(400).json({ success: false, message: "Subsection already completed" })
       }
 
       // Push the subsection into the completedVideos array
@@ -40,10 +40,10 @@ exports.updateCourseProgress = async (req, res) => {
     // Save the updated course progress
     await courseProgress.save();
 
-    return res.status(200).json({ message: "Course progress updated" })
+    return res.status(200).json({ success: true, message: "Course progress updated" })
   } catch (error) {
     console.error(error)
-    return res.status(500).json({ error: "Internal server error" })
+    return res.status(500).json({ success: false, message: "Internal server error" })
   }
 }
 
