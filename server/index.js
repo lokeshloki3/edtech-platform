@@ -23,6 +23,17 @@ const { scheduleUserDeletionJob } = require("./jobs/deleteInactiveUsers");
 // database connect
 database.connect();
 // middlewares
+// robots.txt stops crawling; X-Robots-Tag also stops a URL found via a link
+// from being indexed, which robots.txt alone does not prevent.
+app.use((req, res, next) => {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    next();
+});
+
+app.get("/robots.txt", (req, res) => {
+    return res.type("text/plain").send("User-agent: *\nDisallow: /\n");
+});
+
 app.use(express.json());
 app.use(cookieParser());
 // The session cookie is cross-site in production, so the allowed origins have

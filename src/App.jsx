@@ -26,10 +26,13 @@ import ViewCourse from "./pages/ViewCourse";
 import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 import Instructor from "./components/core/Dashboard/Instructor";
 import Category from "./components/core/Dashboard/Category";
+import { useRobotsMeta } from '@/hooks/use-robots-meta';
 import { useAuthStore } from '@/store/auth.store';
 
 function App() {
   const user = useAuthStore((s) => s.user);
+
+  useRobotsMeta();
 
   return (
     <div className="w-screen min-h-screen bg-global-bg flex flex-col font-inter">
