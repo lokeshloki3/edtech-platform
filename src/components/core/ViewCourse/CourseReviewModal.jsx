@@ -73,12 +73,6 @@ const CourseReviewModal = ({ setReviewModal }) => {
             onSubmit={handleSubmit(onSubmit)}
             className='mt-6 flex flex-col items-center'
           >
-            {/* <ReactStars
-              count={5}
-              onChange={ratingChanged}
-              size={24}
-              activeColor="#ffd700"
-            /> */}
             <Rating
               initialRating={0}
               onChange={ratingChanged}

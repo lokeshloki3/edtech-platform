@@ -9,7 +9,7 @@ const EnrolledCourses = () => {
 
   return (
     <div>
-      <div className="text-global-text-secondary text-3xl">Enrolled Courses</div>
+      <h1 className="text-global-text-secondary text-3xl">Enrolled Courses</h1>
 
       {isLoading ? (
         <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">

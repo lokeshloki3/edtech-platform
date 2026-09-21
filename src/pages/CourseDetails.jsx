@@ -147,9 +147,9 @@ const CourseDetails = () => {
             <div
               className='z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-global-text-primary'
             >
-              <p className='text-4xl font-bold sm:text-[42px]'>
+              <h1 className='text-4xl font-bold sm:text-[42px]'>
                 {courseName}
-              </p>
+              </h1>
               <p className='text-global-text-tertiary'>{courseDescription}</p>
               <div className='text-md flex flex-wrap items-center gap-2'>
                 <span className='text-global-highlight-text'>{avgReviewCount}</span>
@@ -229,7 +229,7 @@ const CourseDetails = () => {
         <div className='mx-auto max-w-(--max-content-tab) lg:mx-0 xl:max-w-[810px]'>
           {/* What will you learn section */}
           <div className='my-8 border border-global-stroke-secondary p-8'>
-            <p className='text-3xl font-semibold'>What you'll learn</p>
+            <h2 className='text-3xl font-semibold'>What you'll learn</h2>
             <div className='mt-5'>
               <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown>
             </div>

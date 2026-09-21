@@ -16,9 +16,11 @@ const About = () => {
         <div>
             <section className="bg-global-card-surface-2">
                 <div className="relative mx-auto flex w-11/12 max-w-(--max-content) flex-col justify-between gap-10 text-center text-white">
-                    <header className="mx-auto py-20 text-3xl md:text-4xl font-semibold lg:w-[70%]">
-                        Driving Innovation in Online Education for a
-                        <HighlightText text={"Brighter Future"} />
+                    <header className="mx-auto py-20 lg:w-[70%]">
+                        <h1 className="text-3xl md:text-4xl font-semibold">
+                            Driving Innovation in Online Education for a
+                            <HighlightText text={"Brighter Future"} />
+                        </h1>
                         <p className="mx-auto mt-3 text-center text-base font-medium text-global-text-tertiary lg:w-[95%]">
                             Studysphere is at the forefront of driving innovation in online
                             education. We're passionate about creating a brighter future by
@@ -47,10 +49,10 @@ const About = () => {
                 text-global-text-disabled">
                     <div className="flex flex-col items-center gap-10 lg:flex-row justify-between">
                         <div className="my-24 flex lg:w-[50%] flex-col gap-10">
-                            <h1 className="bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] 
+                            <h2 className="bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] 
                                 bg-clip-text text-3xl md:text-4xl font-semibold text-transparent lg:w-[70%] leading-[1.3]">
                                 Our Founding Story
-                            </h1>
+                            </h2>
                             <p className="text-base font-medium text-global-text-tertiary lg:w-[95%]">
                                 Our e-learning platform was born out of a shared vision and
                                 passion for transforming education. It all began with a group of
@@ -78,10 +80,10 @@ const About = () => {
                     </div>
                     <div className="flex flex-col items-center lg:gap-10 lg:flex-row justify-between">
                         <div className="my-24 flex lg:w-[40%] flex-col gap-10">
-                            <h1 className="bg-gradient-to-b from-[#FF512F] to-[#F09819] bg-clip-text 
+                            <h2 className="bg-gradient-to-b from-[#FF512F] to-[#F09819] bg-clip-text 
                                 text-4xl font-semibold text-transparent lg:w-[70%]">
                                 Our Vision
-                            </h1>
+                            </h2>
                             <p className="text-base font-medium text-global-text-tertiary lg:w-[95%]">
                                 With this vision in mind, we set out on a journey to create an
                                 e-learning platform that would revolutionize the way people
@@ -92,10 +94,10 @@ const About = () => {
                             </p>
                         </div>
                         <div className="my-24 flex lg:w-[40%] flex-col gap-10">
-                            <h1 className="bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] 
+                            <h2 className="bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] 
                                 text-transparent bg-clip-text text-4xl font-semibold lg:w-[70%]">
                                 Our Mission
-                            </h1>
+                            </h2>
                             <p className="text-base font-medium text-global-text-tertiary lg:w-[95%]">
                                 Our mission goes beyond just delivering courses online. We wanted
                                 to create a vibrant community of learners, where individuals can
@@ -116,10 +118,10 @@ const About = () => {
                 <ContactFormSection />
             </section>
 
-            <div className="relative mx-auto my-20 flex w-11/12 max-w-maxContent flex-col items-center justify-between gap-8 bg-global-bg text-white">
-                <h1 className="text-center text-4xl font-semibold mt-8">
+            <div className="relative mx-auto my-20 flex w-11/12 max-w-(--max-content) flex-col items-center justify-between gap-8 bg-global-bg text-white">
+                <h2 className="text-center text-4xl font-semibold mt-8">
                     Reviews from other learners
-                </h1>
+                </h2>
                 <ReviewSliderHome />
             </div>
             <Footer />

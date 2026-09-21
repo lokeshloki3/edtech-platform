@@ -47,9 +47,9 @@ const Catalog = () => {
               {catalogPageData.selectedCategory?.name}
             </span>
           </p>
-          <p className="text-global-text-primary text-3xl">
+          <h1 className="text-global-text-primary text-3xl">
             {catalogPageData.selectedCategory?.name}
-          </p>
+          </h1>
           <p className="text-global-text-tertiary max-w-[870px]">
             {catalogPageData.selectedCategory?.description}
           </p>
@@ -57,7 +57,7 @@ const Catalog = () => {
       </div>
 
       <div className="mx-auto box-content w-11/12 max-w-(--max-content-tab) px-4 py-12 md:w-full lg:max-w-(--max-content)">
-        <div className="section_heading">Courses to get you started</div>
+        <h2 className="section_heading">Courses to get you started</h2>
         <div className="border-b-global-stroke-secondary my-4 flex border-b text-sm">
           <p
             className={`px-4 py-2 ${
@@ -86,16 +86,16 @@ const Catalog = () => {
       </div>
 
       <div className="mx-auto box-content w-11/12 max-w-(--max-content-tab) px-4 py-12 md:w-full lg:max-w-(--max-content)">
-        <div className="section_heading">
+        <h2 className="section_heading">
           Top Courses in {catalogPageData.differentCategory?.name}
-        </div>
+        </h2>
         <div className="py-8">
           <CatalogCourseSlider Courses={catalogPageData.differentCategory?.courses} delay={3000} />
         </div>
       </div>
 
       <div className="mx-auto box-content w-11/12 max-w-(--max-content-tab) px-4 py-12 md:w-full lg:max-w-(--max-content)">
-        <div className="section_heading">Frequently Bought</div>
+        <h2 className="section_heading">Frequently Bought</h2>
         <div className="py-8">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {catalogPageData.mostSellingCourses?.slice(0, 4).map((course) => (

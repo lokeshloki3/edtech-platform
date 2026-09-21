@@ -16,10 +16,10 @@ const InstructorSection = () => {
                     />
                 </div>
                 <div className="flex flex-col gap-10 w-full md:w-[50%]">
-                    <div className="text-3xl md:text-4xl font-semibold text-center md:text-start">
+                    <h2 className="text-3xl md:text-4xl font-semibold text-center md:text-start">
                         Become an
                         <HighlightText text={"Instructor"} />
-                    </div>
+                    </h2>
                     <div className="font-medium text-[16px] w-full md:w-[80%] text-global-text-tertiary">
                         Instructors from around the world teach millions of students on StudySphere. We provide the tools and skills to teach what you love.
                     </div>
