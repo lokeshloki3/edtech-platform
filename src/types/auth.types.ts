@@ -1,12 +1,5 @@
 // types/auth.types.ts
-
-// The Express API wraps responses as { success, message, ...payload } rather
-// than the { status, message, data } envelope the BFF-backed apps return.
-// Services check this shape and unwrap to a plain domain object.
-export interface ApiEnvelope {
-  success: boolean;
-  message: string;
-}
+import type { ApiEnvelope } from '@/types/api.types';
 
 export type AccountType = 'Admin' | 'Student' | 'Instructor';
 
@@ -48,6 +41,15 @@ export interface LoginResponse extends ApiEnvelope {
 
 export interface GetUserDetailsResponse extends ApiEnvelope {
   data: AuthUser;
+}
+
+export interface UpdateDisplayPictureResponse extends ApiEnvelope {
+  data: AuthUser;
+}
+
+/** `updateProfile` answers under `updatedUserDetails` rather than `data`. */
+export interface UpdateProfileResponse extends ApiEnvelope {
+  updatedUserDetails: AuthUser;
 }
 
 export type LogoutResponse = ApiEnvelope;

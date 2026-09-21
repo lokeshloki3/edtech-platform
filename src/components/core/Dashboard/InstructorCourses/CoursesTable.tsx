@@ -9,13 +9,10 @@ import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 import { useDeleteCourse } from '@/hooks/use-course-query';
 import { formatDate } from '@/lib/utils';
-import type { Course } from '@/types/course.types';
+import type { InstructorCourse } from '@/types/course.types';
 import ConfirmationModal, { type ModalData } from '../../../common/ConfirmationModal';
 
 const TRUNCATE_LENGTH = 200;
-
-/** `totalDuration` is added by the instructor-courses controller. */
-type InstructorCourse = Course & { totalDuration?: string };
 
 const CoursesTable = ({ courses }: { courses: InstructorCourse[] }) => {
   const navigate = useNavigate();

@@ -26,14 +26,17 @@ import {
   updateSection,
   updateSubSection,
 } from '@/services/course.service';
-import type { ApiEnvelope } from '@/types/auth.types';
+import type { ApiEnvelope } from '@/types/api.types';
 import type {
   CatalogPageData,
   Category,
   Course,
+  CourseCard,
   CourseDetailsData,
   FullCourseDetailsData,
+  InstructorCourse,
   RatingAndReview,
+  Section,
 } from '@/types/course.types';
 import type {
   CreateCategoryPayload,
@@ -61,7 +64,7 @@ export const courseKeys = {
 /* -------------------------------------------------------------------------- */
 
 export function useAllCourses(enabled = true) {
-  return useQuery<Course[]>({
+  return useQuery<CourseCard[]>({
     queryKey: courseKeys.list(),
     queryFn: getAllCourses,
     enabled,
@@ -109,7 +112,7 @@ export function useFullCourseDetails(courseId: string) {
 }
 
 export function useInstructorCourses(enabled = true) {
-  return useQuery<Course[]>({
+  return useQuery<InstructorCourse[]>({
     queryKey: courseKeys.instructor(),
     queryFn: getInstructorCourses,
     enabled,
@@ -147,7 +150,7 @@ export function useCreateCategory() {
 export function useCreateCourse() {
   const queryClient = useQueryClient();
 
-  return useMutation<Course, Error, FormData>({
+  return useMutation<InstructorCourse, Error, FormData>({
     mutationFn: (payload) => createCourse(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: courseKeys.instructor() });
@@ -185,10 +188,10 @@ export function useDeleteCourse() {
   });
 }
 
-// The builder mutations all return the whole updated course, which the
-// AddCourse/EditCourse screens hold in the course slice while editing.
+// The section mutations answer with the course, the sub-section ones with just
+// the changed section, which the AddCourse/EditCourse screens rebuild around.
 export function useCreateSection() {
-  return useMutation<Course, Error, CreateSectionPayload>({
+  return useMutation<InstructorCourse, Error, CreateSectionPayload>({
     mutationFn: (payload) => createSection(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Course section created' }),
     onError: (err) => handleMutationError(err, 'Could not create section'),
@@ -196,7 +199,7 @@ export function useCreateSection() {
 }
 
 export function useUpdateSection() {
-  return useMutation<Course, Error, UpdateSectionPayload>({
+  return useMutation<InstructorCourse, Error, UpdateSectionPayload>({
     mutationFn: (payload) => updateSection(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Course section updated' }),
     onError: (err) => handleMutationError(err, 'Could not update section'),
@@ -204,7 +207,7 @@ export function useUpdateSection() {
 }
 
 export function useDeleteSection() {
-  return useMutation<Course, Error, DeleteSectionPayload>({
+  return useMutation<InstructorCourse, Error, DeleteSectionPayload>({
     mutationFn: (payload) => deleteSection(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Course section deleted' }),
     onError: (err) => handleMutationError(err, 'Could not delete section'),
@@ -212,7 +215,7 @@ export function useDeleteSection() {
 }
 
 export function useCreateSubSection() {
-  return useMutation<Course, Error, FormData>({
+  return useMutation<Section, Error, FormData>({
     mutationFn: (payload) => createSubSection(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Lecture added' }),
     onError: (err) => handleMutationError(err, 'Could not add lecture'),
@@ -220,7 +223,7 @@ export function useCreateSubSection() {
 }
 
 export function useUpdateSubSection() {
-  return useMutation<Course, Error, FormData>({
+  return useMutation<Section, Error, FormData>({
     mutationFn: (payload) => updateSubSection(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Lecture updated' }),
     onError: (err) => handleMutationError(err, 'Could not update lecture'),
@@ -228,7 +231,7 @@ export function useUpdateSubSection() {
 }
 
 export function useDeleteSubSection() {
-  return useMutation<Course, Error, DeleteSubSectionPayload>({
+  return useMutation<Section, Error, DeleteSubSectionPayload>({
     mutationFn: (payload) => deleteSubSection(payload),
     onSuccess: () => showCustomSuccessToast({ message: 'Lecture deleted' }),
     onError: (err) => handleMutationError(err, 'Could not delete lecture'),

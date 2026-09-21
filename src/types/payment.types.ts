@@ -1,5 +1,5 @@
 // types/payment.types.ts
-import type { ApiEnvelope } from '@/types/auth.types';
+import type { ApiEnvelope } from '@/types/api.types';
 
 export interface RazorpayOrder {
   id: string;

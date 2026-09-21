@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { showCustomSuccessToast } from '@/lib/customToastHelper';
 import { handleMutationError } from '@/lib/handleMutationError';
 import { submitContactForm } from '@/services/contact.service';
-import type { ApiEnvelope } from '@/types/auth.types';
+import type { ApiEnvelope } from '@/types/api.types';
 import type { ContactUsPayload } from '@/zod-validations/contact.validation';
 
 export function useSubmitContactForm() {

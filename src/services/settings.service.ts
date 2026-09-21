@@ -1,20 +1,17 @@
 // services/settings.service.ts
 import axiosClient from '@/lib/axiosClient';
 import { handleClientAxiosError } from '@/lib/handleClientAxiosError';
-import type { ApiEnvelope, AuthUser } from '@/types/auth.types';
+import type { ApiEnvelope } from '@/types/api.types';
+import type {
+  AuthUser,
+  UpdateDisplayPictureResponse,
+  UpdateProfileResponse,
+} from '@/types/auth.types';
 import { withAvatarFallback } from '@/lib/avatar';
 import type {
   ChangePasswordPayload,
   UpdateProfilePayload,
 } from '@/zod-validations/settings.validation';
-
-interface UpdateDisplayPictureResponse extends ApiEnvelope {
-  data: AuthUser;
-}
-
-interface UpdateProfileResponse extends ApiEnvelope {
-  updatedUserDetails: AuthUser;
-}
 
 export async function updateDisplayPicture(file: File): Promise<AuthUser> {
   try {

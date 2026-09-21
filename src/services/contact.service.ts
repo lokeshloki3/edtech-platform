@@ -1,7 +1,7 @@
 // services/contact.service.ts
 import axiosClient from '@/lib/axiosClient';
 import { handleClientAxiosError } from '@/lib/handleClientAxiosError';
-import type { ApiEnvelope } from '@/types/auth.types';
+import type { ApiEnvelope } from '@/types/api.types';
 import type { ContactUsPayload } from '@/zod-validations/contact.validation';
 
 export async function submitContactForm(payload: ContactUsPayload): Promise<ApiEnvelope> {
