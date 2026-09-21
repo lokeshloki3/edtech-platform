@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import NotFound from "./NotFound";
+import NotFound from './NotFound';
 import GetAvgRating from '../utils/avgRating';
-import RatingStars from "../components/common/RatingStars";
-import { BiInfoCircle } from "react-icons/bi";
-import { HiOutlineGlobeAlt } from "react-icons/hi";
-import { formatDate } from "../services/formatDate";
-import { ACCOUNT_TYPE } from "../utils/constants";
+import RatingStars from '../components/common/RatingStars';
+import { BiInfoCircle } from 'react-icons/bi';
+import { HiOutlineGlobeAlt } from 'react-icons/hi';
+import { formatDate } from '../services/formatDate';
+import { ACCOUNT_TYPE } from '../utils/constants';
 import toast from 'react-hot-toast';
 import { addToCart } from '../slices/cartSlice';
-import ConfirmationModal from "../components/common/ConfirmationModal";
+import ConfirmationModal from '../components/common/ConfirmationModal';
 import CourseDetailsCard from '../components/core/Course/CourseDetailsCard';
-import Footer from "../components/common/Footer";
+import Footer from '../components/common/Footer';
 import ReactMarkdown from 'react-markdown';
 import CourseAccordionBar from '../components/core/Course/CourseAccordionBar';
 import { useCourseDetails } from '@/hooks/use-course-query';
@@ -20,9 +20,8 @@ import { useBuyCourse } from '@/hooks/use-payment-query';
 import { useAuthStore } from '@/store/auth.store';
 
 const CourseDetails = () => {
-
   const user = useAuthStore((s) => s.user);
-  const isLoggedIn = useAuthStore((s) => s.status === "authenticated");
+  const isLoggedIn = useAuthStore((s) => s.status === 'authenticated');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { courseId } = useParams();
@@ -42,10 +41,9 @@ const CourseDetails = () => {
   useEffect(() => {
     let lectures = 0;
     courseData?.courseDetails?.courseContent?.forEach((sec) => {
-      lectures += sec.subSection.length || 0
-    })
+      lectures += sec.subSection.length || 0;
+    });
     setTotalNoOfLectures(lectures);
-
   }, [courseData]);
 
   // These loading should be after useEffect and before destructuring
@@ -54,11 +52,11 @@ const CourseDetails = () => {
       <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
         <div className="spinner"></div>
       </div>
-    )
+    );
   }
 
   if (isError) {
-    return <NotFound />
+    return <NotFound />;
   }
 
   const {
@@ -83,14 +81,14 @@ const CourseDetails = () => {
       return;
     }
     setConfirmationModal({
-      text1: "You are not logged in!",
-      text2: "Please login to Purchase Course.",
-      btn1Text: "Login",
-      btn2Text: "Cancel",
-      btn1Handler: () => navigate("/login"),
+      text1: 'You are not logged in!',
+      text2: 'Please login to Purchase Course.',
+      btn1Text: 'Login',
+      btn2Text: 'Cancel',
+      btn1Handler: () => navigate('/login'),
       btn2Handler: () => setConfirmationModal(null),
-    })
-  }
+    });
+  };
 
   const handleAddToCart = () => {
     if (user && user?.accountType === ACCOUNT_TYPE.INSTRUCTOR) {
@@ -102,23 +100,19 @@ const CourseDetails = () => {
       return;
     }
     setConfirmationModal({
-      text1: "You are not logged in!",
-      text2: "Please login to add To Cart",
-      btn1Text: "Login",
-      btn2Text: "Cancel",
-      btn1Handler: () => navigate("/login"),
+      text1: 'You are not logged in!',
+      text2: 'Please login to add To Cart',
+      btn1Text: 'Login',
+      btn2Text: 'Cancel',
+      btn1Handler: () => navigate('/login'),
       btn2Handler: () => setConfirmationModal(null),
-    })
-  }
+    });
+  };
 
   const handleActive = (id) => {
     // console.log("called", id);
-    setIsActive(
-      !isActive.includes(id)
-        ? isActive.concat([id])
-        : isActive.filter((e) => e != id)
-    )
-  }
+    setIsActive(!isActive.includes(id) ? isActive.concat([id]) : isActive.filter((e) => e != id));
+  };
 
   if (paymentLoading) {
     // console.log("payment loading")
@@ -126,96 +120,88 @@ const CourseDetails = () => {
       <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
         <div className="spinner"></div>
       </div>
-    )
+    );
   }
 
   return (
     <div>
-      <div className='relative w-full bg-global-bg-surface'>
+      <div className="bg-global-bg-surface relative w-full">
         {/* Hero Section */}
-        <div className='mx-auto box-content px-4 lg:w-[1260px] 2xl:relative'>
-          <div className='mx-auto grid min-h-[450px] max-w-(--max-content-tab) justify-items-center py-8 lg:mx-0 lg:justify-items-center lg:py-0 xl:max-w-[810px]'>
+        <div className="mx-auto box-content px-4 lg:w-[1260px] 2xl:relative">
+          <div className="mx-auto grid min-h-[450px] max-w-(--max-content-tab) justify-items-center py-8 lg:mx-0 lg:justify-items-center lg:py-0 xl:max-w-[810px]">
             {/* This div for mobile only */}
-            <div className='relative block max-h-[30rem] lg:hidden'>
-              <div className='absolute bottom-0 left-0 h-full w-full shadow-[#161D29_0px_-64px_36px_-28px_inset]'></div>
-              <img
-                src={thumbnail}
-                alt='Course thumbnail'
-                className='aspect-auto w-full'
-              />
+            <div className="relative block max-h-[30rem] lg:hidden">
+              <div className="absolute bottom-0 left-0 h-full w-full shadow-[#161D29_0px_-64px_36px_-28px_inset]"></div>
+              <img src={thumbnail} alt="Course thumbnail" className="aspect-auto w-full" />
             </div>
-            <div
-              className='z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-global-text-primary'
-            >
-              <h1 className='text-4xl font-bold sm:text-[42px]'>
-                {courseName}
-              </h1>
-              <p className='text-global-text-tertiary'>{courseDescription}</p>
-              <div className='text-md flex flex-wrap items-center gap-2'>
-                <span className='text-global-highlight-text'>{avgReviewCount}</span>
+            <div className="text-global-text-primary z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg">
+              <h1 className="text-4xl font-bold sm:text-[42px]">{courseName}</h1>
+              <p className="text-global-text-tertiary">{courseDescription}</p>
+              <div className="text-md flex flex-wrap items-center gap-2">
+                <span className="text-global-highlight-text">{avgReviewCount}</span>
                 <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
                 <span>{`(${ratingAndReviews.length} reviews)`}</span>
                 <span>{`${studentsEnrolled.length} students enrolled`}</span>
               </div>
-              <p>
-                Created By {`${instructor.firstName} ${instructor.lastName}`}
-              </p>
-              <div className='flex flex-wrap gap-5 text-lg'>
+              <p>Created By {`${instructor.firstName} ${instructor.lastName}`}</p>
+              <div className="flex flex-wrap gap-5 text-lg">
                 <p className="flex items-center gap-2">
-                  {" "}
+                  {' '}
                   <BiInfoCircle /> Created at {formatDate(createdAt)}
                 </p>
                 <p className="flex items-center gap-2">
-                  {" "}
+                  {' '}
                   <HiOutlineGlobeAlt /> English
                 </p>
               </div>
             </div>
 
             {/* This div for mobile only */}
-            <div className='flex w-full flex-col gap-4 border-y border-y-richblack-500 py-4 lg:hidden'>
-              <p className='space-x-3 pb-4 text-3xl font-semibold text-global-text-primary'>
+            <div className="border-y-richblack-500 flex w-full flex-col gap-4 border-y py-4 lg:hidden">
+              <p className="text-global-text-primary space-x-3 pb-4 text-3xl font-semibold">
                 Rs. {price}
               </p>
-              <div className='flex flex-col gap-2'>
+              <div className="flex flex-col gap-2">
                 {/* Show to non-logged in OR student */}
                 {(!user || user?.accountType === ACCOUNT_TYPE.STUDENT) && (
                   <button
                     className="yellowButton"
                     onClick={
-                      user?.accountType === ACCOUNT_TYPE.STUDENT && courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id)
-                        ? () => navigate("/dashboard/enrolled-courses")
+                      user?.accountType === ACCOUNT_TYPE.STUDENT &&
+                      courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id)
+                        ? () => navigate('/dashboard/enrolled-courses')
                         : handleBuyCourse
                     }
                   >
-                    {user?.accountType === ACCOUNT_TYPE.STUDENT && courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id)
-                      ? "Go To Course"
-                      : "Buy Now"}
+                    {user?.accountType === ACCOUNT_TYPE.STUDENT &&
+                    courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id)
+                      ? 'Go To Course'
+                      : 'Buy Now'}
                   </button>
                 )}
-                {(user?.accountType === ACCOUNT_TYPE.STUDENT && !courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id)) && (
-                  isCourseInCart ? (
+                {user?.accountType === ACCOUNT_TYPE.STUDENT &&
+                  !courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id) &&
+                  (isCourseInCart ? (
                     <button
-                      onClick={() => navigate("/dashboard/cart")}
-                      className='cursor-pointer rounded-md bg-global-surface-muted px-[20px] py-[8px] font-semibold text-global-text-primary'
+                      onClick={() => navigate('/dashboard/cart')}
+                      className="bg-global-surface-muted text-global-text-primary cursor-pointer rounded-md px-[20px] py-[8px] font-semibold"
                     >
                       Go to Cart
                     </button>
                   ) : (
                     <button
                       onClick={handleAddToCart}
-                      className='cursor-pointer rounded-md bg-global-surface-muted px-[20px] py-[8px] font-semibold text-global-text-primary'
+                      className="bg-global-surface-muted text-global-text-primary cursor-pointer rounded-md px-[20px] py-[8px] font-semibold"
                     >
                       Add to Cart
                     </button>
-                  )
-                )}
+                  ))}
               </div>
             </div>
           </div>
 
           {/* Course Card */}
-          <div className="right-[1rem] top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0 lg:absolute  lg:block">
+          <div className="top-[60px] right-[1rem] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0 lg:absolute lg:block">
             <CourseDetailsCard
               course={courseData?.data?.courseDetails}
               // setConfirmationModal={setConfirmationModal}
@@ -225,22 +211,22 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
-      <div className='mx-auto box-content px4 text-start text-global-text-primary lg:w-[1260px]'>
-        <div className='mx-auto max-w-(--max-content-tab) lg:mx-0 xl:max-w-[810px]'>
+      <div className="px4 text-global-text-primary mx-auto box-content text-start lg:w-[1260px]">
+        <div className="mx-auto max-w-(--max-content-tab) lg:mx-0 xl:max-w-[810px]">
           {/* What will you learn section */}
-          <div className='my-8 border border-global-stroke-secondary p-8'>
-            <h2 className='text-3xl font-semibold'>What you'll learn</h2>
-            <div className='mt-5'>
+          <div className="border-global-stroke-secondary my-8 border p-8">
+            <h2 className="text-3xl font-semibold">What you'll learn</h2>
+            <div className="mt-5">
               <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown>
             </div>
           </div>
 
           {/* Course Content Section */}
-          <div className='max-w-[830px]'>
-            <div className='flex flex-col gap-3'>
-              <p className='text-[28px] font-semibold'>Course Content</p>
-              <div className='flex flex-wrap justify-between gap-2'>
-                <div className='flex gap-2'>
+          <div className="max-w-[830px]">
+            <div className="flex flex-col gap-3">
+              <p className="text-[28px] font-semibold">Course Content</p>
+              <div className="flex flex-wrap justify-between gap-2">
+                <div className="flex gap-2">
                   <span>
                     {courseContent.length} {`section(s)`}
                   </span>
@@ -251,7 +237,7 @@ const CourseDetails = () => {
                 </div>
                 <div>
                   <button
-                    className='text-global-highlight-text cursor-pointer'
+                    className="text-global-highlight-text cursor-pointer"
                     onClick={() => setIsActive([])}
                   >
                     Collapse all sections
@@ -261,7 +247,7 @@ const CourseDetails = () => {
             </div>
 
             {/* Course Details Accordion */}
-            <div className='py-4'>
+            <div className="py-4">
               {courseContent?.map((course, index) => (
                 <CourseAccordionBar
                   course={course}
@@ -273,8 +259,8 @@ const CourseDetails = () => {
             </div>
 
             {/* Author Details */}
-            <div className='mb-12 py-4'>
-              <p className='text-[28px] font-semibold'>Author</p>
+            <div className="mb-12 py-4">
+              <p className="text-[28px] font-semibold">Author</p>
               <div className="flex items-center gap-4 py-4">
                 <img
                   src={
@@ -287,9 +273,7 @@ const CourseDetails = () => {
                 />
                 <p className="text-lg">{`${instructor.firstName} ${instructor.lastName}`}</p>
               </div>
-              <p className='text-global-text-secondary'>
-                {instructor?.additionalDetails?.about}
-              </p>
+              <p className="text-global-text-secondary">{instructor?.additionalDetails?.about}</p>
             </div>
           </div>
         </div>
@@ -298,7 +282,7 @@ const CourseDetails = () => {
       <Footer />
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </div>
-  )
-}
+  );
+};
 
-export default CourseDetails
+export default CourseDetails;

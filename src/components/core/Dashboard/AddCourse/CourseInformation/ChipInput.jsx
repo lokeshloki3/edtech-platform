@@ -1,84 +1,81 @@
-import React, { useEffect, useState } from 'react'
-import { MdClose } from "react-icons/md"
+import React, { useEffect, useState } from 'react';
+import { MdClose } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
 const ChipInput = ({ label, name, placeholder, register, errors, setValue }) => {
+  const [chips, setChips] = useState([]);
 
-    const [chips, setChips] = useState([]);
+  const { editCourse, course } = useSelector((state) => state.course);
 
-    const { editCourse, course } = useSelector((state) => state.course);
-
-    useEffect(() => {
-        if (editCourse) {
-            // console.log(course);
-            setChips(course?.tag);
-        }
-        register(name, { required: true, validate: (value) => value.length > 0 })
-    }, []);
-
-    useEffect(() => {
-        setValue(name, chips);
-    }, [chips]);
-
-    const handleKeyDown = (event) => {
-        if (event.key === "Enter" || event.key === ",") {
-            event.preventDefault();
-
-            const chipValue = event.target.value.trim();
-
-            if (chipValue && !chips.includes(chipValue)) {
-                const newChips = [...chips, chipValue];
-                setChips(newChips);
-                event.target.value = "";
-            }
-        }
+  useEffect(() => {
+    if (editCourse) {
+      // console.log(course);
+      setChips(course?.tag);
     }
+    register(name, { required: true, validate: (value) => value.length > 0 });
+  }, []);
 
-    const handleDeleteChip = (chipIndex) => {
-        const newChips = chips.filter((_, index) => index !== chipIndex);
+  useEffect(() => {
+    setValue(name, chips);
+  }, [chips]);
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ',') {
+      event.preventDefault();
+
+      const chipValue = event.target.value.trim();
+
+      if (chipValue && !chips.includes(chipValue)) {
+        const newChips = [...chips, chipValue];
         setChips(newChips);
+        event.target.value = '';
+      }
     }
+  };
 
-    return (
-        <div className="flex flex-col space-y-2">
-            <label htmlFor={name} className="text-sm text-global-text-primary">
-                {label} <sup className="text-status-error">*</sup>
-            </label>
+  const handleDeleteChip = (chipIndex) => {
+    const newChips = chips.filter((_, index) => index !== chipIndex);
+    setChips(newChips);
+  };
 
-            {/* Render the chips and input */}
-            <div className="flex w-full flex-wrap gap-y-2">
-                {chips.map((chip, index) => (
-                    <div
-                        key={index}
-                        className="m-1 flex items-center rounded-full bg-global-highlight-surface-strong px-2 py-1 text-sm text-global-text-primary"
-                    >
-                        {chip}
-                        <button
-                            type='button'
-                            className='ml-2 focus:outline-none'
-                            onClick={() => handleDeleteChip(index)}
-                        >
-                            <MdClose className="text-sm cursor-pointer" />
-                        </button>
-                    </div>
-                ))}
+  return (
+    <div className="flex flex-col space-y-2">
+      <label htmlFor={name} className="text-global-text-primary text-sm">
+        {label} <sup className="text-status-error">*</sup>
+      </label>
 
-                <input
-                    id={name}
-                    name={name}
-                    type='text'
-                    placeholder={placeholder}
-                    onKeyDown={handleKeyDown}
-                    className='form-style w-full'
-                />
-            </div>
-            {errors[name] && (
-                <span className="ml-2 text-xs tracking-wide text-status-error">
-                    {label} is required
-                </span>
-            )}
-        </div>
-    )
-}
+      {/* Render the chips and input */}
+      <div className="flex w-full flex-wrap gap-y-2">
+        {chips.map((chip, index) => (
+          <div
+            key={index}
+            className="bg-global-highlight-surface-strong text-global-text-primary m-1 flex items-center rounded-full px-2 py-1 text-sm"
+          >
+            {chip}
+            <button
+              type="button"
+              className="ml-2 focus:outline-none"
+              onClick={() => handleDeleteChip(index)}
+            >
+              <MdClose className="cursor-pointer text-sm" />
+            </button>
+          </div>
+        ))}
 
-export default ChipInput
+        <input
+          id={name}
+          name={name}
+          type="text"
+          placeholder={placeholder}
+          onKeyDown={handleKeyDown}
+          className="form-style w-full"
+        />
+      </div>
+      {errors[name] && (
+        <span className="text-status-error ml-2 text-xs tracking-wide">{label} is required</span>
+      )}
+    </div>
+  );
+};
+
+export default ChipInput;
