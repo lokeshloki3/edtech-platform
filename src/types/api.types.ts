@@ -1,10 +1,13 @@
 // types/api.types.ts
 
-// The Express API wraps responses as { success, message, ...payload } rather
-// than the { status, message, data } envelope the BFF-backed apps return, and
-// the payload key differs per endpoint. Services check this shape and unwrap
-// to a plain domain object.
+// Every endpoint answers { success, message }, plus a `data` payload when it has
+// one. Services check `success` before unwrapping: the contact endpoint replies
+// 200 on failure, so the flag — not the status code — is the only signal there.
 export interface ApiEnvelope {
   success: boolean;
   message: string;
+}
+
+export interface ApiResponse<T> extends ApiEnvelope {
+  data: T;
 }

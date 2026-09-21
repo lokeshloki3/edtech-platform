@@ -1,5 +1,4 @@
 // types/auth.types.ts
-import type { ApiEnvelope } from '@/types/api.types';
 
 export type AccountType = 'Admin' | 'Student' | 'Instructor';
 
@@ -26,34 +25,3 @@ export interface AuthUser {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface SendOtpResponse extends ApiEnvelope {
-  data?: unknown;
-}
-
-export interface SignupResponse extends ApiEnvelope {
-  user: AuthUser;
-}
-
-export interface LoginResponse extends ApiEnvelope {
-  user: AuthUser;
-}
-
-export interface GetUserDetailsResponse extends ApiEnvelope {
-  data: AuthUser;
-}
-
-export interface UpdateDisplayPictureResponse extends ApiEnvelope {
-  data: AuthUser;
-}
-
-/** `updateProfile` answers under `updatedUserDetails` rather than `data`. */
-export interface UpdateProfileResponse extends ApiEnvelope {
-  updatedUserDetails: AuthUser;
-}
-
-export type LogoutResponse = ApiEnvelope;
-
-export type ResetPasswordTokenResponse = ApiEnvelope;
-
-export type ResetPasswordResponse = ApiEnvelope;

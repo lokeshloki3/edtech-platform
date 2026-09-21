@@ -53,7 +53,7 @@ exports.updateProfile = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Profile updated successfully",
-            updatedUserDetails, // donot send contact number in response
+            data: updatedUserDetails, // donot send contact number in response
         })
     } catch (error) {
         return res.status(500).json({
@@ -285,6 +285,7 @@ exports.getEnrolledCourses = async (req, res) => {
         }
         return res.status(200).json({
             success: true,
+            message: "Enrolled courses fetched successfully",
             data: userDetails.courses,
         })
     } catch (error) {
@@ -316,9 +317,13 @@ exports.instructorDashboard = async (req, res) => {
             return courseDataWithStats
         })
 
-        res.status(200).json({ courses: courseData })
+        res.status(200).json({
+            success: true,
+            message: "Instructor dashboard fetched successfully",
+            data: courseData,
+        })
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Server Error" })
+        res.status(500).json({ success: false, message: "Server Error" })
     }
 }

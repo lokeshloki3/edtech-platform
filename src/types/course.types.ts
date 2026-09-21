@@ -1,5 +1,4 @@
 // types/course.types.ts
-import type { ApiEnvelope } from '@/types/api.types';
 import type { AuthUser, Profile } from '@/types/auth.types';
 
 export type CourseStatus = 'Draft' | 'Published';
@@ -148,63 +147,4 @@ export interface CatalogPageData {
   selectedCategory: Category;
   differentCategory: Category;
   mostSellingCourses: CatalogCourse[];
-}
-
-export interface CourseCardListResponse extends ApiEnvelope {
-  data: CourseCard[];
-}
-
-export interface InstructorCourseListResponse extends ApiEnvelope {
-  data: InstructorCourse[];
-}
-
-/** createCourse answers with the freshly inserted document, nothing populated. */
-export interface InstructorCourseResponse extends ApiEnvelope {
-  data: InstructorCourse;
-}
-
-export interface CourseResponse extends ApiEnvelope {
-  data: Course;
-}
-
-export interface CourseDetailsResponse extends ApiEnvelope {
-  data: CourseDetailsData;
-}
-
-export interface FullCourseDetailsResponse extends ApiEnvelope {
-  data: FullCourseDetailsData;
-}
-
-export interface SectionResponse extends ApiEnvelope {
-  data: InstructorCourse;
-}
-
-/** The sub-section mutations answer with the changed section, not the course. */
-export interface SubSectionResponse extends ApiEnvelope {
-  data: Section;
-}
-
-export interface CategoryResponse extends ApiEnvelope {
-  data: Category;
-}
-
-export interface CategoryListResponse extends ApiEnvelope {
-  data: Category[];
-}
-
-export interface CatalogPageResponse extends ApiEnvelope {
-  data: CatalogPageData;
-}
-
-export interface EnrolledCoursesResponse extends ApiEnvelope {
-  data: EnrolledCourse[];
-}
-
-/** instructorDashboard returns a bare { courses } with no envelope. */
-export interface InstructorDashboardResponse {
-  courses: InstructorCourseStat[];
-}
-
-export interface ReviewsResponse extends ApiEnvelope {
-  data: RatingAndReview[];
 }

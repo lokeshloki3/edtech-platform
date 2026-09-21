@@ -55,7 +55,6 @@ exports.sendOTP = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'OTP sent successfully',
-            otp,
         })
 
     } catch (error) {
@@ -160,12 +159,12 @@ exports.signUp = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "User is registered successfully",
-            user,
+            data: user,
         });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            success: true,
+            success: false,
             message: "User cannot be registered. Please try again",
         });
     }
@@ -180,7 +179,7 @@ exports.login = async (req, res) => {
         // validate data
         if (!email || !password) {
             return res.status(400).json({
-                success: true,
+                success: false,
                 message: "All fields required",
             });
         }
@@ -191,7 +190,7 @@ exports.login = async (req, res) => {
         // const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({
-                success: true,
+                success: false,
                 message: "User is not registered, please signup first",
             });
         }
@@ -224,20 +223,20 @@ exports.login = async (req, res) => {
             // returning it would put a bearer credential back into JS reach.
             res.cookie(COOKIE_NAME, token, getAuthCookieOptions()).status(200).json({
                 success: true,
-                user,
                 message: "Logged in successfully",
+                data: user,
             })
         }
         else {
             return res.status(401).json({
-                success: true,
+                success: false,
                 message: "Password is incorrect",
             })
         }
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            success: true,
+            success: false,
             message: "Login failed, please try again",
         });
     }

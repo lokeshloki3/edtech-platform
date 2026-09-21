@@ -1,29 +1,17 @@
 // services/course.service.ts
 import axiosClient from '@/lib/axiosClient';
 import { handleClientAxiosError } from '@/lib/handleClientAxiosError';
-import type { ApiEnvelope } from '@/types/api.types';
+import type { ApiEnvelope, ApiResponse } from '@/types/api.types';
 import type {
   CatalogPageData,
-  CatalogPageResponse,
   Category,
-  CategoryListResponse,
-  CategoryResponse,
   Course,
   CourseCard,
-  CourseCardListResponse,
   CourseDetailsData,
-  CourseDetailsResponse,
-  CourseResponse,
   FullCourseDetailsData,
-  FullCourseDetailsResponse,
   InstructorCourse,
-  InstructorCourseListResponse,
-  InstructorCourseResponse,
   RatingAndReview,
-  ReviewsResponse,
   Section,
-  SectionResponse,
-  SubSectionResponse,
 } from '@/types/course.types';
 import type {
   CreateCategoryPayload,
@@ -41,7 +29,7 @@ import type {
 
 export async function getAllCourses(): Promise<CourseCard[]> {
   try {
-    const response = await axiosClient.get<CourseCardListResponse>('/course/getAllCourses');
+    const response = await axiosClient.get<ApiResponse<CourseCard[]>>('/course/getAllCourses');
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not fetch courses');
@@ -55,7 +43,7 @@ export async function getAllCourses(): Promise<CourseCard[]> {
 
 export async function getCourseCategories(): Promise<Category[]> {
   try {
-    const response = await axiosClient.get<CategoryListResponse>('/course/showAllCategories');
+    const response = await axiosClient.get<ApiResponse<Category[]>>('/course/showAllCategories');
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not fetch categories');
@@ -69,9 +57,12 @@ export async function getCourseCategories(): Promise<Category[]> {
 
 export async function getCatalogPageData(categoryId: string): Promise<CatalogPageData> {
   try {
-    const response = await axiosClient.post<CatalogPageResponse>('/course/getCategoryPageDetails', {
-      categoryId,
-    });
+    const response = await axiosClient.post<ApiResponse<CatalogPageData>>(
+      '/course/getCategoryPageDetails',
+      {
+        categoryId,
+      }
+    );
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not fetch catalog page');
@@ -85,9 +76,12 @@ export async function getCatalogPageData(categoryId: string): Promise<CatalogPag
 
 export async function getCourseDetails(courseId: string): Promise<CourseDetailsData> {
   try {
-    const response = await axiosClient.post<CourseDetailsResponse>('/course/getCourseDetails', {
-      courseId,
-    });
+    const response = await axiosClient.post<ApiResponse<CourseDetailsData>>(
+      '/course/getCourseDetails',
+      {
+        courseId,
+      }
+    );
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not fetch course details');
@@ -101,7 +95,7 @@ export async function getCourseDetails(courseId: string): Promise<CourseDetailsD
 
 export async function getCourseReviews(): Promise<RatingAndReview[]> {
   try {
-    const response = await axiosClient.get<ReviewsResponse>('/course/getReviews');
+    const response = await axiosClient.get<ApiResponse<RatingAndReview[]>>('/course/getReviews');
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not fetch reviews');
@@ -119,7 +113,7 @@ export async function getCourseReviews(): Promise<RatingAndReview[]> {
 
 export async function getFullCourseDetails(courseId: string): Promise<FullCourseDetailsData> {
   try {
-    const response = await axiosClient.post<FullCourseDetailsResponse>(
+    const response = await axiosClient.post<ApiResponse<FullCourseDetailsData>>(
       '/course/getFullCourseDetails',
       { courseId }
     );
@@ -168,7 +162,7 @@ export async function createRating(payload: CreateRatingPayload): Promise<ApiEnv
 
 export async function getInstructorCourses(): Promise<InstructorCourse[]> {
   try {
-    const response = await axiosClient.get<InstructorCourseListResponse>(
+    const response = await axiosClient.get<ApiResponse<InstructorCourse[]>>(
       '/course/getInstructorCourses'
     );
 
@@ -186,7 +180,7 @@ export async function getInstructorCourses(): Promise<InstructorCourse[]> {
 // zod schema validates the form before it is packed rather than the body here.
 export async function createCourse(payload: FormData): Promise<InstructorCourse> {
   try {
-    const response = await axiosClient.post<InstructorCourseResponse>(
+    const response = await axiosClient.post<ApiResponse<InstructorCourse>>(
       '/course/createCourse',
       payload,
       {
@@ -206,7 +200,7 @@ export async function createCourse(payload: FormData): Promise<InstructorCourse>
 
 export async function editCourse(payload: FormData): Promise<Course> {
   try {
-    const response = await axiosClient.post<CourseResponse>('/course/editCourse', payload, {
+    const response = await axiosClient.post<ApiResponse<Course>>('/course/editCourse', payload, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
 
@@ -238,7 +232,10 @@ export async function deleteCourse(courseId: string): Promise<ApiEnvelope> {
 
 export async function createCategory(payload: CreateCategoryPayload): Promise<Category> {
   try {
-    const response = await axiosClient.post<CategoryResponse>('/course/createCategory', payload);
+    const response = await axiosClient.post<ApiResponse<Category>>(
+      '/course/createCategory',
+      payload
+    );
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not create category');
@@ -256,7 +253,10 @@ export async function createCategory(payload: CreateCategoryPayload): Promise<Ca
 
 export async function createSection(payload: CreateSectionPayload): Promise<InstructorCourse> {
   try {
-    const response = await axiosClient.post<SectionResponse>('/course/addSection', payload);
+    const response = await axiosClient.post<ApiResponse<InstructorCourse>>(
+      '/course/addSection',
+      payload
+    );
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not create section');
@@ -270,7 +270,10 @@ export async function createSection(payload: CreateSectionPayload): Promise<Inst
 
 export async function updateSection(payload: UpdateSectionPayload): Promise<InstructorCourse> {
   try {
-    const response = await axiosClient.post<SectionResponse>('/course/updateSection', payload);
+    const response = await axiosClient.post<ApiResponse<InstructorCourse>>(
+      '/course/updateSection',
+      payload
+    );
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not update section');
@@ -284,7 +287,10 @@ export async function updateSection(payload: UpdateSectionPayload): Promise<Inst
 
 export async function deleteSection(payload: DeleteSectionPayload): Promise<InstructorCourse> {
   try {
-    const response = await axiosClient.post<SectionResponse>('/course/deleteSection', payload);
+    const response = await axiosClient.post<ApiResponse<InstructorCourse>>(
+      '/course/deleteSection',
+      payload
+    );
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not delete section');
@@ -300,9 +306,13 @@ export async function deleteSection(payload: DeleteSectionPayload): Promise<Inst
 // three answer with the changed section, not the course.
 export async function createSubSection(payload: FormData): Promise<Section> {
   try {
-    const response = await axiosClient.post<SubSectionResponse>('/course/addSubSection', payload, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await axiosClient.post<ApiResponse<Section>>(
+      '/course/addSubSection',
+      payload,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
 
     if (!response.data.success) {
       throw new Error(response.data.message || 'Could not create lecture');
@@ -316,7 +326,7 @@ export async function createSubSection(payload: FormData): Promise<Section> {
 
 export async function updateSubSection(payload: FormData): Promise<Section> {
   try {
-    const response = await axiosClient.post<SubSectionResponse>(
+    const response = await axiosClient.post<ApiResponse<Section>>(
       '/course/updateSubSection',
       payload,
       {
@@ -336,7 +346,7 @@ export async function updateSubSection(payload: FormData): Promise<Section> {
 
 export async function deleteSubSection(payload: DeleteSubSectionPayload): Promise<Section> {
   try {
-    const response = await axiosClient.post<SubSectionResponse>(
+    const response = await axiosClient.post<ApiResponse<Section>>(
       '/course/deleteSubSection',
       payload
     );

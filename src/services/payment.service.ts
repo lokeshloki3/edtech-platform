@@ -1,16 +1,12 @@
 // services/payment.service.ts
 import axiosClient from '@/lib/axiosClient';
 import { handleClientAxiosError } from '@/lib/handleClientAxiosError';
-import type { ApiEnvelope } from '@/types/api.types';
-import type {
-  CapturePaymentResponse,
-  RazorpayOrder,
-  VerifyPaymentPayload,
-} from '@/types/payment.types';
+import type { ApiEnvelope, ApiResponse } from '@/types/api.types';
+import type { RazorpayOrder, VerifyPaymentPayload } from '@/types/payment.types';
 
 export async function capturePayment(courses: string[]): Promise<RazorpayOrder> {
   try {
-    const response = await axiosClient.post<CapturePaymentResponse>('/payment/capturePayment', {
+    const response = await axiosClient.post<ApiResponse<RazorpayOrder>>('/payment/capturePayment', {
       courses,
     });
 
