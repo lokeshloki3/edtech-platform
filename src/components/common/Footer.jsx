@@ -121,7 +121,7 @@ const Footer = () => {
               </li>
             ))}
           </ul>
-          <p className="body-3 text-center">Made with ❤️ Lokesh © {year} StudySphere</p>
+          <p className="body-3 text-center">© {year} StudySphere. All rights reserved.</p>
         </div>
       </div>
     </footer>
