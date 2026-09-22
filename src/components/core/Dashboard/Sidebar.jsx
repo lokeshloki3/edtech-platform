@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   if (status === 'pending') {
     return (
-      <div className="border-r-richblack-700 bg-global-bg-surface grid h-[calc(100vh-3.5rem)] min-w-[220px] items-center border-r-[1px]">
+      <div className="border-r-global-stroke-primary bg-global-bg-surface grid h-[calc(100vh-3.5rem)] min-w-[220px] items-center border-r-[1px]">
         <div className="spinner"></div>
       </div>
     );
@@ -25,7 +25,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="border-r-richblack-700 bg-global-bg-surface hidden h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] py-10 md:block">
+      <div className="border-r-global-stroke-primary bg-global-bg-surface hidden h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] py-10 md:block">
         <div className="flex flex-col">
           {sidebarLinks.map((link) => {
             if (link.type && user?.accountType !== link.type) {

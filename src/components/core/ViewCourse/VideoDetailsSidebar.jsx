@@ -37,7 +37,7 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
 
   return (
     <>
-      <div className="border-r-richblack-700 bg-global-bg-surface flex h-[calc(100vh-3.5rem)] w-full flex-col border-r-[1px] md:w-[320px] md:max-w-[350px]">
+      <div className="border-r-global-stroke-primary bg-global-bg-surface flex h-[calc(100vh-3.5rem)] w-full flex-col border-r-[1px] md:w-[320px] md:max-w-[350px]">
         {/* For buttons and headings */}
         <div className="border-global-stroke-secondary text-global-text-secondary mx-5 flex flex-col items-start justify-between gap-2 gap-y-4 border-b py-5 text-lg font-bold">
           {/* For buttons */}

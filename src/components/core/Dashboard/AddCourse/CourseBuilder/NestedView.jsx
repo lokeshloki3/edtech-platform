@@ -55,7 +55,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
           <details key={section._id} open>
             {/* Section Dropdown Content  */}
             {/* open attribute on <details> tag makes the section expanded by default */}
-            <summary className="border-b-richblack-600 flex items-center justify-between border-b-2 py-2">
+            <summary className="border-b-global-stroke-secondary flex items-center justify-between border-b-2 py-2">
               <div className="flex items-center gap-x-3">
                 <RxDropdownMenu className="text-global-text-secondary text-2xl" />
                 <p className="text-global-text-secondary font-semibold">{section.sectionName}</p>
@@ -94,7 +94,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                 <div
                   key={data?._id}
                   onClick={() => setViewSubSection(data)}
-                  className="border-b-richblack-600 flex cursor-pointer items-center justify-between gap-x-3 border-b-2 py-2"
+                  className="border-b-global-stroke-secondary flex cursor-pointer items-center justify-between gap-x-3 border-b-2 py-2"
                 >
                   <div className="flex items-center gap-x-3 py-2">
                     <RxDropdownMenu className="text-global-text-secondary text-2xl" />

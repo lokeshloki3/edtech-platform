@@ -51,7 +51,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="border-b-richblack-700 bg-global-bg-surface fixed top-0 z-500 flex h-14 w-full items-center justify-center border-b-[1px] transition-all duration-200">
+    <div className="border-b-global-stroke-primary bg-global-bg-surface fixed top-0 z-500 flex h-14 w-full items-center justify-center border-b-[1px] transition-all duration-200">
       <div className="flex w-11/12 max-w-(--max-content) items-center justify-between">
         {/* Logo */}
         <Link to="/">
