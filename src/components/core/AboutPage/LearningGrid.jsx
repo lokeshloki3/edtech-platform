@@ -1,96 +1,88 @@
-import React from 'react'
+import React from 'react';
 import HighlightText from '../HomePage/HighlightText';
-import CTAButton from '../HomePage/Button'
+import CTAButton from '../HomePage/Button';
 
 const LearningGridArray = [
-	{
-		order: -1,
-		heading: "World-Class Learning for",
-		highliteText: "Anyone, Anywhere",
-		description:
-			"Studysphere partners with more than 275+ leading universities and companies to bring flexible, affordable, job-relevant online learning to individuals and organizations worldwide.",
-		BtnText: "Learn More",
-		BtnLink: "/",
-	},
-	{
-		order: 1,
-		heading: "Curriculum Based on Industry Needs",
-		description:
-			"Save time and money! The Belajar curriculum is made to be easier to understand and in line with industry needs.",
-	},
-	{
-		order: 2,
-		heading: "Our Learning Methods",
-		description:
-			"Studysphere partners with more than 275+ leading universities and companies to bring",
-	},
-	{
-		order: 3,
-		heading: "Certification",
-		description:
-			"Studysphere partners with more than 275+ leading universities and companies to bring",
-	},
-	{
-		order: 4,
-		heading: `Rating "Auto-grading"`,
-		description:
-			"Studysphere partners with more than 275+ leading universities and companies to bring",
-	},
-	{
-		order: 5,
-		heading: "Ready to Work",
-		description:
-			"Studysphere partners with more than 275+ leading universities and companies to bring",
-	},
+  {
+    order: -1,
+    heading: 'World-Class Learning for',
+    highliteText: 'Anyone, Anywhere',
+    description:
+      'Studysphere partners with more than 275+ leading universities and companies to bring flexible, affordable, job-relevant online learning to individuals and organizations worldwide.',
+    BtnText: 'Learn More',
+    BtnLink: '/',
+  },
+  {
+    order: 1,
+    heading: 'Curriculum Based on Industry Needs',
+    description:
+      'Save time and money! The Belajar curriculum is made to be easier to understand and in line with industry needs.',
+  },
+  {
+    order: 2,
+    heading: 'Our Learning Methods',
+    description:
+      'Studysphere partners with more than 275+ leading universities and companies to bring',
+  },
+  {
+    order: 3,
+    heading: 'Certification',
+    description:
+      'Studysphere partners with more than 275+ leading universities and companies to bring',
+  },
+  {
+    order: 4,
+    heading: `Rating "Auto-grading"`,
+    description:
+      'Studysphere partners with more than 275+ leading universities and companies to bring',
+  },
+  {
+    order: 5,
+    heading: 'Ready to Work',
+    description:
+      'Studysphere partners with more than 275+ leading universities and companies to bring',
+  },
 ];
 
 const LearningGrid = () => {
-	return (
-		<div className="grid mx-auto w-[350px] xl:w-fit grid-cols-1 xl:grid-cols-4 mb-12">
-			{
-				LearningGridArray.map((card, index) => {
-					return (
-						<div
-							key={index}
-							className={`${index === 0 && "xl:col-span-2 xl:h-[294px]"}
-                        		${card.order % 2 === 1
-									? "bg-richblack-700 h-[294px]"
-									: card.order % 2 === 0
-										? "bg-richblack-800 h-[294px]"
-										: "bg-transparent"} 
-                    			${card.order === 3 && "xl:col-start-2"}`}
-						>
-							{
-								card.order < 0 ? (
-									<div className="xl:w-[90%] flex flex-col gap-3 pb-10 xl:pb-0">
-										<div className="text-3xl md:text-4xl font-semibold ">
-											{card.heading}
-											<HighlightText text={card.highliteText} />
-										</div>
-										<p className="text-richblack-300 font-medium">
-											{card.description}
-										</p>
-										<div className="w-fit mt-2">
-											<CTAButton active={true} linkto={card.BtnLink}>
-												{card.BtnText}
-											</CTAButton>
-										</div>
-									</div>
-								) : (
-									<div className="p-8 flex flex-col gap-8">
-										<h1 className="text-richblack-5 text-lg">{card.heading}</h1>
-										<p className="text-richblack-300 font-medium">
-											{card.description}
-										</p>
-									</div>
-								)
-							}
-						</div>
-					)
-				})
-			}
-		</div>
-	)
-}
+  return (
+    <div className="mx-auto mb-12 grid w-[350px] grid-cols-1 xl:w-fit xl:grid-cols-4">
+      {LearningGridArray.map((card, index) => {
+        return (
+          <div
+            key={index}
+            className={`${index === 0 && 'xl:col-span-2 xl:h-[294px]'} ${
+              card.order % 2 === 1
+                ? 'bg-global-card-surface-2 h-[294px]'
+                : card.order % 2 === 0
+                  ? 'bg-global-bg-surface h-[294px]'
+                  : 'bg-transparent'
+            } ${card.order === 3 && 'xl:col-start-2'}`}
+          >
+            {card.order < 0 ? (
+              <div className="flex flex-col gap-3 pb-10 xl:w-[90%] xl:pb-0">
+                <h2 className="text-3xl font-semibold md:text-4xl">
+                  {card.heading}
+                  <HighlightText text={card.highliteText} />
+                </h2>
+                <p className="text-global-text-tertiary font-medium">{card.description}</p>
+                <div className="mt-2 w-fit">
+                  <CTAButton active={true} linkto={card.BtnLink}>
+                    {card.BtnText}
+                  </CTAButton>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-8 p-8">
+                <h3 className="text-global-text-primary text-lg">{card.heading}</h3>
+                <p className="text-global-text-tertiary font-medium">{card.description}</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
-export default LearningGrid
+export default LearningGrid;

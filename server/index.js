@@ -23,12 +23,30 @@ const { scheduleUserDeletionJob } = require("./jobs/deleteInactiveUsers");
 // database connect
 database.connect();
 // middlewares
+// robots.txt stops crawling; X-Robots-Tag also stops a URL found via a link
+// from being indexed, which robots.txt alone does not prevent.
+app.use((req, res, next) => {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    next();
+});
+
+app.get("/robots.txt", (req, res) => {
+    return res.type("text/plain").send("User-agent: *\nDisallow: /\n");
+});
+
 app.use(express.json());
 app.use(cookieParser());
+// The session cookie is cross-site in production, so the allowed origins have
+// to be exact (no "*") and credentials must be on, or the browser silently
+// drops the cookie. Set CORS_ORIGINS to a comma-separated list per environment.
+const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:5173")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
 app.use(
     cors({
-        // origin: "http://localhost:5173",
-        origin: "https://studysphere-edtech.vercel.app",
+        origin: allowedOrigins,
         credentials: true,
     })
 )
@@ -62,5 +80,5 @@ app.get("/", (req, res) => {
 
 // activate the server
 app.listen(PORT, () => {
-    console.log(`App is running at ${PORT}`)
+    // console.log(`App is running at ${PORT}`)
 })

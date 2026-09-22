@@ -6,13 +6,15 @@ const User = require("../models/User");
 // dotenv.config();
 
 // auth
-// authentication bearer > cookies > body - safety of token
+// Session auth: the JWT travels only as an httpOnly cookie.
 exports.auth = async (req, res, next) => {
     try {
-        // extract token
-        const token = req.cookies.token
-            || req.body.token
-            || req.header("Authorization").replace("Bearer ", "");
+        // Cookie-only. The Authorization header and body token were accepted
+        // while the client still held a bearer token; now that it does not, a
+        // second accepted credential path would only widen the surface the
+        // httpOnly cookie exists to close. Re-add the header read here if a
+        // non-browser client ever needs it.
+        const token = req.cookies.token;
 
         // if token missing, then return response
         if (!token) {
@@ -25,7 +27,6 @@ exports.auth = async (req, res, next) => {
         // verify the token
         try {
             const decode = jwt.verify(token, process.env.JWT_SECRET);
-            console.log(decode);
             req.user = decode;
         } catch (error) {
             // verification issue
@@ -45,12 +46,14 @@ exports.auth = async (req, res, next) => {
 }
 
 // isStudent
+// The three role guards answer 403, not 401: reaching them means auth accepted
+// the session and only the role is wrong. A 401 signed the user out instead.
 exports.isStudent = async (req, res, next) => {
     try {
         const userDetails = await User.findOne({ email: req.user.email });
 
         if (userDetails.accountType !== "Student") {
-            return res.status(401).json({
+            return res.status(403).json({
                 success: false,
                 message: "This is protected route for Student only",
             });
@@ -68,11 +71,11 @@ exports.isStudent = async (req, res, next) => {
 exports.isInstructor = async (req, res, next) => {
     try {
         const userDetails = await User.findOne({ email: req.user.email });
-        console.log(userDetails);
-        console.log(userDetails.accountType);
+        // console.log(userDetails);
+        // console.log(userDetails.accountType);
 
         if (userDetails.accountType !== "Instructor") {
-            return res.status(401).json({
+            return res.status(403).json({
                 success: false,
                 message: "This is protected route for Instructor only",
             });
@@ -92,7 +95,7 @@ exports.isAdmin = async (req, res, next) => {
         const userDetails = await User.findOne({ email: req.user.email });
 
         if (userDetails.accountType !== "Admin") {
-            return res.status(401).json({
+            return res.status(403).json({
                 success: false,
                 message: "This is protected route for Admin only",
             });

@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 // import ReactStars from "react-rating-stars-component";
 import IconBtn from '../../common/IconBtn';
-import { createRating } from '../../../services/operations/courseDetailsAPI';
+import { useCreateRating } from '@/hooks/use-course-query';
+import { useAuthStore } from '@/store/auth.store';
 import Rating from 'react-rating';
 import { FaStar } from 'react-icons/fa';
-import { RxCross2 } from "react-icons/rx";
+import { RxCross2 } from 'react-icons/rx';
 
 const CourseReviewModal = ({ setReviewModal }) => {
-
-  const { user } = useSelector((state) => state.profile);
+  const user = useAuthStore((s) => s.user);
   const { courseEntireData } = useSelector((state) => state.viewCourse);
-  const { token } = useSelector((state) => state.auth);
+  const { mutate: submitRating, isPending } = useCreateRating();
 
   const {
     register,
@@ -22,63 +22,53 @@ const CourseReviewModal = ({ setReviewModal }) => {
   } = useForm();
 
   useEffect(() => {
-    setValue("courseExperience", "");
-    setValue("courseRating", 0);
-  }, [])
+    setValue('courseExperience', '');
+    setValue('courseRating', 0);
+  }, []);
 
-  const onSubmit = async (data) => {
-    await createRating(
+  const onSubmit = (data) => {
+    submitRating(
       {
-        courseId: courseEntireData._id,
-        rating: data.courseRating,
+        courseId: courseEntireData?._id,
+        rating: Number(data.courseRating),
         review: data.courseExperience,
       },
-      token
+      { onSuccess: () => setReviewModal(false) }
     );
-    setReviewModal(false);
-  }
+  };
 
   const ratingChanged = (newRating) => {
-    setValue("courseRating", newRating);
-  }
+    setValue('courseRating', newRating);
+  };
 
   return (
-    <div className='fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white/10 backdrop-blur-sm'>
-      <div className='my-10 w-11/12 max-w-[700px] rounded-lg border border-richblack-400 bg-richblack-800'>
+    <div className="fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white/10 backdrop-blur-sm">
+      <div className="border-global-stroke-tertiary bg-global-bg-surface my-10 w-11/12 max-w-[700px] rounded-lg border">
         {/* Modal header */}
-        <div className='flex items-center justify-between rounded-t-lg bg-richblack-700 p-5'>
-          <p className='text-xl font-semibold text-richblack-5'>Add Review</p>
-          <button
-            onClick={() => setReviewModal(false)}
-          >
-            <RxCross2 className="text-2xl text-richblack-5 cursor-pointer" />
+        <div className="bg-global-card-surface-2 flex items-center justify-between rounded-t-lg p-5">
+          <p className="text-global-text-primary text-xl font-semibold">Add Review</p>
+          <button onClick={() => setReviewModal(false)}>
+            <RxCross2 className="text-global-text-primary cursor-pointer text-2xl" />
           </button>
         </div>
 
         {/* Modal body */}
-        <div className='p-6'>
-          <div className='flex items-center justify-center gap-x-4'>
+        <div className="p-6">
+          <div className="flex items-center justify-center gap-x-4">
             <img
               src={user?.image}
-              alt={user?.firstName + "profile"}
-              className='aspect-square w-[50px] rounded-full object-cover'
+              alt={user?.firstName + 'profile'}
+              className="aspect-square w-[50px] rounded-full object-cover"
             />
             <div>
-              <p className="font-semibold text-richblack-5">{user?.firstName} {user?.lastName}</p>
-              <p className="text-sm text-richblack-5">Posting Publicly</p>
+              <p className="text-global-text-primary font-semibold">
+                {user?.firstName} {user?.lastName}
+              </p>
+              <p className="text-global-text-primary text-sm">Posting Publicly</p>
             </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className='mt-6 flex flex-col items-center'
-          >
-            {/* <ReactStars
-              count={5}
-              onChange={ratingChanged}
-              size={24}
-              activeColor="#ffd700"
-            /> */}
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col items-center">
             <Rating
               initialRating={0}
               onChange={ratingChanged}
@@ -86,42 +76,38 @@ const CourseReviewModal = ({ setReviewModal }) => {
               fullSymbol={<FaStar className="text-[#ffd700]" />}
             />
 
-            <div className='flex w-11/12 flex-col space-y-2'>
-              <label htmlFor='courseExperience' className='text-sm text-richblack-5'>
-                Add Your Experience <sup className="text-pink-200">*</sup>
+            <div className="flex w-11/12 flex-col space-y-2">
+              <label htmlFor="courseExperience" className="text-global-text-primary text-sm">
+                Add Your Experience <sup className="text-status-error">*</sup>
               </label>
               <textarea
-                id='courseExperience'
-                placeholder='Add Your Experience here'
-                {...register("courseExperience", { required: true })}
-                className='form-style resize-x-none min-h-[130px] w-full'
+                id="courseExperience"
+                placeholder="Add Your Experience here"
+                {...register('courseExperience', { required: true })}
+                className="form-style resize-x-none min-h-[130px] w-full"
               />
-              {
-                errors.courseExperience && (
-                  <span className="ml-2 text-xs tracking-wide text-pink-200">
-                    Please add your experience
-                  </span>
-                )
-              }
+              {errors.courseExperience && (
+                <span className="text-status-error ml-2 text-xs tracking-wide">
+                  Please add your experience
+                </span>
+              )}
             </div>
 
             {/* Cancel and Save buttons */}
             <div className="mt-6 flex w-11/12 justify-end gap-x-2">
               <button
                 onClick={() => setReviewModal(false)}
-                className="flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900"
+                className="bg-button-tertiary-bg-default text-global-text-inverse flex cursor-pointer items-center gap-x-2 rounded-md px-[20px] py-[8px] font-semibold"
               >
                 Cancel
               </button>
-              <IconBtn
-                text="Save"
-              />
+              <IconBtn disabled={isPending} text={isPending ? 'Saving...' : 'Save'} />
             </div>
           </form>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CourseReviewModal
+export default CourseReviewModal;

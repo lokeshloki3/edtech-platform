@@ -49,15 +49,15 @@ exports.createRating = async (req, res) => {
             },
             { new: true },
         );
-        console.log(updatedCourseDetails);
+        // console.log(updatedCourseDetails);
         // return response
         return res.status(200).json({
             success: true,
             message: "Rating and Review created successfully",
-            ratingReview,
+            data: ratingReview,
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message,
@@ -91,7 +91,8 @@ exports.getAverageRating = async (req, res) => {
         if (result.length > 0) {
             return res.status(200).json({
                 success: true,
-                averageRating: result[0].averageRating,  // as aggregate return array and its first index has average rating as right now we have only one element in our result array, may be more in future change index accordingly in future
+                message: "Average rating fetched successfully",
+                data: result[0].averageRating,  // as aggregate return array and its first index has average rating as right now we have only one element in our result array, may be more in future change index accordingly in future
             })
         }
 
@@ -99,11 +100,11 @@ exports.getAverageRating = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Average Rating is 0, no ratings given till now",
-            averageRating: 0,
+            data: 0,
         })
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message,
@@ -132,7 +133,7 @@ exports.getAllRating = async (req, res) => {
             data: allReviews,
         })
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message,
@@ -163,7 +164,7 @@ exports.getAllRatingForCourse = async (req, res) => {
             data: allReviews,
         })
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message,
