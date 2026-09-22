@@ -1,6 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {
+import type { BuilderCourse } from '@/types/course.types';
+
+interface CourseState {
+  /** Wizard pane: 1, 2 or 3. */
+  step: number;
+  course: BuilderCourse | null;
+  editCourse: boolean;
+  paymentLoading: boolean;
+}
+
+const initialState: CourseState = {
   step: 1,
   course: null,
   editCourse: false,
@@ -11,16 +21,16 @@ const courseSlice = createSlice({
   name: 'course',
   initialState,
   reducers: {
-    setStep: (state, action) => {
+    setStep: (state, action: PayloadAction<number>) => {
       state.step = action.payload;
     },
-    setCourse: (state, action) => {
+    setCourse: (state, action: PayloadAction<BuilderCourse | null>) => {
       state.course = action.payload;
     },
-    setEditCourse: (state, action) => {
+    setEditCourse: (state, action: PayloadAction<boolean>) => {
       state.editCourse = action.payload;
     },
-    setPaymentLoading: (state, action) => {
+    setPaymentLoading: (state, action: PayloadAction<boolean>) => {
       state.paymentLoading = action.payload;
     },
     resetCourseState: (state) => {

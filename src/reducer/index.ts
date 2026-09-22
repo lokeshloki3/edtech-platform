@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+
 import cartReducer from '../slices/cartSlice';
 import courseReducer from '../slices/courseSlice';
 import viewCourseReducer from '../slices/viewCourseSlice';
