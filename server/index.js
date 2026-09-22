@@ -1,9 +1,4 @@
 const express = require("express");
-// Must load before any route. Express 4 does not catch rejected promises in
-// async handlers; this forwards them to the error handler instead of letting
-// them kill the process.
-require("express-async-errors");
-
 const app = express();
 
 const userRoutes = require("./routes/User");
@@ -20,16 +15,12 @@ const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 
 const { verifyOrigin } = require("./middlewares/verifyOrigin");
-const { errorHandler, registerProcessHandlers } = require("./middlewares/errorHandler");
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 // Import the cron job
 const { scheduleUserDeletionJob } = require("./jobs/deleteInactiveUsers");
-
-// First, so it covers startup too.
-registerProcessHandlers();
 
 // database connect
 database.connect();
@@ -97,9 +88,6 @@ app.get("/", (req, res) => {
         message: 'Your server is up and running.'
     });
 });
-
-// Must come after every route.
-app.use(errorHandler);
 
 // activate the server
 app.listen(PORT, () => {

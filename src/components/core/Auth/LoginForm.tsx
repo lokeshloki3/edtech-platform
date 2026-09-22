@@ -5,7 +5,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FormTextField } from '@/components/FormTextField';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { useLogin } from '@/hooks/use-auth-query';
-import { resolveRedirectPath } from '@/lib/safeRedirect';
 import { loginSchema, type LoginPayload } from '@/zod-validations/auth.validation';
 
 function LoginForm() {
@@ -26,9 +25,8 @@ function LoginForm() {
     submitLogin(values, {
       onSuccess: () => {
         // `from` is set by the axios interceptor when a session expires on a
-        // protected page, so the user lands back where they were. Validated
-        // because it comes from the query string.
-        navigate(resolveRedirectPath(searchParams.get('from')));
+        // protected page, so the user lands back where they were.
+        navigate(searchParams.get('from') ?? '/dashboard/my-profile');
       },
     });
   };
