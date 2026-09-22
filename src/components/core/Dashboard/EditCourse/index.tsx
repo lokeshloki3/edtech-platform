@@ -1,20 +1,15 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useFullCourseDetails } from '@/hooks/use-course-query';
-import type { BuilderCourse } from '@/types/course.types';
+import { useAppDispatch, useAppSelector } from '@/reducer/hooks';
 import RenderSteps from '../AddCourse/RenderSteps';
 import { setCourse, setEditCourse } from '../../../../slices/courseSlice';
 
-interface CourseState {
-  course: { course: BuilderCourse | null };
-}
-
 const EditCourse = () => {
   const { courseId } = useParams();
-  const dispatch = useDispatch();
-  const { course } = useSelector((state: CourseState) => state.course);
+  const dispatch = useAppDispatch();
+  const { course } = useAppSelector((state) => state.course);
 
   const { data, isLoading } = useFullCourseDetails(courseId ?? '');
 

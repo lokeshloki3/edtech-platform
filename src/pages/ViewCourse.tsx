@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Outlet, useParams } from 'react-router-dom';
 
 import { useFullCourseDetails } from '@/hooks/use-course-query';
+import { useAppDispatch } from '@/reducer/hooks';
 import CourseReviewModal from '../components/core/ViewCourse/CourseReviewModal';
 import VideoDetailsSidebar from '../components/core/ViewCourse/VideoDetailsSidebar';
 import {
@@ -14,7 +14,7 @@ import {
 
 const ViewCourse = () => {
   const { courseId } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [reviewModal, setReviewModal] = useState(false);
 
   const { data: courseData } = useFullCourseDetails(courseId ?? '');

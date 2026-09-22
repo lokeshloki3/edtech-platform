@@ -1,15 +1,9 @@
-import { useSelector } from 'react-redux';
-
 import { useBuyCourse } from '@/hooks/use-payment-query';
-import type { Course } from '@/types/course.types';
+import { useAppSelector } from '@/reducer/hooks';
 import IconBtn from '../../../common/IconBtn';
 
-interface CartState {
-  cart: { total: number; cart: Course[] };
-}
-
 const RenderTotalAmount = () => {
-  const { total, cart } = useSelector((state: CartState) => state.cart);
+  const { total, cart } = useAppSelector((state) => state.cart);
   const { mutate: buyCourse, isPending } = useBuyCourse();
 
   const handleBuyCourse = () => {

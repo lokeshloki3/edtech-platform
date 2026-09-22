@@ -1,13 +1,13 @@
 // hooks/use-payment-query.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 import rzpLogo from '@/assets/Logo/rzp_Logo.png';
 import { showCustomSuccessToast } from '@/lib/customToastHelper';
 import { handleMutationError } from '@/lib/handleMutationError';
 import { loadRazorpayScript } from '@/lib/razorpay';
 import { profileKeys } from '@/hooks/use-profile-query';
+import { useAppDispatch } from '@/reducer/hooks';
 import { capturePayment, sendPaymentSuccessEmail, verifyPayment } from '@/services/payment.service';
 import { resetCart } from '@/slices/cartSlice';
 import { useAuthStore } from '@/store/auth.store';
@@ -20,7 +20,7 @@ import type { RazorpayHandlerResponse } from '@/types/payment.types';
  */
 export function useBuyCourse() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
 

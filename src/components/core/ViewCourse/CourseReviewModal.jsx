@@ -29,7 +29,7 @@ const CourseReviewModal = ({ setReviewModal }) => {
   const onSubmit = (data) => {
     submitRating(
       {
-        courseId: courseEntireData._id,
+        courseId: courseEntireData?._id,
         rating: Number(data.courseRating),
         review: data.courseExperience,
       },
