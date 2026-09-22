@@ -114,12 +114,9 @@ function SignupForm() {
           />
         </div>
 
-        <PrimaryButton
-          type="submit"
-          label="Create Account"
-          isLoading={isPending}
-          className="mt-6"
-        />
+        <PrimaryButton type="submit" isLoading={isPending} className="mt-6">
+          Create Account
+        </PrimaryButton>
       </form>
     </div>
   );

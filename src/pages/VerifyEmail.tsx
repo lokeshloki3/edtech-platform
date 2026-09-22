@@ -71,12 +71,9 @@ const VerifyEmail = () => {
               }}
             />
 
-            <PrimaryButton
-              type="submit"
-              label="Verify Email"
-              disabled={otp.length !== 6}
-              className="mt-6"
-            />
+            <PrimaryButton type="submit" disabled={otp.length !== 6} className="mt-6">
+              Verify Email
+            </PrimaryButton>
           </form>
 
           <div className="mt-6 flex items-center justify-between">

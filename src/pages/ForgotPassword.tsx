@@ -60,12 +60,9 @@ const ForgotPassword = () => {
               />
             )}
 
-            <PrimaryButton
-              type="submit"
-              label={!emailSent ? 'Submit' : 'Resend Email'}
-              isLoading={isPending}
-              className="mt-6"
-            />
+            <PrimaryButton type="submit" isLoading={isPending} className="mt-6">
+              {!emailSent ? 'Submit' : 'Resend Email'}
+            </PrimaryButton>
           </form>
 
           <div className="mt-6 flex items-center justify-between">
