@@ -27,12 +27,14 @@ import VideoDetails from './components/core/ViewCourse/VideoDetails';
 import Instructor from './components/core/Dashboard/Instructor';
 import Category from './components/core/Dashboard/Category';
 import { useRobotsMeta } from '@/hooks/use-robots-meta';
+import { useScrollToTop } from '@/hooks/use-scroll-to-top';
 import { useAuthStore } from '@/store/auth.store';
 
 function App() {
   const user = useAuthStore((s) => s.user);
 
   useRobotsMeta();
+  useScrollToTop();
 
   return (
     <div className="bg-global-bg font-inter flex min-h-screen w-screen flex-col">
