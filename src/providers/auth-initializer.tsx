@@ -7,8 +7,16 @@ import { isAuthError } from '@/lib/queryRetry';
 import { useAuthStore } from '@/store/auth.store';
 
 export function AuthInitializer({ children }: { children: ReactNode }) {
-  const { error, isError } = useCurrentUser();
+  const { data: user, error, isError } = useCurrentUser();
+  const setUser = useAuthStore((s) => s.setUser);
   const setStatus = useAuthStore((s) => s.setStatus);
+
+  // Mirrors the query cache into the store, so queryFn stays side-effect free.
+  useEffect(() => {
+    if (user) {
+      setUser(user);
+    }
+  }, [user, setUser]);
 
   useEffect(() => {
     if (!isError) {

@@ -59,6 +59,23 @@ export const courseKeys = {
   reviews: () => [...courseKeys.all, 'reviews'] as const,
 };
 
+export const courseToasts = {
+  createCategorySuccess: () => showCustomSuccessToast({ message: 'Category created successfully' }),
+  createCourseSuccess: () =>
+    showCustomSuccessToast({ message: 'Course details added successfully' }),
+  updateCourseSuccess: () =>
+    showCustomSuccessToast({ message: 'Course details updated successfully' }),
+  deleteCourseSuccess: () => showCustomSuccessToast({ message: 'Course deleted successfully' }),
+  createSectionSuccess: () => showCustomSuccessToast({ message: 'Course section created' }),
+  updateSectionSuccess: () => showCustomSuccessToast({ message: 'Course section updated' }),
+  deleteSectionSuccess: () => showCustomSuccessToast({ message: 'Course section deleted' }),
+  createSubSectionSuccess: () => showCustomSuccessToast({ message: 'Lecture added' }),
+  updateSubSectionSuccess: () => showCustomSuccessToast({ message: 'Lecture updated' }),
+  deleteSubSectionSuccess: () => showCustomSuccessToast({ message: 'Lecture deleted' }),
+  markLectureCompleteSuccess: () => showCustomSuccessToast({ message: 'Lecture completed' }),
+  createRatingSuccess: () => showCustomSuccessToast({ message: 'Thanks for your review' }),
+};
+
 /* -------------------------------------------------------------------------- */
 /* Queries                                                                     */
 /* -------------------------------------------------------------------------- */
@@ -141,7 +158,7 @@ export function useCreateCategory() {
     mutationFn: (payload) => createCategory(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: courseKeys.categories() });
-      showCustomSuccessToast({ message: 'Category created successfully' });
+      courseToasts.createCategorySuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not create category'),
   });
@@ -154,7 +171,7 @@ export function useCreateCourse() {
     mutationFn: (payload) => createCourse(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: courseKeys.instructor() });
-      showCustomSuccessToast({ message: 'Course details added successfully' });
+      courseToasts.createCourseSuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not create course'),
   });
@@ -168,7 +185,7 @@ export function useEditCourse() {
     onSuccess: (course) => {
       queryClient.invalidateQueries({ queryKey: courseKeys.instructor() });
       queryClient.invalidateQueries({ queryKey: courseKeys.details(course._id) });
-      showCustomSuccessToast({ message: 'Course details updated successfully' });
+      courseToasts.updateCourseSuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not update course'),
   });
@@ -182,7 +199,7 @@ export function useDeleteCourse() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: courseKeys.instructor() });
       queryClient.invalidateQueries({ queryKey: profileKeys.instructorData() });
-      showCustomSuccessToast({ message: 'Course deleted successfully' });
+      courseToasts.deleteCourseSuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not delete course'),
   });
@@ -193,7 +210,7 @@ export function useDeleteCourse() {
 export function useCreateSection() {
   return useMutation<InstructorCourse, Error, CreateSectionPayload>({
     mutationFn: (payload) => createSection(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Course section created' }),
+    onSuccess: () => courseToasts.createSectionSuccess(),
     onError: (err) => handleMutationError(err, 'Could not create section'),
   });
 }
@@ -201,7 +218,7 @@ export function useCreateSection() {
 export function useUpdateSection() {
   return useMutation<InstructorCourse, Error, UpdateSectionPayload>({
     mutationFn: (payload) => updateSection(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Course section updated' }),
+    onSuccess: () => courseToasts.updateSectionSuccess(),
     onError: (err) => handleMutationError(err, 'Could not update section'),
   });
 }
@@ -209,7 +226,7 @@ export function useUpdateSection() {
 export function useDeleteSection() {
   return useMutation<InstructorCourse, Error, DeleteSectionPayload>({
     mutationFn: (payload) => deleteSection(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Course section deleted' }),
+    onSuccess: () => courseToasts.deleteSectionSuccess(),
     onError: (err) => handleMutationError(err, 'Could not delete section'),
   });
 }
@@ -217,7 +234,7 @@ export function useDeleteSection() {
 export function useCreateSubSection() {
   return useMutation<Section, Error, FormData>({
     mutationFn: (payload) => createSubSection(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Lecture added' }),
+    onSuccess: () => courseToasts.createSubSectionSuccess(),
     onError: (err) => handleMutationError(err, 'Could not add lecture'),
   });
 }
@@ -225,7 +242,7 @@ export function useCreateSubSection() {
 export function useUpdateSubSection() {
   return useMutation<Section, Error, FormData>({
     mutationFn: (payload) => updateSubSection(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Lecture updated' }),
+    onSuccess: () => courseToasts.updateSubSectionSuccess(),
     onError: (err) => handleMutationError(err, 'Could not update lecture'),
   });
 }
@@ -233,7 +250,7 @@ export function useUpdateSubSection() {
 export function useDeleteSubSection() {
   return useMutation<Section, Error, DeleteSubSectionPayload>({
     mutationFn: (payload) => deleteSubSection(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Lecture deleted' }),
+    onSuccess: () => courseToasts.deleteSubSectionSuccess(),
     onError: (err) => handleMutationError(err, 'Could not delete lecture'),
   });
 }
@@ -246,7 +263,7 @@ export function useMarkLectureAsComplete() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: courseKeys.fullDetails(variables.courseId) });
       queryClient.invalidateQueries({ queryKey: profileKeys.enrolledCourses() });
-      showCustomSuccessToast({ message: 'Lecture completed' });
+      courseToasts.markLectureCompleteSuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not mark lecture complete'),
   });
@@ -260,7 +277,7 @@ export function useCreateRating() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: courseKeys.reviews() });
       queryClient.invalidateQueries({ queryKey: courseKeys.details(variables.courseId) });
-      showCustomSuccessToast({ message: 'Thanks for your review' });
+      courseToasts.createRatingSuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not create rating'),
   });

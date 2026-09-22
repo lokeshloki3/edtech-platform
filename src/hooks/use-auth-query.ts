@@ -29,17 +29,22 @@ export const authKeys = {
   currentUser: () => [...authKeys.all, 'current-user'] as const,
 };
 
+export const authToasts = {
+  loginSuccess: () => showCustomSuccessToast({ message: 'Logged in successfully' }),
+  logoutSuccess: (message?: string) => showCustomSuccessToast({ message: message || 'Logged out' }),
+  sendOtpSuccess: () => showCustomSuccessToast({ message: 'OTP sent successfully' }),
+  resendOtpSuccess: () => showCustomSuccessToast({ message: 'OTP resent, check your inbox' }),
+  signupSuccess: () => showCustomSuccessToast({ message: 'Signup successful' }),
+  resetEmailSuccess: () =>
+    showCustomSuccessToast({ message: 'Reset email sent, check your inbox' }),
+  resetPasswordSuccess: () => showCustomSuccessToast({ message: 'Password reset successfully' }),
+};
+
 // A 401 here just means not logged in, so it is never retried or toasted.
 export function useCurrentUser() {
-  const setUser = useAuthStore((s) => s.setUser);
-
   return useQuery<AuthUser>({
     queryKey: authKeys.currentUser(),
-    queryFn: async () => {
-      const user = await getCurrentUser();
-      setUser(user);
-      return user;
-    },
+    queryFn: getCurrentUser,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
     refetchOnWindowFocus: false,
@@ -54,9 +59,11 @@ export function useLogin() {
   return useMutation<AuthUser, Error, LoginPayload>({
     mutationFn: (payload) => login(payload),
     onSuccess: (user) => {
+      // Set here, not left to AuthInitializer's effect: callers navigate to a
+      // private route from their own onSuccess, which runs after this one.
       setUser(user);
       queryClient.setQueryData(authKeys.currentUser(), user);
-      showCustomSuccessToast({ message: 'Logged in successfully' });
+      authToasts.loginSuccess();
     },
     onError: (err) => handleMutationError(err, 'Login failed, please try again'),
   });
@@ -65,8 +72,16 @@ export function useLogin() {
 export function useSendOtp() {
   return useMutation<ApiEnvelope, Error, SendOtpPayload>({
     mutationFn: (payload) => sendOtp(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'OTP sent successfully' }),
+    onSuccess: () => authToasts.sendOtpSuccess(),
     onError: (err) => handleMutationError(err, 'Could not send OTP'),
+  });
+}
+
+export function useResendOtp() {
+  return useMutation<ApiEnvelope, Error, SendOtpPayload>({
+    mutationFn: (payload) => sendOtp(payload),
+    onSuccess: () => authToasts.resendOtpSuccess(),
+    onError: (err) => handleMutationError(err, 'Could not resend OTP'),
   });
 }
 
@@ -77,7 +92,7 @@ export function useSignup() {
     mutationFn: (payload) => signup(payload),
     onSuccess: () => {
       setSignupData(null);
-      showCustomSuccessToast({ message: 'Signup successful' });
+      authToasts.signupSuccess();
     },
     onError: (err) => handleMutationError(err, 'Signup failed, please try again'),
   });
@@ -89,9 +104,7 @@ export function useLogout() {
 
   return useMutation<ApiEnvelope, Error, void>({
     mutationFn: () => logout(),
-    onSuccess: (data) => {
-      showCustomSuccessToast({ message: data.message || 'Logged out' });
-    },
+    onSuccess: (data) => authToasts.logoutSuccess(data.message),
     onError: (err) => handleMutationError(err, 'Logout failed'),
     // A failed logout call must not strand the user in a half-authenticated UI.
     onSettled: () => {
@@ -104,7 +117,7 @@ export function useLogout() {
 export function useRequestPasswordResetToken() {
   return useMutation<ApiEnvelope, Error, ResetPasswordTokenPayload>({
     mutationFn: (payload) => requestPasswordResetToken(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Reset email sent, check your inbox' }),
+    onSuccess: () => authToasts.resetEmailSuccess(),
     onError: (err) => handleMutationError(err, 'Failed to send reset email'),
   });
 }
@@ -112,7 +125,7 @@ export function useRequestPasswordResetToken() {
 export function useResetPassword() {
   return useMutation<ApiEnvelope, Error, ResetPasswordPayload>({
     mutationFn: (payload) => resetPassword(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Password reset successfully' }),
+    onSuccess: () => authToasts.resetPasswordSuccess(),
     onError: (err) => handleMutationError(err, 'Failed to reset password'),
   });
 }
