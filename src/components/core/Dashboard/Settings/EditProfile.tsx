@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { useUpdateProfile } from '@/hooks/use-profile-query';
+import { useUpdateProfile } from '@/hooks/use-settings-query';
 import { useAuthStore } from '@/store/auth.store';
 import {
   updateProfileSchema,

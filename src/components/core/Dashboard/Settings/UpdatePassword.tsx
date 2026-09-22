@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FormTextField } from '@/components/FormTextField';
-import { useChangePassword } from '@/hooks/use-profile-query';
+import { useChangePassword } from '@/hooks/use-settings-query';
 import {
   changePasswordSchema,
   type ChangePasswordPayload,

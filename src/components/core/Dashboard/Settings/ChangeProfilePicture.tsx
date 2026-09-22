@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import { toast } from 'sonner';
 
-import { useUpdateDisplayPicture } from '@/hooks/use-profile-query';
+import { useUpdateDisplayPicture } from '@/hooks/use-settings-query';
 import { useAuthStore } from '@/store/auth.store';
 import IconBtn from '../../../common/IconBtn';
 
