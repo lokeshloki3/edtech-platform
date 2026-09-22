@@ -46,7 +46,7 @@ exports.capturePayment = async (req, res) => {
             // Add the price of the course to the total amount - more than one in cart
             total_amount += course.price;
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             return res.status(500).json({
                 success: false,
                 message: error.message
@@ -64,7 +64,7 @@ exports.capturePayment = async (req, res) => {
     try {
         // Initiate the payment using Razorpay
         const paymentResponse = await instance.orders.create(options);
-        console.log("paymentResponse", paymentResponse);
+        // console.log("paymentResponse", paymentResponse);
         return res.status(200).json({
             success: true,
             message: "Payment order created successfully",
@@ -151,7 +151,7 @@ const enrollStudent = async (courses, userId, res) => {
                     message: "Course not found"
                 });
             }
-            console.log("Updated course: ", enrolledCourse);
+            // console.log("Updated course: ", enrolledCourse);
 
             const courseProgress = await CourseProgress.create({
                 courseID: courseId,
@@ -171,7 +171,7 @@ const enrollStudent = async (courses, userId, res) => {
                 { new: true }
             );
 
-            console.log("Enrolled student: ", enrollStudent);
+            // console.log("Enrolled student: ", enrollStudent);
 
             // Send an email notification to the enrolled student
             const emailResponse = await mailSender(
@@ -183,9 +183,9 @@ const enrollStudent = async (courses, userId, res) => {
                 )
             );
 
-            console.log("Email sent successfully: ", emailResponse.response);
+            // console.log("Email sent successfully: ", emailResponse.response);
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             return res.status(500).json({
                 success: false,
                 message: "Could not send the payment confirmation email",
@@ -221,7 +221,7 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
             )
         )
     } catch (error) {
-        console.log("error in sending mail", error);
+        // console.log("error in sending mail", error);
         return res.status(500).json({
             success: false,
             message: "Could not send email"

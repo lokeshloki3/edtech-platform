@@ -24,8 +24,8 @@ exports.createCourse = async (req, res) => {
         const tag = JSON.parse(_tag);
         const instructions = JSON.parse(_instructions);
 
-        console.log("tag", tag)
-        console.log("instructions", instructions)
+        // console.log("tag", tag)
+        // console.log("instructions", instructions)
 
         // validation
         if (!courseName || !courseDescription || !whatYouWillLearn || !price || !tag.length || !thumbnail || !category || !instructions.length) {
@@ -44,7 +44,7 @@ exports.createCourse = async (req, res) => {
         const instructorDetails = await User.findById(userId, {
             accountType: "Instructor",
         });
-        console.log("Instructor Details: ", instructorDetails);
+        // console.log("Instructor Details: ", instructorDetails);
 
         if (!instructorDetails) {
             return res.status(404).json({
@@ -102,7 +102,7 @@ exports.createCourse = async (req, res) => {
             },
             { new: true },
         );
-        console.log("categoryDetails2", categoryDetails2);
+        // console.log("categoryDetails2", categoryDetails2);
 
         // return response
         return res.status(200).json({
@@ -112,7 +112,7 @@ exports.createCourse = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: "Failed to created course",
@@ -134,7 +134,7 @@ exports.editCourse = async (req, res) => {
 
         // If Thumbnail Image is found, update it
         if (req.files) {
-            console.log("thumbnail update")
+            // console.log("thumbnail update")
             const thumbnail = req.files.thumbnailImage
             const thumbnailImage = await uploadImageToCloudinary(
                 thumbnail,
@@ -210,7 +210,7 @@ exports.getAllCourses = async (req, res) => {
             data: allCourses,
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: "Failed to fetch course data",
@@ -286,7 +286,7 @@ exports.getCourseDetails = async (req, res) => {
             },
         })
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(500).json({
             success: false,
             message: error.message,
@@ -322,7 +322,7 @@ exports.getFullCourseDetails = async (req, res) => {
             userId: userId,
         })
 
-        console.log("courseProgressCount : ", courseProgressCount)
+        // console.log("courseProgressCount : ", courseProgressCount)
 
         if (!courseDetails) {
             return res.status(400).json({

@@ -49,11 +49,11 @@ exports.scheduleUserDeletionJob = () => {
 
                 // Finally delete the user
                 await User.findByIdAndDelete(user._id);
-                console.log(`Deleted user: ${user.email}`);
+                // console.log(`Deleted user: ${user.email}`);
                 await CourseProgress.deleteMany({ userId: user._id })
             }
 
-            console.log("Daily cleanup completed.");
+            // console.log("Daily cleanup completed.");
         } catch (error) {
             console.error("Error running deletion job:", error);
         }
