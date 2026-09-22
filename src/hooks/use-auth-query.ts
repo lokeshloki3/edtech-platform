@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { showCustomSuccessToast } from '@/lib/customToastHelper';
 import { handleMutationError } from '@/lib/handleMutationError';
-import { retryUnlessAuth } from '@/lib/queryRetry';
 import {
   getCurrentUser,
   login,
@@ -40,15 +39,15 @@ export const authToasts = {
   resetPasswordSuccess: () => showCustomSuccessToast({ message: 'Password reset successfully' }),
 };
 
-// A 401 here just means not logged in, so it is never retried or toasted.
+// The session is checked once on load and outlives an ordinary query, so it is
+// held longer than the global default. Not retrying or toasting a 401 already
+// comes from that default, so it is not repeated here.
 export function useCurrentUser() {
   return useQuery<AuthUser>({
     queryKey: authKeys.currentUser(),
     queryFn: getCurrentUser,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
-    refetchOnWindowFocus: false,
-    retry: retryUnlessAuth(1),
   });
 }
 

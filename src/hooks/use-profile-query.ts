@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { showCustomSuccessToast } from '@/lib/customToastHelper';
 import { handleMutationError } from '@/lib/handleMutationError';
-import { retryUnlessAuth } from '@/lib/queryRetry';
 import {
   changePassword,
   deleteProfile,
@@ -41,9 +40,6 @@ export function useEnrolledCourses(enabled = true) {
     queryKey: profileKeys.enrolledCourses(),
     queryFn: getEnrolledCourses,
     enabled,
-    staleTime: 1000 * 60 * 2,
-    refetchOnWindowFocus: false,
-    retry: retryUnlessAuth(1),
   });
 }
 
@@ -52,9 +48,6 @@ export function useInstructorData(enabled = true) {
     queryKey: profileKeys.instructorData(),
     queryFn: getInstructorData,
     enabled,
-    staleTime: 1000 * 60 * 2,
-    refetchOnWindowFocus: false,
-    retry: retryUnlessAuth(1),
   });
 }
 

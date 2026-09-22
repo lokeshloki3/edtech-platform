@@ -144,8 +144,11 @@ const Navbar = () => {
           )}
           {isLoggedIn && <ProfileDropdown />}
         </div>
-        <button className="mr-4 md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
+        <button
+          className="text-icon-button-content-default mr-4 cursor-pointer md:hidden"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <AiOutlineMenu fontSize={24} />
         </button>
       </div>
 

@@ -68,12 +68,9 @@ const UpdatePassword = () => {
               {...register('confirmPassword')}
             />
 
-            <PrimaryButton
-              type="submit"
-              label="Reset Password"
-              isLoading={isPending}
-              className="mt-6"
-            />
+            <PrimaryButton type="submit" isLoading={isPending} className="mt-6">
+              Reset Password
+            </PrimaryButton>
           </form>
 
           <div className="mt-6 flex items-center justify-between">

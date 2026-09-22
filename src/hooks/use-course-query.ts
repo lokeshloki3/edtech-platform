@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { showCustomSuccessToast } from '@/lib/customToastHelper';
 import { handleMutationError } from '@/lib/handleMutationError';
-import { retryUnlessAuth } from '@/lib/queryRetry';
 import { profileKeys } from '@/hooks/use-profile-query';
 import {
   createCategory,
@@ -123,8 +122,6 @@ export function useFullCourseDetails(courseId: string) {
     queryKey: courseKeys.fullDetails(courseId),
     queryFn: () => getFullCourseDetails(courseId),
     enabled: !!courseId,
-    staleTime: 1000 * 60 * 2,
-    retry: retryUnlessAuth(1),
   });
 }
 
@@ -133,8 +130,6 @@ export function useInstructorCourses(enabled = true) {
     queryKey: courseKeys.instructor(),
     queryFn: getInstructorCourses,
     enabled,
-    staleTime: 1000 * 60 * 2,
-    retry: retryUnlessAuth(1),
   });
 }
 

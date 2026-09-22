@@ -58,7 +58,9 @@ function LoginForm() {
         </Link>
       </div>
 
-      <PrimaryButton type="submit" label="Sign In" isLoading={isPending} className="mt-6" />
+      <PrimaryButton type="submit" isLoading={isPending} className="mt-6">
+        Sign In
+      </PrimaryButton>
     </form>
   );
 }
