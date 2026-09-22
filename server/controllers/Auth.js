@@ -7,6 +7,15 @@ const { SESSION_TTL_SECONDS, COOKIE_NAME, getAuthCookieOptions } = require("../c
 const Profile = require("../models/Profile");
 const mailSender = require("../utils/mailSender");
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
+const {
+    validateRequired,
+    validateEmail,
+    validatePassword,
+    validateOtp,
+    validateAccountType,
+    firstError,
+    normalizeEmail,
+} = require("../utils/validateAuth");
 require("dotenv").config();
 
 // sendOTP
@@ -15,12 +24,23 @@ exports.sendOTP = async (req, res) => {
         // fetch email from req body
         const { email } = req.body;
 
-        // check if user already exist
-        const checkUserPresent = await User.findOne({ email });
+        const emailError = validateEmail(email);
+        if (emailError) {
+            return res.status(400).json({
+                success: false,
+                message: emailError,
+            });
+        }
 
-        // if user already exist, then return a response
+        const normalizedEmail = normalizeEmail(email);
+
+        // check if user already exist
+        const checkUserPresent = await User.findOne({ email: normalizedEmail });
+
+        // if user already exist, then return a response.
+        // 409 not 401 - the client treats a 401 as the session ending.
         if (checkUserPresent) {
-            return res.status(401).json({
+            return res.status(409).json({
                 success: false,
                 message: "User already registered",
             })
@@ -46,7 +66,7 @@ exports.sendOTP = async (req, res) => {
             result = await OTP.findOne({ otp: otp });
         }
 
-        const otpPayload = { email, otp };
+        const otpPayload = { email: normalizedEmail, otp };
 
         // create an entry in db for OTP
         const otpBody = await OTP.create(otpPayload);
@@ -82,24 +102,37 @@ exports.signUp = async (req, res) => {
             otp
         } = req.body;
 
-        // validate data
-        if (!firstName || !lastName || !email || !password || !confirmPassword || !otp) {
-            return res.status(403).json({
+        // validate data. accountType is allowlisted, not trusted - it is the
+        // role isAdmin and isInstructor read.
+        const validationError = firstError([
+            validateRequired(firstName, "First name"),
+            validateRequired(lastName, "Last name"),
+            validateEmail(email),
+            validatePassword(password),
+            validateRequired(confirmPassword, "Confirm password"),
+            validateAccountType(accountType),
+            validateOtp(otp),
+        ]);
+
+        if (validationError) {
+            return res.status(400).json({
                 success: false,
-                message: "All fields are required",
-            })
+                message: validationError,
+            });
         }
 
         // 2 password match
         if (password !== confirmPassword) {
             return res.status(400).json({
                 success: false,
-                message: "Password and Confirm Password does not match",
+                message: "Passwords do not match",
             });
         }
 
+        const normalizedEmail = normalizeEmail(email);
+
         // check user already exist or not
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email: normalizedEmail });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
@@ -108,7 +141,7 @@ exports.signUp = async (req, res) => {
         }
 
         // find most recent OTP stored for the user
-        const recentOtp = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+        const recentOtp = await OTP.find({ email: normalizedEmail }).sort({ createdAt: -1 }).limit(1);
         console.log(recentOtp);
 
         // validate OTP
@@ -118,7 +151,7 @@ exports.signUp = async (req, res) => {
                 success: false,
                 message: "One OTP is not valid",
             });
-        } else if (otp !== recentOtp[0].otp) {
+        } else if (otp.trim() !== recentOtp[0].otp) {
             // invalid otp
             return res.status(400).json({
                 success: false,
@@ -131,9 +164,12 @@ exports.signUp = async (req, res) => {
 
         // entry create in db
 
-        // Create the user
-        let approved = "";
-        approved === "Instructor" ? (approved = false) : (approved = true);
+        // // Create the user
+        // let approved = "";
+        // approved === "Instructor" ? (approved = false) : (approved = true);
+        // Left to the model default of true. The lines above compared an empty
+        // string to "Instructor", so they approved everyone anyway, and nothing
+        // reads the flag - there is no approval route to clear it again.
 
         // Create additional profile for user
         const profileDetails = await Profile.create({
@@ -146,14 +182,18 @@ exports.signUp = async (req, res) => {
         const user = await User.create({
             firstName,
             lastName,
-            email,
+            email: normalizedEmail,
             contactNumber,
             password: hashedPassword,
             accountType,
-            approved: approved,
+            // approved: approved,
             additionalDetails: profileDetails._id,
             image: `http://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`, // dice bear api
         })
+
+        // Strip the hash before it goes out, as login does. Nothing saves
+        // after this, so the stored document is untouched.
+        user.password = undefined;
 
         // return res
         return res.status(200).json({
@@ -176,17 +216,23 @@ exports.login = async (req, res) => {
         // get data from req body
         const { email, password } = req.body;
 
-        // validate data
-        if (!email || !password) {
+        // validate data. Password is presence-only: enforcing length here would
+        // lock out every account whose password predates the rule.
+        const validationError = firstError([
+            validateEmail(email),
+            validateRequired(password, "Password"),
+        ]);
+
+        if (validationError) {
             return res.status(400).json({
                 success: false,
-                message: "All fields required",
+                message: validationError,
             });
         }
 
         // user check exist or not
         // User only has additionalDetails Id - To get its data need to populate
-        const user = await User.findOne({ email }).populate("additionalDetails");
+        const user = await User.findOne({ email: normalizeEmail(email) }).populate("additionalDetails");
         // const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({
@@ -245,19 +291,26 @@ exports.login = async (req, res) => {
 // changePassword
 exports.changePassword = async (req, res) => {
     try {
-        // Get user data from req.user
-        const userDetails = await User.findById(req.user.id);
-
         // get get oldPassword, newPassword, confirmPassword from req body
         const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
-        // validation
-        if (!oldPassword || !newPassword || !confirmNewPassword) {
+        // Runs before the lookup so bad input costs no db round trip.
+        // oldPassword is presence-only; the bcrypt compare below is the check.
+        const validationError = firstError([
+            validateRequired(oldPassword, "Old password"),
+            validatePassword(newPassword, "New password"),
+            validateRequired(confirmNewPassword, "Confirm new password"),
+        ]);
+
+        if (validationError) {
             return res.status(400).json({
                 success: false,
-                message: "All fields are required",
+                message: validationError,
             });
         }
+
+        // Get user data from req.user
+        const userDetails = await User.findById(req.user.id);
 
         // Validate old password
         const isPasswordMatch = await bcrypt.compare(
@@ -265,8 +318,9 @@ exports.changePassword = async (req, res) => {
             userDetails.password
         );
         if (!isPasswordMatch) {
-            // If old password does not match, return a 401 (Unauthorized) error
-            return res.status(401).json({
+            // 403 not 401 - the session is valid, the old password is not.
+            // A 401 here signed the user out over a typo.
+            return res.status(403).json({
                 success: false,
                 message: "The old password is incorrect"
             });
