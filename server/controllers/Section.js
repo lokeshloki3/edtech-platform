@@ -94,7 +94,7 @@ exports.deleteSection = async (req, res) => {
         // get ID - assuming we are sending ID 
         const { sectionId, courseId } = req.body;
 
-        console.log(sectionId, courseId)
+        // console.log(sectionId, courseId)
 
         // use findIdAndDelete
         const section = await Section.findByIdAndDelete(sectionId);

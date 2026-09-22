@@ -31,9 +31,9 @@ async function sendVerificationEmail(email, otp) {
             "Verification OTP from edTech platform - StudySphere",
             emailTemplate(otp)
         );
-        console.log("Email sent successfully: ", mailResponse.response);
+        // console.log("Email sent successfully: ", mailResponse.response);
     } catch (error) {
-        console.log("Error occured while sending mails: ", error);
+        // console.log("Error occured while sending mails: ", error);
         throw error;
     }
 }
@@ -41,7 +41,7 @@ async function sendVerificationEmail(email, otp) {
 // OTP pre save middleware added before OTP exports as pre hook
 // Define a post-save hook to send email after the document has been saved
 OTPSchema.pre("save", async function (next) {
-    console.log("New document saved to database");
+    // console.log("New document saved to database");
 
     // Only send an email when a new document is created
     if (this.isNew) {

@@ -49,7 +49,7 @@ exports.resetPasswordToken = async (req, res) => {
                 new: true, // give latest one
             }
         );
-        console.log("Details", updatedDetails);
+        // console.log("Details", updatedDetails);
         // create url
         // const url = `http://localhost:5173/update-password/${token}`
         const url = `${process.env.FRONTEND_URL_UPDATE_PASSWORD}/update-password/${token}`;
@@ -65,7 +65,7 @@ exports.resetPasswordToken = async (req, res) => {
             message: "Email sent successfully, please check email and change pwd",
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: "Something went wrong while sending reset pwd mail",
@@ -132,7 +132,7 @@ exports.resetPassword = async (req, res) => {
             message: "Password reset successfully",
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: "Something went wrong while resetting your password",

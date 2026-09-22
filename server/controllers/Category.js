@@ -22,7 +22,7 @@ exports.createCategory = async (req, res) => {
             name: name,
             description: description,
         });
-        console.log(categoriesDetails);
+        // console.log(categoriesDetails);
 
         // return response
         return res.status(200).json({
@@ -72,10 +72,10 @@ exports.categoryPageDetails = async (req, res) => {
             }) // Category schema has course array reference so need to populate it
             .exec();
 
-        console.log("SELECTED COURSE", selectedCategory);
+        // console.log("SELECTED COURSE", selectedCategory);
         // Validation - when the category is not found
         if (!selectedCategory) {
-            console.log("Category not found.");
+            // console.log("Category not found.");
             return res.status(404).json({
                 success: false,
                 message: "Category not found"
@@ -83,7 +83,7 @@ exports.categoryPageDetails = async (req, res) => {
         }
         // Handle the case when there are no courses
         if (selectedCategory.courses.length === 0) {
-            console.log("No courses found for the selected category.");
+            // console.log("No courses found for the selected category.");
             return res.status(404).json({
                 success: false,
                 message: "No courses found for the selected category.",

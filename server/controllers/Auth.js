@@ -52,7 +52,7 @@ exports.sendOTP = async (req, res) => {
             lowerCaseAlphabets: false,
             specialChars: false,
         });
-        console.log("OTP generated", otp);
+        // console.log("OTP generated", otp);
 
         // check unique otp or not or we can use library which will auto give unique otp everytime
         let result = await OTP.findOne({ otp: otp });
@@ -70,7 +70,7 @@ exports.sendOTP = async (req, res) => {
 
         // create an entry in db for OTP
         const otpBody = await OTP.create(otpPayload);
-        console.log(otpBody);
+        // console.log(otpBody);
 
         res.status(200).json({
             success: true,
@@ -78,7 +78,7 @@ exports.sendOTP = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message,
@@ -142,7 +142,7 @@ exports.signUp = async (req, res) => {
 
         // find most recent OTP stored for the user
         const recentOtp = await OTP.find({ email: normalizedEmail }).sort({ createdAt: -1 }).limit(1);
-        console.log(recentOtp);
+        // console.log(recentOtp);
 
         // validate OTP
         if (recentOtp.length == 0) {
@@ -202,7 +202,7 @@ exports.signUp = async (req, res) => {
             data: user,
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: "User cannot be registered. Please try again",
@@ -280,7 +280,7 @@ exports.login = async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success: false,
             message: "Login failed, please try again",
@@ -362,7 +362,7 @@ exports.changePassword = async (req, res) => {
                     `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
                 )
             );
-            console.log("Email sent successfully:", emailResponse.response);
+            // console.log("Email sent successfully:", emailResponse.response);
         } catch (error) {
             // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
             console.error("Error occurred while sending email:", error);
