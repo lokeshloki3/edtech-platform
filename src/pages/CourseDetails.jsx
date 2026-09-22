@@ -47,16 +47,16 @@ const CourseDetails = () => {
   }, [courseData]);
 
   // These loading should be after useEffect and before destructuring
+  if (isError) {
+    return <NotFound />;
+  }
+
   if (loading || !courseData) {
     return (
       <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
         <div className="spinner"></div>
       </div>
     );
-  }
-
-  if (isError) {
-    return <NotFound />;
   }
 
   const {
@@ -168,19 +168,19 @@ const CourseDetails = () => {
                     className="yellowButton"
                     onClick={
                       user?.accountType === ACCOUNT_TYPE.STUDENT &&
-                      courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id)
+                      courseData?.courseDetails?.studentsEnrolled?.includes(user?._id)
                         ? () => navigate('/dashboard/enrolled-courses')
                         : handleBuyCourse
                     }
                   >
                     {user?.accountType === ACCOUNT_TYPE.STUDENT &&
-                    courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id)
+                    courseData?.courseDetails?.studentsEnrolled?.includes(user?._id)
                       ? 'Go To Course'
                       : 'Buy Now'}
                   </button>
                 )}
                 {user?.accountType === ACCOUNT_TYPE.STUDENT &&
-                  !courseData?.data?.courseDetails.studentsEnrolled.includes(user?._id) &&
+                  !courseData?.courseDetails?.studentsEnrolled?.includes(user?._id) &&
                   (isCourseInCart ? (
                     <button
                       onClick={() => navigate('/dashboard/cart')}
@@ -203,7 +203,7 @@ const CourseDetails = () => {
           {/* Course Card */}
           <div className="top-[60px] right-[1rem] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0 lg:absolute lg:block">
             <CourseDetailsCard
-              course={courseData?.data?.courseDetails}
+              course={courseData?.courseDetails}
               // setConfirmationModal={setConfirmationModal}
               handleBuyCourse={handleBuyCourse}
               handleAddToCart={handleAddToCart}
@@ -233,7 +233,7 @@ const CourseDetails = () => {
                   <span>
                     {totalNoOfLectures} {`lecture(s)`}
                   </span>
-                  <span>{courseData.data?.totalDuration} total length</span>
+                  <span>{courseData?.totalDuration} total length</span>
                 </div>
                 <div>
                   <button

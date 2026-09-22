@@ -18,6 +18,10 @@ const CourseDetailsCard = ({
   const navigate = useNavigate();
   const { cart } = useSelector((state) => state.cart || { cart: [] });
 
+  if (!course) {
+    return null;
+  }
+
   const { thumbnail: ThumbnailImage, price: CurrentPrice, _id: courseId } = course;
 
   const isCourseInCart = cart?.some((item) => item._id === courseId);
@@ -48,20 +52,20 @@ const CourseDetailsCard = ({
                 className="yellowButton"
                 onClick={
                   user?.accountType === ACCOUNT_TYPE.STUDENT &&
-                  course?.studentsEnrolled.includes(user?._id)
+                  course?.studentsEnrolled?.includes(user?._id)
                     ? () => navigate('/dashboard/enrolled-courses')
                     : handleBuyCourse
                 }
               >
                 {user?.accountType === ACCOUNT_TYPE.STUDENT &&
-                course?.studentsEnrolled.includes(user?._id)
+                course?.studentsEnrolled?.includes(user?._id)
                   ? 'Go To Course'
                   : 'Buy Now'}
               </button>
             )}
             {/* Only show Add to Cart / Go to Cart if student + not enrolled */}
             {user?.accountType === ACCOUNT_TYPE.STUDENT &&
-              !course?.studentsEnrolled.includes(user?._id) &&
+              !course?.studentsEnrolled?.includes(user?._id) &&
               (isCourseInCart ? (
                 <button onClick={() => navigate('/dashboard/cart')} className="blackButton">
                   Go to Cart
