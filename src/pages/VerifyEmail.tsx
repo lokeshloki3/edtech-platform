@@ -55,11 +55,14 @@ const VerifyEmail = () => {
               onChange={setOtp}
               numInputs={6}
               renderSeparator={<span>-</span>}
+              // The library injects style={{ width: '1em' }} into renderInput's
+              // props, which beats the width class. Opt out and size with CSS.
+              skipDefaultStyles
               renderInput={(props) => (
                 <input
                   {...props}
                   placeholder="-"
-                  className="bg-global-bg-surface text-global-text-primary focus:outline-global-highlight-text aspect-square w-[48px] rounded-lg border-0 text-center focus:border-0 focus:outline-2 lg:w-[60px]"
+                  className="bg-global-bg-surface text-global-text-primary focus:outline-global-highlight-text aspect-square w-[48px] rounded-lg border-0 text-center shadow-[inset_0_-1px_0_var(--global-stroke-secondary)] focus:border-0 focus:outline-2 lg:w-[60px]"
                 />
               )}
               containerStyle={{
