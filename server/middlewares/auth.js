@@ -46,12 +46,14 @@ exports.auth = async (req, res, next) => {
 }
 
 // isStudent
+// The three role guards answer 403, not 401: reaching them means auth accepted
+// the session and only the role is wrong. A 401 signed the user out instead.
 exports.isStudent = async (req, res, next) => {
     try {
         const userDetails = await User.findOne({ email: req.user.email });
 
         if (userDetails.accountType !== "Student") {
-            return res.status(401).json({
+            return res.status(403).json({
                 success: false,
                 message: "This is protected route for Student only",
             });
@@ -73,7 +75,7 @@ exports.isInstructor = async (req, res, next) => {
         console.log(userDetails.accountType);
 
         if (userDetails.accountType !== "Instructor") {
-            return res.status(401).json({
+            return res.status(403).json({
                 success: false,
                 message: "This is protected route for Instructor only",
             });
@@ -93,7 +95,7 @@ exports.isAdmin = async (req, res, next) => {
         const userDetails = await User.findOne({ email: req.user.email });
 
         if (userDetails.accountType !== "Admin") {
-            return res.status(401).json({
+            return res.status(403).json({
                 success: false,
                 message: "This is protected route for Admin only",
             });

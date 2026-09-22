@@ -2,6 +2,13 @@ const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const {
+    validateRequired,
+    validateEmail,
+    validatePassword,
+    firstError,
+    normalizeEmail,
+} = require("../utils/validateAuth");
 // const dotenv = require("dotenv");
 // dotenv.config();
 
@@ -11,7 +18,15 @@ require("dotenv").config();
 exports.resetPasswordToken = async (req, res) => {
     try {
         // get email from req body
-        const email = req.body.email;
+        const emailError = validateEmail(req.body.email);
+        if (emailError) {
+            return res.status(400).json({
+                success: false,
+                message: emailError,
+            });
+        }
+
+        const email = normalizeEmail(req.body.email);
         // check user for this email
         const user = await User.findOne({ email: email });
         // email validation
@@ -65,11 +80,25 @@ exports.resetPassword = async (req, res) => {
     try {
         // data fetch - token from params sent in req by frontend
         const { password, confirmPassword, token } = req.body;
-        // validation
+        // The presence checks matter as much as the length one: with both
+        // fields missing the match check passed and bcrypt.hash threw a 500.
+        const validationError = firstError([
+            validatePassword(password),
+            validateRequired(confirmPassword, "Confirm password"),
+            validateRequired(token, "Reset token"),
+        ]);
+
+        if (validationError) {
+            return res.status(400).json({
+                success: false,
+                message: validationError,
+            });
+        }
+
         if (password !== confirmPassword) {
             return res.status(400).json({
                 success: false,
-                message: "Password not matching",
+                message: "Passwords do not match",
             });
         }
         // get user details from db using token
@@ -106,7 +135,7 @@ exports.resetPassword = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             success: false,
-            message: "Something went wrong while sending reset pwd mail",
+            message: "Something went wrong while resetting your password",
         });
     }
 }
