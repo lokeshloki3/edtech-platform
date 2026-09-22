@@ -1,9 +1,6 @@
-// CSRF defence. The session cookie is sameSite:'none' in production, so the
-// browser attaches it to cross-site writes. Rejects writes that state an origin
-// we do not allow.
-//
-// The real fix is serving the API same-site and switching the cookie to 'lax';
-// this stays afterwards as defence in depth.
+// CSRF defence: the session cookie is sameSite:'none' in production, so the
+// browser attaches it to cross-site writes. The real fix is serving the API
+// same-site and switching the cookie to 'lax'.
 
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
@@ -26,8 +23,6 @@ const verifyOrigin = (allowedOrigins) => {
             return next();
         }
 
-        // Referer only as a fallback: some browsers and extensions strip it
-        // while Origin survives.
         const stated = toOrigin(req.get("origin")) ?? toOrigin(req.get("referer"));
 
         // A browser always sends Origin on a cross-site write, so a request with

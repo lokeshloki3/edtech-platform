@@ -122,9 +122,8 @@ exports.createCourse = async (req, res) => {
 };
 
 // Edit Course Details
-// `const updates = req.body` copied every key onto the document, so a request
-// could reassign `instructor` or fabricate `studentsEnrolled`. Allowlisted so it
-// fails closed.
+// Allowlisted: `req.body` was copied wholesale onto the document, so a request
+// could reassign `instructor` or fabricate `studentsEnrolled`.
 const EDITABLE_COURSE_FIELDS = new Set([
     "courseName",
     "courseDescription",
@@ -146,8 +145,6 @@ exports.editCourse = async (req, res) => {
             return res.status(404).json({ success: false, message: "Course not found" })
         }
 
-        // isInstructor proves the caller is an instructor, not that this is their
-        // course.
         if (course.instructor.toString() !== req.user.id) {
             return res.status(403).json({
                 success: false,
@@ -166,14 +163,11 @@ exports.editCourse = async (req, res) => {
             course.thumbnail = thumbnailImage.secure_url
         }
 
-        // Update only the allowlisted fields that are present in the request body
         for (const key of Object.keys(updates)) {
             if (!EDITABLE_COURSE_FIELDS.has(key)) {
                 continue
             }
             if (key === "tag" || key === "instructions") {
-                // JSON strings from the multipart form; a malformed one used to
-                // surface as "Internal server error".
                 try {
                     course[key] = JSON.parse(updates[key])
                 } catch {
@@ -463,9 +457,6 @@ exports.deleteCourse = async (req, res) => {
             return res.status(404).json({ success: false, message: "Course not found" })
         }
 
-        // The route had no auth at all, so this whole cascade was reachable by
-        // anyone with a course id. Route guards are now in place; this is the
-        // ownership half they cannot express.
         if (course.instructor.toString() !== req.user.id) {
             return res.status(403).json({
                 success: false,

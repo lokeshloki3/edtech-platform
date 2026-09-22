@@ -22,7 +22,9 @@ const signaturesMatch = (expected, received) => {
 exports.capturePayment = async (req, res) => {
     const { courses } = req.body;
     const userId = req.user.id;
-    if (courses.length === 0) {
+    // Array check, not just length: a missing `courses` key reached
+    // `undefined.length` and took the process down.
+    if (!Array.isArray(courses) || courses.length === 0) {
         return res.status(400).json({
             success: false,
             message: "Please provide Course Id"
@@ -67,8 +69,7 @@ exports.capturePayment = async (req, res) => {
     const options = {
         amount: total_amount * 100,
         currency: "INR",
-        // Was Math.random(Date.now()) — the argument is ignored, and Razorpay
-        // treats receipt as the caller's idempotency handle.
+        // Razorpay treats receipt as the caller's idempotency handle.
         receipt: crypto.randomUUID(),
     }
 
@@ -131,8 +132,6 @@ exports.verifyPayment = async (req, res) => {
         });
     }
 
-    // enrollStudent reports back rather than writing its own response; it used
-    // to write 400/500 and then fall through to the 200 below.
     const result = await enrollStudent(courses, userId);
 
     if (!result.ok) {
@@ -149,11 +148,10 @@ exports.verifyPayment = async (req, res) => {
 }
 
 /**
- * Runs after Razorpay has confirmed payment, so the money is already taken:
- * validate everything, write everything, then notify best-effort. Writes are
- * idempotent, so a re-run converges rather than duplicating.
- *
- * Not yet fully atomic — that needs a transaction, which needs a replica set.
+ * Runs after payment is confirmed, so the money is already taken: validate
+ * everything, write everything, then notify best-effort. Writes are idempotent,
+ * so a re-run repairs rather than duplicates. Full atomicity needs a transaction,
+ * which needs a replica set.
  *
  * @returns {Promise<{ok: true} | {ok: false, status: number, message: string}>}
  */
@@ -163,8 +161,7 @@ const enrollStudent = async (courses, userId) => {
     }
 
     try {
-        // Resolve everything before writing, or a bad id halfway through leaves a
-        // half-enrolled cart.
+        // Resolve everything before writing, or a bad id leaves a half-enrolled cart.
         const courseDocs = await Course.find({ _id: { $in: courses } });
 
         if (courseDocs.length !== courses.length) {
@@ -185,7 +182,6 @@ const enrollStudent = async (courses, userId) => {
                 { $addToSet: { studentsEnrolled: userId } }
             );
 
-            // Upsert for the same reason.
             const progress = await CourseProgress.findOneAndUpdate(
                 { courseID: course._id, userId: userId },
                 { $setOnInsert: { completedVideos: [] } },
@@ -205,7 +201,7 @@ const enrollStudent = async (courses, userId) => {
             }
         );
 
-        // Enrolment is durable from here; nothing below may change the outcome.
+        // Durable from here; nothing below may change the outcome.
         for (const course of courseDocs) {
             await trySendMail(
                 student.email,
@@ -220,8 +216,7 @@ const enrollStudent = async (courses, userId) => {
 
         return { ok: true };
     } catch (error) {
-        // Payment succeeded but enrolment did not. Logged with the ids needed to
-        // repair it by re-running.
+        // Payment succeeded but enrolment did not — log the ids needed to re-run.
         console.error(
             `ENROLMENT FAILED AFTER PAYMENT — user=${userId} courses=${JSON.stringify(courses)}`,
             error
@@ -257,8 +252,7 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
             });
         }
 
-        // Best-effort, 200 either way: the payment already completed. The success
-        // path also never sent a response at all, so the request hung.
+        // Best-effort, 200 either way: the payment already completed.
         await trySendMail(
             enrolledStudent.email,
             "Payment Received for your StudySphere Course Purchase",

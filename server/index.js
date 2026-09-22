@@ -1,4 +1,8 @@
 const express = require("express");
+// Must load before any route. Express 4 does not catch rejected promises, so an
+// async handler that throws took the process down.
+require("express-async-errors");
+
 const app = express();
 
 const userRoutes = require("./routes/User");
@@ -15,6 +19,7 @@ const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 
 const { verifyOrigin } = require("./middlewares/verifyOrigin");
+const { errorHandler, registerProcessHandlers } = require("./middlewares/errorHandler");
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -22,12 +27,13 @@ const PORT = process.env.PORT || 4000;
 // Import the cron job
 const { scheduleUserDeletionJob } = require("./jobs/deleteInactiveUsers");
 
+registerProcessHandlers();
+
 // database connect
 database.connect();
 
-// Required for the rate limiters to key on the real client IP rather than the
-// proxy's. Must stay `1`, not `true` — `true` trusts the whole client-controlled
-// X-Forwarded-For chain, letting anyone reset their own bucket.
+// Lets the rate limiters key on the real client IP. Must stay `1`, not `true`:
+// `true` trusts the client-controlled X-Forwarded-For chain.
 app.set("trust proxy", 1);
 
 // middlewares
@@ -59,7 +65,7 @@ app.use(
     })
 )
 
-// CSRF defence for cross-site writes. Shares the CORS list so the two cannot drift.
+// Shares the CORS list so the two cannot drift.
 app.use(verifyOrigin(allowedOrigins));
 
 app.use(
@@ -88,6 +94,9 @@ app.get("/", (req, res) => {
         message: 'Your server is up and running.'
     });
 });
+
+// Must come after every route.
+app.use(errorHandler);
 
 // activate the server
 app.listen(PORT, () => {

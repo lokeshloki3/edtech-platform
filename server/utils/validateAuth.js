@@ -15,15 +15,14 @@ const SIGNUP_ACCOUNT_TYPES = ["Student", "Instructor"];
 // Looser than the client's zod .email(), so nothing that passes the form is
 // turned away here.
 //
-// Not a regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ backtracks super-linearly, because a
-// dot also matches [^\s@]. Splitting on "@" is linear.
+// Not a regex: the obvious one backtracks super-linearly, because a dot also
+// matches [^\s@]. Splitting on "@" is linear.
 const isValidEmailShape = (value) => {
     const parts = value.split("@");
     if (parts.length !== 2) {
         return false;
     }
     const [local, domain] = parts;
-    // A domain needs at least one dot with something either side of it.
     const dot = domain.lastIndexOf(".");
     return local.length > 0 && dot > 0 && dot < domain.length - 1;
 };
@@ -67,8 +66,7 @@ const validateAccountType = (value) =>
 // First failure only, so one response carries one actionable message.
 const firstError = (errors) => errors.find(Boolean) || null;
 
-// The model trims and lowercases on save, so lookups must do both or a stray
-// space or capital reads as "user is not registered".
+// The model trims and lowercases on save, so lookups must do both.
 const normalizeEmail = (value) =>
     typeof value === "string" ? value.trim().toLowerCase() : value;
 

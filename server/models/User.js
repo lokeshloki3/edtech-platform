@@ -11,9 +11,8 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    // `unique` settles the findOne-then-create race in signUp, which the
-    // application check cannot. On an existing database, clear duplicate emails
-    // first — the index cannot build over them.
+    // `unique` settles the findOne-then-create race in signUp. Clear duplicate
+    // emails first — the index cannot build over them.
     email: {
         type: String,
         required: true,

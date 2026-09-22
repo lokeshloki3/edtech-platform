@@ -31,8 +31,7 @@ router.post("/logout", logout)
 // Route for user signup
 router.post("/signup", signUp)
 
-// Route for sending OTP to the user's email. Throttled per IP and per target
-// address, since it mails whatever address it is given.
+// Route for sending OTP to the user's email. Throttled per IP and per target.
 router.post("/sendotp", emailDispatchLimiter, sendOTP)
 
 // Route for Changing the password

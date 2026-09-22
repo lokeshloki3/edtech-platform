@@ -1,8 +1,7 @@
 const nodemailer = require('nodemailer');
 
-// Throws on failure. It used to swallow everything and return undefined, so no
-// caller could tell a delivered email from a dropped one — the reset flow
-// reported success for mail that never sent.
+// Throws on failure. It used to swallow everything, so no caller could tell a
+// delivered email from a dropped one.
 const mailSender = async (email, title, body) => {
     const transporter = nodemailer.createTransport({
         // service: "gmail",

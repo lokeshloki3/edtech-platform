@@ -1,6 +1,5 @@
 const crypto = require("crypto");
 
-// Reset tokens and OTPs are stored as hashes, never in plaintext.
 const hashToken = (rawToken) =>
     crypto.createHash("sha256").update(String(rawToken)).digest("hex");
 

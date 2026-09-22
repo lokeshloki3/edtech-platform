@@ -22,11 +22,8 @@ const {
 } = require("../utils/validateAuth");
 require("dotenv").config();
 
-// Stops the way around the attempt cap: burn the guesses, request a fresh code.
 const OTP_RESEND_COOLDOWN_MS = 60 * 1000;
 
-// One message for "no such account" and "wrong password", so neither confirms
-// whether an address is registered.
 const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password";
 
 // sendOTP
@@ -74,8 +71,7 @@ exports.sendOTP = async (req, res) => {
             specialChars: false,
         });
 
-        // One live code per address, or superseded codes stay valid and the
-        // attempt counter means nothing.
+        // One live code per address, or the attempt counter means nothing.
         await OTP.deleteMany({ email: normalizedEmail });
 
         const otpRecord = await OTP.create({
@@ -83,8 +79,6 @@ exports.sendOTP = async (req, res) => {
             otpHash: hashToken(otp),
         });
 
-        // Sent here rather than from a pre-save hook, so a mail failure is
-        // reported as one and the row does not outlive the email.
         try {
             await mailSender(
                 normalizedEmail,
@@ -177,7 +171,6 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        // Burn the code once the guess budget is spent.
         if (otpRecord.attempts >= MAX_OTP_ATTEMPTS) {
             await OTP.deleteOne({ _id: otpRecord._id });
             return res.status(429).json({
@@ -230,7 +223,7 @@ exports.signUp = async (req, res) => {
             image: `http://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`, // dice bear api
         })
 
-        // Consume it, or the same code is replayable within its TTL.
+        // Consume it, or the code is replayable within its TTL.
         await OTP.deleteOne({ _id: otpRecord._id });
 
         // Strip the hash before it goes out, as login does. Nothing saves
@@ -244,7 +237,6 @@ exports.signUp = async (req, res) => {
             data: user,
         });
     } catch (error) {
-        // The unique index settles concurrent signups the findOne() check cannot.
         if (error?.code === 11000) {
             return res.status(409).json({
                 success: false,
@@ -284,8 +276,7 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ email: normalizeEmail(email) }).populate("additionalDetails");
         // const user = await User.findOne({ email });
         if (!user) {
-            // Dummy compare, so a missing account costs about the same as a
-            // wrong password and timing does not reopen the oracle.
+            // Dummy compare, so timing does not reveal whether the account exists.
             await bcrypt.compare(password, "$2b$10$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinv");
             return res.status(401).json({
                 success: false,
@@ -404,8 +395,7 @@ exports.changePassword = async (req, res) => {
             { new: true }
         );
 
-        // Best-effort: the password is already changed, so a mail outage must not
-        // be reported as a failed password change.
+        // Best-effort: the password is already changed.
         await trySendMail(
             updatedUserDetails.email,
             "Password Successfully Updated for your StudySphere Account",

@@ -15,8 +15,6 @@ require("dotenv").config();
 
 const RESET_TOKEN_TTL_MS = 5 * 60 * 1000;
 
-// Returned whether or not the address is registered, so this is not a free
-// membership check for any email list.
 const RESET_REQUESTED_MESSAGE =
     "If an account exists for that email, a password reset link has been sent to it.";
 
@@ -56,8 +54,7 @@ exports.resetPasswordToken = async (req, res) => {
 
         const url = `${process.env.FRONTEND_URL_UPDATE_PASSWORD}/update-password/${token}`;
 
-        // Allowed to throw: this email is the feature, so reporting success for
-        // mail that never sent leaves the user waiting for nothing.
+        // Allowed to throw: this email is the feature, not a notification.
         await mailSender(
             email,
             "Password Reset Link for your StudySphere account",
@@ -125,8 +122,7 @@ exports.resetPassword = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // $unset matters: the token used to survive the reset, so the same link
-        // stayed usable for the rest of its TTL.
+        // $unset matters: the token used to survive the reset and stay usable.
         await User.updateOne(
             { _id: userDetails._id },
             {

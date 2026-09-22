@@ -1,9 +1,8 @@
 const rateLimit = require("express-rate-limit");
 const { ipKeyGenerator } = require("express-rate-limit");
 
-// In-memory counters: they reset on restart and are not shared between
-// instances. Swap in rate-limit-redis when Redis lands.
-// All of these depend on app.set('trust proxy', 1) in index.js.
+// In-memory: counters reset on restart and are not shared across instances.
+// Swap in rate-limit-redis when Redis lands. Depends on trust proxy in index.js.
 
 const message = (text) => ({ success: false, message: text });
 
@@ -12,7 +11,6 @@ const base = {
     legacyHeaders: false,
 };
 
-// Only failed sign-ins count toward the limit.
 const loginLimiter = rateLimit({
     ...base,
     windowMs: 15 * 60 * 1000,
@@ -22,7 +20,7 @@ const loginLimiter = rateLimit({
 });
 
 // Keyed on IP + target email so neither axis is free. ipKeyGenerator normalises
-// IPv6 to its /64 prefix, otherwise one subscriber holds trillions of buckets.
+// IPv6 to its /64, otherwise one subscriber holds trillions of buckets.
 const emailDispatchLimiter = rateLimit({
     ...base,
     windowMs: 60 * 60 * 1000,
