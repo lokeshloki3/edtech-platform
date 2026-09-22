@@ -13,6 +13,11 @@ import { resetCart } from '@/slices/cartSlice';
 import { useAuthStore } from '@/store/auth.store';
 import type { RazorpayHandlerResponse } from '@/types/payment.types';
 
+export const paymentToasts = {
+  paymentSuccess: () =>
+    showCustomSuccessToast({ message: 'Payment successful, you are added to the course' }),
+};
+
 /**
  * Drives the whole Razorpay purchase: order, checkout, verification, receipt.
  * Checkout is a callback API rather than a promise, so the mutation resolves
@@ -56,9 +61,7 @@ export function useBuyCourse() {
           try {
             await verifyPayment({ ...response, courses });
 
-            showCustomSuccessToast({
-              message: 'Payment successful, you are added to the course',
-            });
+            paymentToasts.paymentSuccess();
             dispatch(resetCart());
             queryClient.invalidateQueries({ queryKey: profileKeys.enrolledCourses() });
             navigate('/dashboard/enrolled-courses');

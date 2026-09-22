@@ -27,6 +27,15 @@ export const profileKeys = {
   instructorData: () => [...profileKeys.all, 'instructor-data'] as const,
 };
 
+export const profileToasts = {
+  updateDisplayPictureSuccess: () =>
+    showCustomSuccessToast({ message: 'Display picture updated successfully' }),
+  updateProfileSuccess: () => showCustomSuccessToast({ message: 'Profile updated successfully' }),
+  changePasswordSuccess: () => showCustomSuccessToast({ message: 'Password changed successfully' }),
+  deleteProfileSuccess: (message?: string) =>
+    showCustomSuccessToast({ message: message || 'Profile deleted' }),
+};
+
 export function useEnrolledCourses(enabled = true) {
   return useQuery<EnrolledCourse[]>({
     queryKey: profileKeys.enrolledCourses(),
@@ -68,7 +77,7 @@ export function useUpdateDisplayPicture() {
     mutationFn: (file) => updateDisplayPicture(file),
     onSuccess: (user) => {
       applyUpdatedUser(user);
-      showCustomSuccessToast({ message: 'Display picture updated successfully' });
+      profileToasts.updateDisplayPictureSuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not update display picture'),
   });
@@ -81,7 +90,7 @@ export function useUpdateProfile() {
     mutationFn: (payload) => updateProfile(payload),
     onSuccess: (user) => {
       applyUpdatedUser(user);
-      showCustomSuccessToast({ message: 'Profile updated successfully' });
+      profileToasts.updateProfileSuccess();
     },
     onError: (err) => handleMutationError(err, 'Could not update profile'),
   });
@@ -90,7 +99,7 @@ export function useUpdateProfile() {
 export function useChangePassword() {
   return useMutation<ApiEnvelope, Error, ChangePasswordPayload>({
     mutationFn: (payload) => changePassword(payload),
-    onSuccess: () => showCustomSuccessToast({ message: 'Password changed successfully' }),
+    onSuccess: () => profileToasts.changePasswordSuccess(),
     onError: (err) => handleMutationError(err, 'Could not change password'),
   });
 }
@@ -102,7 +111,7 @@ export function useDeleteProfile() {
   return useMutation<ApiEnvelope, Error, void>({
     mutationFn: () => deleteProfile(),
     onSuccess: (data) => {
-      showCustomSuccessToast({ message: data.message || 'Profile deleted' });
+      profileToasts.deleteProfileSuccess(data.message);
       clearAuth();
       queryClient.clear();
     },

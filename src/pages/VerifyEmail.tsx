@@ -5,7 +5,7 @@ import OtpInput from 'react-otp-input';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { PrimaryButton } from '@/components/PrimaryButton';
-import { useSendOtp, useSignup } from '@/hooks/use-auth-query';
+import { useResendOtp, useSignup } from '@/hooks/use-auth-query';
 import { useAuthStore } from '@/store/auth.store';
 
 const VerifyEmail = () => {
@@ -14,7 +14,7 @@ const VerifyEmail = () => {
   const [otp, setOtp] = useState('');
 
   const { mutate: submitSignup, isPending } = useSignup();
-  const { mutate: resendOtp, isPending: isResending } = useSendOtp();
+  const { mutate: resendOtp, isPending: isResending } = useResendOtp();
 
   useEffect(() => {
     // Only reachable once the signup form has been filled in.
