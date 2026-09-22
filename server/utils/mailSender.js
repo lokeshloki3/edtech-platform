@@ -1,28 +1,36 @@
 const nodemailer = require('nodemailer');
 
+// Throws on failure. It used to swallow everything and return undefined, so no
+// caller could tell a delivered email from a dropped one — the reset flow
+// reported success for mail that never sent.
 const mailSender = async (email, title, body) => {
-    try {
-        let transporter = nodemailer.createTransport({
-            // service: "gmail",
-            host: process.env.MAIL_HOST,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            }
-        })
+    const transporter = nodemailer.createTransport({
+        // service: "gmail",
+        host: process.env.MAIL_HOST,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
 
-        let info = await transporter.sendMail({
-            from: `"Studysphere" <${process.env.EMAIL_USER}>`, // sender address
-            to: `${email}`, // list of receivers
-            subject: `${title}`,
-            html: `${body}`,
-        })
-        // console.log(info);
-        return info;
-        
+    return transporter.sendMail({
+        from: `"Studysphere" <${process.env.EMAIL_USER}>`,
+        to: `${email}`,
+        subject: `${title}`,
+        html: `${body}`,
+    });
+};
+
+// For mail that must never fail the operation that triggered it.
+const trySendMail = async (email, title, body, context = "") => {
+    try {
+        await mailSender(email, title, body);
+        return true;
     } catch (error) {
-        console.error(error.message);
+        console.error(`Mail delivery failed${context ? ` (${context})` : ""}:`, error.message);
+        return false;
     }
-}
+};
 
 module.exports = mailSender;
+module.exports.trySendMail = trySendMail;

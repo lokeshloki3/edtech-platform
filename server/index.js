@@ -1,4 +1,9 @@
 const express = require("express");
+// Must load before any route. Express 4 does not catch rejected promises in
+// async handlers; this forwards them to the error handler instead of letting
+// them kill the process.
+require("express-async-errors");
+
 const app = express();
 
 const userRoutes = require("./routes/User");
@@ -14,14 +19,26 @@ const { cloudinaryConnect } = require("./config/cloudinary");
 const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 
+const { verifyOrigin } = require("./middlewares/verifyOrigin");
+const { errorHandler, registerProcessHandlers } = require("./middlewares/errorHandler");
+
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 // Import the cron job
 const { scheduleUserDeletionJob } = require("./jobs/deleteInactiveUsers");
 
+// First, so it covers startup too.
+registerProcessHandlers();
+
 // database connect
 database.connect();
+
+// Required for the rate limiters to key on the real client IP rather than the
+// proxy's. Must stay `1`, not `true` — `true` trusts the whole client-controlled
+// X-Forwarded-For chain, letting anyone reset their own bucket.
+app.set("trust proxy", 1);
+
 // middlewares
 // robots.txt stops crawling; X-Robots-Tag also stops a URL found via a link
 // from being indexed, which robots.txt alone does not prevent.
@@ -51,6 +68,9 @@ app.use(
     })
 )
 
+// CSRF defence for cross-site writes. Shares the CORS list so the two cannot drift.
+app.use(verifyOrigin(allowedOrigins));
+
 app.use(
     fileUpload({
         useTempFiles: true,
@@ -77,6 +97,9 @@ app.get("/", (req, res) => {
         message: 'Your server is up and running.'
     });
 });
+
+// Must come after every route.
+app.use(errorHandler);
 
 // activate the server
 app.listen(PORT, () => {

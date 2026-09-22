@@ -16,13 +16,14 @@ const {
 } = require("../controllers/ResetPassword")
 
 const { auth } = require("../middlewares/auth")
+const { loginLimiter, emailDispatchLimiter } = require("../middlewares/rateLimit")
 
 // Routes for Login, Signup, and Authentication
 
 // Authentication routes
 
-// Route for user login
-router.post("/login", login)
+// Route for user login. Throttled; only failed attempts count.
+router.post("/login", loginLimiter, login)
 
 // Route for clearing the session cookie
 router.post("/logout", logout)
@@ -30,15 +31,16 @@ router.post("/logout", logout)
 // Route for user signup
 router.post("/signup", signUp)
 
-// Route for sending OTP to the user's email
-router.post("/sendotp", sendOTP)
+// Route for sending OTP to the user's email. Throttled per IP and per target
+// address, since it mails whatever address it is given.
+router.post("/sendotp", emailDispatchLimiter, sendOTP)
 
 // Route for Changing the password
 router.post("/changepassword", auth, changePassword)
 
 // Reset Password
-// Route for generating a reset password token
-router.post("/reset-password-token", resetPasswordToken)
+// Route for generating a reset password token. Same limiter as /sendotp.
+router.post("/reset-password-token", emailDispatchLimiter, resetPasswordToken)
 
 // Route for resetting user's password after verification
 router.post("/reset-password", resetPassword)

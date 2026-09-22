@@ -4,10 +4,19 @@ const crypto = require("crypto");
 const User = require("../models/User");
 // const CourseProgress = require("../models/CourseProgress");
 const mailSender = require("../utils/mailSender");
+const { trySendMail } = require("../utils/mailSender");
 const { courseEnrollmentEmail } = require("../mail/templates/courseEnrollmentEmail");
 const { default: mongoose } = require("mongoose");
 const { paymentSuccessEmail } = require("../mail/templates/paymentSuccessEmail");
 const CourseProgress = require("../models/CourseProgress");
+
+// timingSafeEqual throws on length mismatch, so check length first.
+const signaturesMatch = (expected, received) => {
+    if (typeof received !== "string" || expected.length !== received.length) {
+        return false;
+    }
+    return crypto.timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(received, "hex"));
+};
 
 // Capture the payment and initiate the Razorpay order
 exports.capturePayment = async (req, res) => {
@@ -58,7 +67,9 @@ exports.capturePayment = async (req, res) => {
     const options = {
         amount: total_amount * 100,
         currency: "INR",
-        receipt: Math.random(Date.now()).toString(),
+        // Was Math.random(Date.now()) — the argument is ignored, and Razorpay
+        // treats receipt as the caller's idempotency handle.
+        receipt: crypto.randomUUID(),
     }
 
     try {
@@ -113,85 +124,114 @@ exports.verifyPayment = async (req, res) => {
         .update(body.toString())
         .digest("hex");
 
-    if (expectedSignature === razorpay_signature) {
-        // enroll student - function is below it
-        await enrollStudent(courses, userId, res);
-        return res.status(200).json({
-            success: true,
-            message: "Payment Verified"
+    if (!signaturesMatch(expectedSignature, razorpay_signature)) {
+        return res.status(400).json({
+            success: false,
+            message: "Payment Failed"
         });
     }
 
-    return res.status(400).json({
-        success: false,
-        message: "Payment Failed"
+    // enrollStudent reports back rather than writing its own response; it used
+    // to write 400/500 and then fall through to the 200 below.
+    const result = await enrollStudent(courses, userId);
+
+    if (!result.ok) {
+        return res.status(result.status).json({
+            success: false,
+            message: result.message,
+        });
+    }
+
+    return res.status(200).json({
+        success: true,
+        message: "Payment Verified"
     });
 }
 
-const enrollStudent = async (courses, userId, res) => {
-    if (!courses || !userId) {
-        return res.status(400).json({
-            success: false,
-            message: "Please provide Course ID and User ID"
-        });
+/**
+ * Runs after Razorpay has confirmed payment, so the money is already taken:
+ * validate everything, write everything, then notify best-effort. Writes are
+ * idempotent, so a re-run converges rather than duplicating.
+ *
+ * Not yet fully atomic — that needs a transaction, which needs a replica set.
+ *
+ * @returns {Promise<{ok: true} | {ok: false, status: number, message: string}>}
+ */
+const enrollStudent = async (courses, userId) => {
+    if (!Array.isArray(courses) || courses.length === 0 || !userId) {
+        return { ok: false, status: 400, message: "Please provide Course ID and User ID" };
     }
 
-    for (const courseId of courses) {
-        try {
-            // Find the all courses and enroll the student in it 
-            const enrolledCourse = await Course.findOneAndUpdate(
-                { _id: courseId },
-                { $push: { studentsEnrolled: userId } },
-                { new: true },
-            );
+    try {
+        // Resolve everything before writing, or a bad id halfway through leaves a
+        // half-enrolled cart.
+        const courseDocs = await Course.find({ _id: { $in: courses } });
 
-            if (!enrolledCourse) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Course not found"
-                });
-            }
-            // console.log("Updated course: ", enrolledCourse);
-
-            const courseProgress = await CourseProgress.create({
-                courseID: courseId,
-                userId: userId,
-                completedVideos: [],
-            });
-
-            // Find the student and add the course to their list of enrolled courses
-            const enrolledStudent = await User.findByIdAndUpdate(
-                userId,
-                {
-                    $push: {
-                        courses: courseId, // courses is name of course ID in User schema
-                        courseProgress: courseProgress._id,
-                    },
-                },
-                { new: true }
-            );
-
-            // console.log("Enrolled student: ", enrollStudent);
-
-            // Send an email notification to the enrolled student
-            const emailResponse = await mailSender(
-                enrolledStudent.email,
-                `Successfully Enrolled in ${enrolledCourse.courseName} at StudySphere`,
-                courseEnrollmentEmail(
-                    enrolledCourse.courseName,
-                    `${enrolledStudent.firstName} ${enrolledStudent.lastName}`
-                )
-            );
-
-            // console.log("Email sent successfully: ", emailResponse.response);
-        } catch (error) {
-            // console.log(error);
-            return res.status(500).json({
-                success: false,
-                message: "Could not send the payment confirmation email",
-                error: error.message
-            });
+        if (courseDocs.length !== courses.length) {
+            return { ok: false, status: 400, message: "One or more courses could not be found" };
         }
+
+        const student = await User.findById(userId);
+        if (!student) {
+            return { ok: false, status: 400, message: "Student account not found" };
+        }
+
+        const progressIds = [];
+
+        for (const course of courseDocs) {
+            // $addToSet, not $push, so a re-run does not double-enrol.
+            await Course.updateOne(
+                { _id: course._id },
+                { $addToSet: { studentsEnrolled: userId } }
+            );
+
+            // Upsert for the same reason.
+            const progress = await CourseProgress.findOneAndUpdate(
+                { courseID: course._id, userId: userId },
+                { $setOnInsert: { completedVideos: [] } },
+                { upsert: true, new: true }
+            );
+
+            progressIds.push(progress._id);
+        }
+
+        await User.updateOne(
+            { _id: userId },
+            {
+                $addToSet: {
+                    courses: { $each: courseDocs.map((course) => course._id) },
+                    courseProgress: { $each: progressIds },
+                },
+            }
+        );
+
+        // Enrolment is durable from here; nothing below may change the outcome.
+        for (const course of courseDocs) {
+            await trySendMail(
+                student.email,
+                `Successfully Enrolled in ${course.courseName} at StudySphere`,
+                courseEnrollmentEmail(
+                    course.courseName,
+                    `${student.firstName} ${student.lastName}`
+                ),
+                `enrolment confirmation for course ${course._id}`
+            );
+        }
+
+        return { ok: true };
+    } catch (error) {
+        // Payment succeeded but enrolment did not. Logged with the ids needed to
+        // repair it by re-running.
+        console.error(
+            `ENROLMENT FAILED AFTER PAYMENT — user=${userId} courses=${JSON.stringify(courses)}`,
+            error
+        );
+        return {
+            ok: false,
+            status: 500,
+            message:
+                "Your payment went through but we could not finish setting up your courses. Our team has been notified — please contact support.",
+        };
     }
 }
 
@@ -210,7 +250,16 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
     try {
         const enrolledStudent = await User.findById(userId);
 
-        await mailSender(
+        if (!enrolledStudent) {
+            return res.status(404).json({
+                success: false,
+                message: "Student account not found",
+            });
+        }
+
+        // Best-effort, 200 either way: the payment already completed. The success
+        // path also never sent a response at all, so the request hung.
+        await trySendMail(
             enrolledStudent.email,
             "Payment Received for your StudySphere Course Purchase",
             paymentSuccessEmail(
@@ -218,13 +267,19 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
                 amount / 100,
                 orderId,
                 paymentId
-            )
-        )
+            ),
+            "payment receipt"
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Payment receipt processed",
+        });
     } catch (error) {
-        // console.log("error in sending mail", error);
+        console.error("sendPaymentSuccessEmail failed:", error);
         return res.status(500).json({
             success: false,
-            message: "Could not send email"
+            message: "Could not process the payment receipt",
         })
     }
 }

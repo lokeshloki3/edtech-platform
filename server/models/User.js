@@ -11,10 +11,16 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    // `unique` settles the findOne-then-create race in signUp, which the
+    // application check cannot. On an existing database, run
+    // `node scripts/check-email-duplicates.js` before deploying — the index
+    // cannot build over duplicates.
     email: {
         type: String,
         required: true,
         trim: true,
+        lowercase: true,
+        unique: true,
     },
     password: {
         type: String,
@@ -48,8 +54,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    token: {
+    // SHA-256 of the reset token, never the token itself.
+    resetPasswordTokenHash: {
         type: String,
+        index: true,
     },
     resetPasswordExpires: {
         type: Date,

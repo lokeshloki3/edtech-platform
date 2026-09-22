@@ -1,11 +1,15 @@
 const User = require("../models/User");
 const OTP = require("../models/OTP");
+const { MAX_OTP_ATTEMPTS } = require("../models/OTP");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SESSION_TTL_SECONDS, COOKIE_NAME, getAuthCookieOptions } = require("../config/authCookie");
 const Profile = require("../models/Profile");
 const mailSender = require("../utils/mailSender");
+const { trySendMail } = require("../utils/mailSender");
+const { hashToken, safeCompareHex } = require("../utils/hashToken");
+const otpEmailTemplate = require("../mail/templates/emailVerificationTemplate");
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 const {
     validateRequired,
@@ -17,6 +21,13 @@ const {
     normalizeEmail,
 } = require("../utils/validateAuth");
 require("dotenv").config();
+
+// Stops the way around the attempt cap: burn the guesses, request a fresh code.
+const OTP_RESEND_COOLDOWN_MS = 60 * 1000;
+
+// One message for "no such account" and "wrong password", so neither confirms
+// whether an address is registered.
+const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password";
 
 // sendOTP
 exports.sendOTP = async (req, res) => {
@@ -46,42 +57,59 @@ exports.sendOTP = async (req, res) => {
             })
         }
 
-        // generate otp
-        var otp = otpGenerator.generate(6, {
+        const latest = await OTP.findOne({ email: normalizedEmail }).sort({ createdAt: -1 });
+        if (latest && Date.now() - latest.createdAt.getTime() < OTP_RESEND_COOLDOWN_MS) {
+            const waitSeconds = Math.ceil(
+                (OTP_RESEND_COOLDOWN_MS - (Date.now() - latest.createdAt.getTime())) / 1000
+            );
+            return res.status(429).json({
+                success: false,
+                message: `Please wait ${waitSeconds}s before requesting another OTP.`,
+            });
+        }
+
+        const otp = otpGenerator.generate(6, {
             upperCaseAlphabets: false,
             lowerCaseAlphabets: false,
             specialChars: false,
         });
-        // console.log("OTP generated", otp);
 
-        // check unique otp or not or we can use library which will auto give unique otp everytime
-        let result = await OTP.findOne({ otp: otp });
+        // One live code per address, or superseded codes stay valid and the
+        // attempt counter means nothing.
+        await OTP.deleteMany({ email: normalizedEmail });
 
-        while (result) {
-            var otp = otpGenerator.generate(6, {
-                upperCaseAlphabets: false,
-                lowerCaseAlphabets: false,
-                specialChars: false,
+        const otpRecord = await OTP.create({
+            email: normalizedEmail,
+            otpHash: hashToken(otp),
+        });
+
+        // Sent here rather than from a pre-save hook, so a mail failure is
+        // reported as one and the row does not outlive the email.
+        try {
+            await mailSender(
+                normalizedEmail,
+                "Verification OTP from edTech platform - StudySphere",
+                otpEmailTemplate(otp)
+            );
+        } catch (mailError) {
+            await OTP.deleteOne({ _id: otpRecord._id });
+            console.error("Failed to deliver OTP email:", mailError.message);
+            return res.status(502).json({
+                success: false,
+                message: "Could not send the verification email. Please try again.",
             });
-            result = await OTP.findOne({ otp: otp });
         }
 
-        const otpPayload = { email: normalizedEmail, otp };
-
-        // create an entry in db for OTP
-        const otpBody = await OTP.create(otpPayload);
-        // console.log(otpBody);
-
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: 'OTP sent successfully',
         })
 
     } catch (error) {
-        // console.log(error);
+        console.error("sendOTP failed:", error);
         return res.status(500).json({
             success: false,
-            message: error.message,
+            message: "Could not send OTP. Please try again.",
         })
     }
 }
@@ -140,22 +168,33 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        // find most recent OTP stored for the user
-        const recentOtp = await OTP.find({ email: normalizedEmail }).sort({ createdAt: -1 }).limit(1);
-        // console.log(recentOtp);
+        const otpRecord = await OTP.findOne({ email: normalizedEmail }).sort({ createdAt: -1 });
 
-        // validate OTP
-        if (recentOtp.length == 0) {
-            // otp not found for the email
+        if (!otpRecord) {
             return res.status(400).json({
                 success: false,
-                message: "One OTP is not valid",
+                message: "That OTP has expired. Please request a new one.",
             });
-        } else if (otp.trim() !== recentOtp[0].otp) {
-            // invalid otp
+        }
+
+        // Burn the code once the guess budget is spent.
+        if (otpRecord.attempts >= MAX_OTP_ATTEMPTS) {
+            await OTP.deleteOne({ _id: otpRecord._id });
+            return res.status(429).json({
+                success: false,
+                message: "Too many incorrect attempts. Please request a new OTP.",
+            });
+        }
+
+        if (!safeCompareHex(hashToken(otp.trim()), otpRecord.otpHash)) {
+            await OTP.updateOne({ _id: otpRecord._id }, { $inc: { attempts: 1 } });
+            const remaining = MAX_OTP_ATTEMPTS - (otpRecord.attempts + 1);
             return res.status(400).json({
                 success: false,
-                message: "Most Recent OTP is not matching",
+                message:
+                    remaining > 0
+                        ? `That OTP is not correct. ${remaining} attempt${remaining === 1 ? "" : "s"} remaining.`
+                        : "That OTP is not correct. Please request a new one.",
             });
         }
 
@@ -191,6 +230,9 @@ exports.signUp = async (req, res) => {
             image: `http://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`, // dice bear api
         })
 
+        // Consume it, or the same code is replayable within its TTL.
+        await OTP.deleteOne({ _id: otpRecord._id });
+
         // Strip the hash before it goes out, as login does. Nothing saves
         // after this, so the stored document is untouched.
         user.password = undefined;
@@ -202,7 +244,14 @@ exports.signUp = async (req, res) => {
             data: user,
         });
     } catch (error) {
-        // console.log(error);
+        // The unique index settles concurrent signups the findOne() check cannot.
+        if (error?.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                message: "User is already registered. Please sign in to continue.",
+            });
+        }
+        console.error("signUp failed:", error);
         return res.status(500).json({
             success: false,
             message: "User cannot be registered. Please try again",
@@ -235,9 +284,12 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ email: normalizeEmail(email) }).populate("additionalDetails");
         // const user = await User.findOne({ email });
         if (!user) {
+            // Dummy compare, so a missing account costs about the same as a
+            // wrong password and timing does not reopen the oracle.
+            await bcrypt.compare(password, "$2b$10$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinv");
             return res.status(401).json({
                 success: false,
-                message: "User is not registered, please signup first",
+                message: INVALID_CREDENTIALS_MESSAGE,
             });
         }
 
@@ -276,7 +328,7 @@ exports.login = async (req, res) => {
         else {
             return res.status(401).json({
                 success: false,
-                message: "Password is incorrect",
+                message: INVALID_CREDENTIALS_MESSAGE,
             })
         }
     } catch (error) {
@@ -352,26 +404,18 @@ exports.changePassword = async (req, res) => {
             { new: true }
         );
 
-        // send notification email - Password updated - passwordUpdated -> html template
-        try {
-            const emailResponse = await mailSender(
+        // Best-effort: the password is already changed, so a mail outage must not
+        // be reported as a failed password change.
+        await trySendMail(
+            updatedUserDetails.email,
+            "Password Successfully Updated for your StudySphere Account",
+            passwordUpdated(
                 updatedUserDetails.email,
-                "Password Successfully Updated for your StudySphere Account",
-                passwordUpdated(
-                    updatedUserDetails.email,
-                    `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
-                )
-            );
-            // console.log("Email sent successfully:", emailResponse.response);
-        } catch (error) {
-            // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
-            console.error("Error occurred while sending email:", error);
-            return res.status(500).json({
-                success: false,
-                message: "Error occurred while sending email",
-                error: error.message,
-            });
-        }
+                `Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
+            ),
+            "password-change notification"
+        );
+
         //  return response
         return res.status(200).json({
             success: true,
@@ -382,7 +426,6 @@ exports.changePassword = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Error occurred while updating password",
-            error: error.message,
         });
     }
 }

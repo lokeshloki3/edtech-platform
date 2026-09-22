@@ -4,10 +4,18 @@ const Profile = require("../models/Profile");
 const Course = require("../models/Course");
 const UserDeletionLog = require("../models/UserDeletionLog");
 const CourseProgress = require("../models/CourseProgress");
+const { withJobLock } = require("../utils/jobLock");
+
+const JOB_NAME = "delete-inactive-users";
+// Longer than the job's worst-case runtime.
+const JOB_LOCK_TTL_MS = 10 * 60 * 1000;
 
 // Schedule: every day at 1:00 AM
 exports.scheduleUserDeletionJob = () => {
     cron.schedule("0 1 * * *", async () => {
+        // Two concurrent runs read the same set of users and both write a
+        // UserDeletionLog entry for each.
+        const ran = await withJobLock(JOB_NAME, JOB_LOCK_TTL_MS, async () => {
         const now = new Date();
         // console.log("Current date for deletion check:", now);
         try {
@@ -56,6 +64,11 @@ exports.scheduleUserDeletionJob = () => {
             // console.log("Daily cleanup completed.");
         } catch (error) {
             console.error("Error running deletion job:", error);
+        }
+        });
+
+        if (!ran) {
+            console.log(`Skipped ${JOB_NAME}: another worker holds the lock.`);
         }
     })
 }
