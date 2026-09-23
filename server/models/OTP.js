@@ -1,57 +1,35 @@
-const mongoose = require('mongoose');
-const mailSender = require('../utils/mailSender');
-const emailTemplate = require("../mail/templates/emailVerificationTemplate");
+const mongoose = require("mongoose");
 
+const OTP_TTL_SECONDS = 5 * 60;
+const MAX_OTP_ATTEMPTS = 5;
+
+// The code is stored as a hash and capped at MAX_OTP_ATTEMPTS guesses. The
+// verification email is sent by the controller, not by a pre-save hook.
 const OTPSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        trim: true,
+        lowercase: true,
+        index: true,
     },
-    otp: {
+    otpHash: {
         type: String,
         required: true,
     },
+    attempts: {
+        type: Number,
+        default: 0,
+    },
     createdAt: {
         type: Date,
-        default: Date.now(),
-        expires: 5 * 60, // 5 min
+        // `Date.now`, not `Date.now()`: called, it evaluates once at module load
+        // and every OTP shares that timestamp, so all of them expire at once.
+        default: Date.now,
+        expires: OTP_TTL_SECONDS,
     },
 });
 
-// a function -> to send emails pre save middleware hook to be sent before DB entry of actual Data
-async function sendVerificationEmail(email, otp) {
-    // Create a transporter to send emails
-
-    // Define the email options
-
-    // Send the email
-    try {
-        const mailResponse = await mailSender(
-            email,
-            "Verification OTP from edTech platform - StudySphere",
-            emailTemplate(otp)
-        );
-        // console.log("Email sent successfully: ", mailResponse.response);
-    } catch (error) {
-        // console.log("Error occured while sending mails: ", error);
-        throw error;
-    }
-}
-
-// OTP pre save middleware added before OTP exports as pre hook
-// Define a post-save hook to send email after the document has been saved
-OTPSchema.pre("save", async function (next) {
-    // console.log("New document saved to database");
-
-    // Only send an email when a new document is created
-    if (this.isNew) {
-        await sendVerificationEmail(this.email, this.otp);
-    }
-    next(); // Move to next middleware
-})
-
 module.exports = mongoose.model("OTP", OTPSchema);
-
-// const OTP = mongoose.model("OTP", OTPSchema);
-
-// module.exports = OTP;
+module.exports.OTP_TTL_SECONDS = OTP_TTL_SECONDS;
+module.exports.MAX_OTP_ATTEMPTS = MAX_OTP_ATTEMPTS;

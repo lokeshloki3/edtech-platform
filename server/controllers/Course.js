@@ -122,6 +122,19 @@ exports.createCourse = async (req, res) => {
 };
 
 // Edit Course Details
+// Allowlisted: `req.body` was copied wholesale onto the document, so a request
+// could reassign `instructor` or fabricate `studentsEnrolled`.
+const EDITABLE_COURSE_FIELDS = new Set([
+    "courseName",
+    "courseDescription",
+    "whatYouWillLearn",
+    "price",
+    "tag",
+    "category",
+    "instructions",
+    "status",
+])
+
 exports.editCourse = async (req, res) => {
     try {
         const { courseId } = req.body
@@ -130,6 +143,13 @@ exports.editCourse = async (req, res) => {
 
         if (!course) {
             return res.status(404).json({ success: false, message: "Course not found" })
+        }
+
+        if (course.instructor.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only edit your own courses",
+            })
         }
 
         // If Thumbnail Image is found, update it
@@ -143,14 +163,21 @@ exports.editCourse = async (req, res) => {
             course.thumbnail = thumbnailImage.secure_url
         }
 
-        // Update only the fields that are present in the request body
-        for (const key in updates) {
-            if (updates.hasOwnProperty(key)) {
-                if (key === "tag" || key === "instructions") {
+        for (const key of Object.keys(updates)) {
+            if (!EDITABLE_COURSE_FIELDS.has(key)) {
+                continue
+            }
+            if (key === "tag" || key === "instructions") {
+                try {
                     course[key] = JSON.parse(updates[key])
-                } else {
-                    course[key] = updates[key]
+                } catch {
+                    return res.status(400).json({
+                        success: false,
+                        message: `${key} must be a valid JSON array`,
+                    })
                 }
+            } else {
+                course[key] = updates[key]
             }
         }
 
@@ -428,6 +455,13 @@ exports.deleteCourse = async (req, res) => {
         const course = await Course.findById(courseId)
         if (!course) {
             return res.status(404).json({ success: false, message: "Course not found" })
+        }
+
+        if (course.instructor.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only delete your own courses",
+            })
         }
 
         // Unenroll students from the course
