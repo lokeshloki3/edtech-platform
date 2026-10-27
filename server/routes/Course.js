@@ -82,8 +82,8 @@ router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress)
 // To get Course Progress
 // router.post("/getProgressPercentage", auth, isStudent, getProgressPercentage)
-// Delete a Course
-router.delete("/deleteCourse", deleteCourse)
+// Delete a Course. This was unauthenticated; the controller also checks ownership.
+router.delete("/deleteCourse", auth, isInstructor, deleteCourse)
 
 // Category routes (Only by Admin)
 // Category can Only be Created by Admin
