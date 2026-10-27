@@ -37,15 +37,13 @@ database.connect();
 app.set("trust proxy", 1);
 
 // middlewares
-// robots.txt stops crawling; X-Robots-Tag also stops a URL found via a link
-// from being indexed, which robots.txt alone does not prevent.
+// X-Robots-Tag keeps API URLs out of search results without stopping anyone
+// from fetching them. There is deliberately no robots.txt: Google renders the
+// client's course pages by calling this API and obeys this host's robots.txt
+// while doing it, so a "Disallow: /" left those pages empty for Google.
 app.use((req, res, next) => {
     res.setHeader("X-Robots-Tag", "noindex, nofollow");
     next();
-});
-
-app.get("/robots.txt", (req, res) => {
-    return res.type("text/plain").send("User-agent: *\nDisallow: /\n");
 });
 
 app.use(express.json());
